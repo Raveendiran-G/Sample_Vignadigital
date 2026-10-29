@@ -66,13 +66,18 @@ function openItem(id) {
     <header class="m-hero">${r.logo ? `<img src="${esc(r.logo)}" alt="">` : ''}<h1>${esc(r.name)}</h1>${r.tagline ? `<p>${esc(r.tagline)}</p>` : ''}${r.city ? `<div class="small">${esc(r.city)}</div>` : ''}</header>
     <div class="m-bar"><div class="m-search"><input type="search" id="q" placeholder="Search dishes" aria-label="Search dishes" autocomplete="off"><div id="layout"></div></div><div class="m-chips" id="chips" role="tablist"></div></div>
     <main class="m-wrap" id="sections"></main>
-    <footer class="m-foot">${r.address ? esc(r.address) + '<br>' : ''}${r.phone ? `<a href="tel:${esc(r.phone)}">${esc(r.phone)}</a>` : ''}</footer>`;
+    ${r.upi_id || r.upi_qr ? `<section class="upi-payment"><h2>Pay with UPI</h2>${r.upi_qr ? `<img class="upi-payment-qr" src="${esc(r.upi_qr)}" alt="${esc(r.name)} UPI payment QR code" loading="lazy">` : ''}${r.upi_id ? `<p>UPI ID: <strong id="upiIdValue">${esc(r.upi_id)}</strong> <button type="button" class="upi-copy" id="copyUpiId">Copy UPI ID</button></p>` : ''}<p class="small muted">Open your UPI app to scan the QR code or pay using the UPI ID.</p></section>` : ''}
+  <footer class="m-foot">${r.address ? esc(r.address) + '<br>' : ''}${r.phone ? `<a href="tel:${esc(r.phone)}">${esc(r.phone)}</a>` : ''}</footer>`;
   render();
   viewToggle($('#layout'), 'dm_view_menu', (m) => $('#sections').classList.toggle('as-list', m === 'list')); // guests pick grid or list; remembered on their phone
   addEventListener('scroll', () => { // at the very bottom of a short menu, highlight the last category
     if (Date.now() > lockUntil && innerHeight + scrollY >= document.documentElement.scrollHeight - 4) { const last = [...document.querySelectorAll('.m-sec')].pop(); if (last) setActive(last.dataset.cat, false); }
   }, { passive: true });
   $('#q').addEventListener('input', (e) => render(e.target.value));
+  $('#copyUpiId')?.addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(r.upi_id); $('#copyUpiId').textContent = 'Copied!'; }
+    catch { const range = document.createRange(); range.selectNodeContents($('#upiIdValue')); const selection = getSelection(); selection.removeAllRanges(); selection.addRange(range); $('#copyUpiId').textContent = 'Select and copy'; }
+  });
   $('#chips').addEventListener('click', (e) => {
     const c = e.target.closest('.chip'); if (!c) return;
     lockUntil = Date.now() + 1000; setActive(c.dataset.cat); document.getElementById('cat-' + c.dataset.cat)?.scrollIntoView({ behavior: 'smooth', block: 'start' });

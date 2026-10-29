@@ -48,6 +48,11 @@
         <div><label>Plan</label><select name="plan_type"><option value="one_time">One time</option><option value="limited">Limited</option></select></div>
         <div data-validwrap class="hidden"><label>Valid until</label><input name="plan_expires" type="date"></div>
       </div>
+      <h3 style="margin-top:24px">UPI payment details <span class="muted small">· optional</span></h3>
+      <div class="row">
+        <div><label style="margin-top:0">UPI ID</label><input name="upi_id" placeholder="restaurant@upi" inputmode="text" autocomplete="off"><p class="small muted">Customers can copy this ID to pay.</p></div>
+        <div><label style="margin-top:0">UPI QR image</label><input name="upi_qr" type="file" accept="image/png,image/jpeg,image/webp,image/gif"><p class="small muted">PNG, JPG, WebP or GIF · maximum 5 MB.</p><div id="upiQrPreview" class="upi-qr-preview hidden"></div></div>
+      </div>
       <label>Login password <span class="muted small">· leave blank to generate one</span></label>
       <div class="pw-row"><input name="password" minlength="6" placeholder="Auto-generated if empty" autocomplete="new-password"><button type="button" class="ghost" data-genpw>Generate</button></div>
       <label class="check"><input type="checkbox" name="paid"> Onboarding payment received</label>
@@ -172,16 +177,20 @@ document.addEventListener('click', async (e) => {
         <div><label>City</label><input name="city" value="${esc(r.city)}"></div><div><label>Onboarding price (₹)</label><input name="price_paid" type="number" min="0" step="1" value="${r.price_paid}" required></div>
         <div><label>Plan</label><select name="plan_type"><option value="one_time" ${r.plan_expires ? '' : 'selected'}>One time</option><option value="limited" ${r.plan_expires ? 'selected' : ''}>Limited</option></select></div>
         <div data-validwrap><label>Valid until</label><input name="plan_expires" type="date" value="${esc(r.plan_expires)}"></div></div>
+        <h3 style="margin-top:22px">UPI payment details</h3><div class="row">
+          <div><label>UPI ID</label><input name="upi_id" value="${esc(r.upi_id || '')}" placeholder="restaurant@upi"></div>
+          <div><label>Replace UPI QR image</label><input name="upi_qr" type="file" accept="image/png,image/jpeg,image/webp,image/gif">${r.upi_qr ? `<p class="small muted">Current QR image: <a href="${esc(r.upi_qr)}" target="_blank" rel="noopener">View image</a></p><label class="check"><input type="checkbox" name="remove_upi_qr"> Remove current QR image</label>` : '<p class="small muted">PNG, JPG, WebP or GIF · maximum 5 MB.</p>'}</div>
+        </div>
         <label>New login password <span class="muted small">· leave blank to keep the current one</span></label>
         <div class="pw-row"><input name="password" minlength="6" placeholder="Unchanged" autocomplete="new-password"><button type="button" class="ghost" data-genpw>Generate</button></div>
         <label class="check"><input type="checkbox" name="paid" ${r.paid ? 'checked' : ''}> Onboarding payment received</label><div class="err" id="editErr" role="alert"></div>
         <div class="card-foot"><button type="button" class="ghost" data-close>Cancel</button><button>Save changes</button></div></form>` });
       const form = $('#editForm', m); planToggle(form); wireGenerate(form);
       form.addEventListener('submit', async (ev) => {
-        ev.preventDefault(); const f = Object.fromEntries(new FormData(ev.target)); f.paid = ev.target.elements.paid.checked; if (!f.password) delete f.password;
+        ev.preventDefault(); const f = new FormData(ev.target); f.set('paid', ev.target.elements.paid.checked ? 'true' : 'false'); if (!f.get('password')) f.delete('password');
         try {
           const out = await api(`/api/v1/admin/restaurants/${r.id}`, 'PATCH', f); closeModal(); toast('Restaurant updated'); await load();
-          if (f.password) credentialsModal('Password changed', out, f.password);
+          if (f.get('password')) credentialsModal('Password changed', out, f.get('password'));
         } catch (er) { $('#editErr', m).textContent = er.message; }
       });
     } else if (id('reset')) {
@@ -203,11 +212,19 @@ document.addEventListener('click', async (e) => {
   } catch (er) { toast(er.message); }
 });
 
+const upiQrInput = $('#obForm [name=upi_qr]');
+upiQrInput.addEventListener('change', () => {
+  const preview = $('#upiQrPreview'); const file = upiQrInput.files?.[0];
+  preview.replaceChildren(); preview.classList.toggle('hidden', !file);
+  if (!file) return;
+  if (!file.type.startsWith('image/')) { upiQrInput.value = ''; preview.classList.add('hidden'); toast('Choose an image file for the UPI QR'); return; }
+  const img = document.createElement('img'); img.alt = 'UPI QR preview'; img.src = URL.createObjectURL(file); img.onload = () => URL.revokeObjectURL(img.src); preview.append(img);
+});
 $('#obForm').addEventListener('submit', async (e) => {
-  e.preventDefault(); $('#obErr').textContent = ''; const f = Object.fromEntries(new FormData(e.target)); f.paid = e.target.elements.paid.checked; if (!f.password) delete f.password;
+  e.preventDefault(); $('#obErr').textContent = ''; const f = new FormData(e.target); f.set('paid', e.target.elements.paid.checked ? 'true' : 'false'); if (!f.get('password')) f.delete('password');
   try {
-    const out = await api('/api/v1/admin/restaurants', 'POST', f); e.target.reset(); e.target.elements.plan_type.dispatchEvent(new Event('change'));
-    await load(); showTab('restaurants'); credentialsModal('Restaurant created', out, out.generated_password || f.password);
+    const out = await api('/api/v1/admin/restaurants', 'POST', f); e.target.reset(); $('#upiQrPreview').replaceChildren(); $('#upiQrPreview').classList.add('hidden'); e.target.elements.plan_type.dispatchEvent(new Event('change'));
+    await load(); showTab('restaurants'); credentialsModal('Restaurant created', out, out.generated_password || f.get('password'));
   } catch (er) { $('#obErr').textContent = er.message; }
 });
 $('#pwf').addEventListener('submit', async (e) => {

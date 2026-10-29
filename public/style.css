@@ -247,3 +247,14 @@ body.menu-page .loadbar::after { background: linear-gradient(90deg, transparent,
 .skel-hero { height: 190px; border-radius: 0; background-color: var(--theme, var(--brand)); background-image: linear-gradient(90deg, transparent 25%, rgba(255,255,255,.18) 37%, transparent 63%); }
 .is-busy { opacity: .45; transition: opacity .15s; pointer-events: none; }
 @media (prefers-reduced-motion: reduce) { .skel, .btn-loading::before, .loadbar::after { animation-duration: 3s; } }
+
+/* UPI QR image preview in the admin onboarding form */
+.upi-qr-preview { margin-top: 10px; padding: 10px; width: fit-content; border: 1px dashed var(--line, #393939); border-radius: 12px; background: #fff; }
+.upi-qr-preview img { display: block; width: 150px; height: 150px; object-fit: contain; }
+input[type="file"] { max-width: 100%; }
+
+/* Customer-facing UPI payment block */
+.upi-payment { max-width: 460px; margin: 24px auto; padding: 20px; text-align: center; border: 1px solid var(--line, #e5e5e5); border-radius: 16px; background: var(--card, #fff); }
+.upi-payment h2 { margin-top: 0; }
+.upi-payment-qr { display: block; width: min(220px, 70vw); height: auto; max-height: 260px; object-fit: contain; margin: 12px auto; border-radius: 8px; background: #fff; }
+.upi-copy { margin-left: 8px; padding: 6px 10px; border: 1px solid currentColor; border-radius: 8px; background: transparent; color: inherit; cursor: pointer; }

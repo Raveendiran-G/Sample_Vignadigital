@@ -61,6 +61,7 @@ router.get('/public/menu/:slug', async (req, res) => {
     restaurant: {
       name: r.name, slug: r.slug, tagline: r.tagline, theme_color: r.theme_color, city: r.city, address: r.address,
       phone: r.contact_phone, logo: r.logo ? `/uploads/${r.logo}` : null,
+      upi_id: r.upi_id || '', upi_qr: r.upi_qr ? `/uploads/${r.upi_qr}` : null,
     },
     categories: m.sections.map(s => ({ id: s.id, name: s.name, items: s.items.map(svc.itemOut) })),
   });
@@ -124,9 +125,9 @@ const admin = express.Router();
 admin.use(auth('admin'));
 admin.get('/summary', async (req, res) => res.json(await svc.summary()));
 admin.get('/restaurants', async (req, res) => res.json({ restaurants: (await svc.listRestaurants()).map(svc.restaurantOut) }));
-admin.post('/restaurants', async (req, res) => res.status(201).json(svc.restaurantOut(await svc.createRestaurant(req.body))));
+admin.post('/restaurants', upload.single('upi_qr'), async (req, res) => res.status(201).json(svc.restaurantOut(await svc.createRestaurant({ ...req.body, upi_qr: req.file?.filename }))));
 admin.get('/restaurants/:id', async (req, res) => res.json(svc.restaurantOut(await svc.getRestaurant(id(req)))));
-admin.patch('/restaurants/:id', async (req, res) => res.json(svc.restaurantOut(await svc.updateRestaurant(id(req), req.body))));
+admin.patch('/restaurants/:id', upload.single('upi_qr'), async (req, res) => res.json(svc.restaurantOut(await svc.updateRestaurant(id(req), { ...req.body, upi_qr: req.file?.filename }))));
 admin.post('/restaurants/:id/password', async (req, res) => { await svc.resetOwnerPassword(id(req), req.body.password); res.status(204).end(); });
 // Generate a fresh password for the owner and return it (the only time it is returned unprompted).
 admin.post('/restaurants/:id/reset-password', async (req, res) => {
