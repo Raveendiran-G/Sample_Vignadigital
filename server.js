@@ -2,15 +2,63 @@ const { PORT, BASE_URL } = require('./lib/config');
 const db = require('./lib/db');
 const app = require('./app');
 
-(async () => {
-  await db.init(); // connect to MongoDB, create indexes, make sure the super admin exists
-  const server = app.listen(PORT, () => console.log(`Menu Card listening on :${PORT} (public URL ${BASE_URL})`));
+let initPromise;
 
-  // Graceful shutdown so in-flight requests finish and the database connection closes on deploys/restarts.
-  function shutdown(sig) {
-    console.log(`${sig} received, shutting down`);
-    server.close(async () => { await db.close(); process.exit(0); });
+function initializeDatabase() {
+if (!initPromise) {
+initPromise = db.init().catch((error) => {
+initPromise = null;
+throw error;
+});
+}
+
+return initPromise;
+}
+
+// Vercel serverless entry point
+if (process.env.VERCEL) {
+app.use(async (req, res, next) => {
+try {
+await initializeDatabase();
+next();
+} catch (error) {
+console.error('Database initialization failed:', error);
+res.status(500).json({ error: 'Database initialization failed' });
+}
+});
+
+module.exports = app;
+} else {
+// Local development / traditional server
+initializeDatabase()
+.then(() => {
+const server = app.listen(PORT, () => {
+console.log(
+`Menu Card listening on :${PORT} (public URL ${BASE_URL})`
+);
+});
+
+function shutdown(signal) {
+    console.log(`${signal} received, shutting down`);
+
+    server.close(async () => {
+      try {
+        await db.close();
+      } finally {
+        process.exit(0);
+      }
+    });
+
     setTimeout(() => process.exit(1), 10000).unref();
   }
-  ['SIGTERM', 'SIGINT'].forEach(s => process.on(s, () => shutdown(s)));
-})().catch(e => { console.error(e.message); process.exit(1); });
+
+  ['SIGTERM', 'SIGINT'].forEach((signal) => {
+    process.on(signal, () => shutdown(signal));
+  });
+})
+.catch((error) => {
+  console.error('Database initialization failed:', error);
+  process.exit(1);
+});
+
+}
