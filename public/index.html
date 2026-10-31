@@ -1,0 +1,750 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="theme-color" content="#f7f5f2">
+
+        <title>Vigna Digital | Digital Menus for Restaurants</title>
+
+        <meta name="description"
+            content="Create beautiful digital restaurant menus with QR codes. Update dishes, prices and photos instantly with Vigna Digital.">
+
+        <style>
+            :root {
+                --orange: #e7470b;
+                --orange-light: #fff0e8;
+                --dark: #171717;
+                --muted: #777;
+                --background: #f7f5f2;
+                --border: #e8e2dc;
+                --white: #fff;
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            html {
+                scroll-behavior: smooth;
+            }
+
+            body {
+                font-family: Arial, Helvetica, sans-serif;
+                background: var(--background);
+                color: var(--dark);
+            }
+
+            a {
+                text-decoration: none;
+                color: inherit;
+            }
+
+            button {
+                font: inherit;
+                cursor: pointer;
+            }
+
+            /* NAVBAR */
+
+            .navbar {
+                height: 65px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0 7%;
+                background: white;
+                border-bottom: 1px solid var(--border);
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+
+            .logo {
+                display: flex;
+                align-items: center;
+                gap: 9px;
+                font-size: 19px;
+                font-weight: 800;
+            }
+
+            .logo-icon {
+                background: var(--orange);
+                color: white;
+                width: 27px;
+                height: 27px;
+                display: grid;
+                place-items: center;
+                border-radius: 7px;
+                font-size: 15px;
+            }
+
+            .logo span:last-child {
+                color: var(--orange);
+            }
+
+            .nav-links {
+                display: flex;
+                align-items: center;
+                gap: 30px;
+                font-size: 13px;
+            }
+
+            .nav-links a:not(.login-btn) {
+                color: #666;
+            }
+
+            .nav-links a:hover {
+                color: var(--orange);
+            }
+
+            .login-btn {
+                background: var(--orange);
+                color: white;
+                padding: 11px 21px;
+                border-radius: 7px;
+                font-weight: 700;
+            }
+
+            /* HERO */
+
+            .hero {
+                min-height: 480px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 65px 20px 45px;
+                background:
+                    radial-gradient(
+                        circle at 75% 35%,
+                        #ffeadc 0,
+                        transparent 28%
+                    ),
+                    var(--background);
+            }
+
+            .hero-content {
+                width: 850px;
+                max-width: 100%;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                align-items: center;
+                gap: 65px;
+            }
+
+            .eyebrow {
+                color: var(--orange);
+                font-size: 11px;
+                font-weight: 800;
+                letter-spacing: 1.5px;
+                margin-bottom: 15px;
+            }
+
+            .hero h1 {
+                font-size: clamp(34px, 4vw, 49px);
+                line-height: 1.08;
+                letter-spacing: -1.8px;
+                margin-bottom: 17px;
+            }
+
+            .hero h1 span {
+                color: var(--orange);
+            }
+
+            .hero-description {
+                color: #777;
+                font-size: 14px;
+                line-height: 1.8;
+                max-width: 380px;
+                margin-bottom: 23px;
+            }
+
+            .primary-btn {
+                display: inline-block;
+                background: var(--orange);
+                color: white;
+                padding: 13px 23px;
+                border-radius: 8px;
+                font-size: 13px;
+                font-weight: 800;
+                transition: .2s;
+            }
+
+            .primary-btn:hover {
+                background: #c93906;
+                transform: translateY(-2px);
+            }
+
+            /* PHONE MOCKUP */
+
+            .hero-visual {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 310px;
+            }
+
+            .phone {
+                width: 190px;
+                height: 325px;
+                background: #171717;
+                border: 5px solid #171717;
+                border-radius: 29px;
+                padding: 6px;
+                transform: rotate(5deg);
+                box-shadow: 0 18px 35px #0003;
+                position: relative;
+            }
+
+            .phone-screen {
+                background: white;
+                width: 100%;
+                height: 100%;
+                border-radius: 19px;
+                overflow: hidden;
+            }
+
+            .phone-header {
+                background: var(--orange);
+                color: white;
+                padding: 16px 8px 12px;
+                text-align: center;
+                font-size: 13px;
+                font-weight: 800;
+            }
+
+            .phone-tabs {
+                display: flex;
+                justify-content: space-around;
+                padding: 10px 3px;
+                font-size: 9px;
+            }
+
+            .phone-tabs span:first-child {
+                background: var(--orange);
+                color: white;
+                padding: 5px 9px;
+                border-radius: 12px;
+            }
+
+            .food-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 7px;
+                padding: 7px;
+            }
+
+            .food {
+                background: #fff0e8;
+                border-radius: 9px;
+                padding: 11px 5px;
+                text-align: center;
+                font-size: 25px;
+            }
+
+            .food small {
+                display: block;
+                font-size: 9px;
+                font-weight: 700;
+                margin-top: 5px;
+            }
+
+            .food b {
+                display: block;
+                font-size: 9px;
+                color: var(--orange);
+                margin-top: 3px;
+            }
+
+            .qr-card {
+                position: absolute;
+                bottom: 12px;
+                left: -42px;
+                width: 75px;
+                height: 75px;
+                background: white;
+                border-radius: 9px;
+                box-shadow: 0 5px 18px #0002;
+                display: grid;
+                place-items: center;
+                font-size: 42px;
+            }
+
+            /* STEPS */
+
+            .steps-section {
+                padding: 35px 20px 42px;
+                text-align: center;
+                background: var(--background);
+            }
+
+            .section-title {
+                font-size: 22px;
+                margin-bottom: 24px;
+            }
+
+            .steps {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 12px;
+                width: 850px;
+                max-width: 100%;
+                margin: auto;
+                text-align: left;
+            }
+
+            .step-card {
+                background: white;
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                padding: 18px;
+            }
+
+            .step-number {
+                background: var(--orange);
+                color: white;
+                width: 25px;
+                height: 25px;
+                border-radius: 50%;
+                display: grid;
+                place-items: center;
+                font-size: 12px;
+                font-weight: 800;
+                margin-bottom: 12px;
+            }
+
+            .step-card h3 {
+                font-size: 14px;
+                margin-bottom: 8px;
+            }
+
+            .step-card p {
+                color: var(--muted);
+                font-size: 12px;
+                line-height: 1.6;
+            }
+
+            /* FEATURES */
+
+            .features-section {
+                background: white;
+                padding: 45px 20px;
+                text-align: center;
+                border-top: 1px solid var(--border);
+            }
+
+            .features {
+                width: 850px;
+                max-width: 100%;
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 12px;
+                margin: auto;
+            }
+
+            .feature-card {
+                background: #f8f6f3;
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                padding: 17px;
+                text-align: left;
+            }
+
+            .feature-card h3 {
+                font-size: 13px;
+                margin-bottom: 8px;
+            }
+
+            .feature-card p {
+                font-size: 12px;
+                line-height: 1.6;
+                color: var(--muted);
+            }
+
+            /* CTA */
+
+            .cta-section {
+                padding: 45px 20px;
+                border-top: 1px solid var(--border);
+                background: var(--background);
+            }
+
+            .cta {
+                width: 850px;
+                max-width: 100%;
+                margin: auto;
+                background: var(--orange);
+                color: white;
+                border-radius: 12px;
+                padding: 23px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 15px;
+            }
+
+            .cta h2 {
+                font-size: 19px;
+                margin-bottom: 7px;
+            }
+
+            .cta p {
+                font-size: 12px;
+            }
+
+            .cta a {
+                background: white;
+                color: var(--orange);
+                padding: 12px 22px;
+                border-radius: 8px;
+                font-weight: 800;
+                font-size: 13px;
+            }
+
+            /* FOOTER */
+
+            footer {
+                padding: 22px 20px;
+                border-top: 1px solid var(--border);
+                display: flex;
+                justify-content: center;
+                gap: 35px;
+                font-size: 11px;
+                color: #777;
+            }
+
+            /* MOBILE */
+
+            @media(max-width: 650px) {
+
+                .navbar {
+                    padding: 0 17px;
+                    height: 60px;
+                }
+
+                .logo {
+                    font-size: 16px;
+                }
+
+                .nav-links {
+                    gap: 13px;
+                    font-size: 11px;
+                }
+
+                .nav-links .optional {
+                    display: none;
+                }
+
+                .login-btn {
+                    padding: 9px 13px;
+                }
+
+                .hero {
+                    padding: 45px 22px 30px;
+                }
+
+                .hero-content {
+                    grid-template-columns: 1fr;
+                    gap: 20px;
+                    text-align: center;
+                }
+
+                .hero-description {
+                    margin-left: auto;
+                    margin-right: auto;
+                }
+
+                .hero-visual {
+                    min-height: 300px;
+                }
+
+                .steps,
+                .features {
+                    grid-template-columns: 1fr;
+                }
+
+                .cta {
+                    flex-direction: column;
+                    align-items: flex-start;
+                }
+
+                .cta a {
+                    align-self: flex-start;
+                }
+
+                footer {
+                    flex-wrap: wrap;
+                    gap: 15px;
+                }
+            }
+
+            @media(min-width: 651px) and (max-width: 850px) {
+                .hero-content {
+                    gap: 25px;
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <!-- NAVBAR -->
+
+        <header class="navbar">
+
+            <a href="/" class="logo">
+                <span class="logo-icon">▦</span>
+                <span>Vigna Digital <span>Menu</span></span>
+            </a>
+
+            <nav class="nav-links">
+                <a href="#how" class="optional">How it works</a>
+                <a href="#features" class="optional">Features</a>
+                <a href="/login" class="login-btn">Login</a>
+            </nav>
+
+        </header>
+
+
+        <!-- HERO -->
+
+        <section class="hero">
+
+            <div class="hero-content">
+
+                <div>
+
+                    <div class="eyebrow">
+                        DIGITAL MENUS FOR RESTAURANTS
+                    </div>
+
+                    <h1>
+                        Your whole menu,<br>
+                        one <span>scan</span> away.
+                    </h1>
+
+                    <p class="hero-description">
+                        Guests point their phone at a QR code on the table
+                        and see your menu as beautiful photo cards.
+                        You update dishes and prices in seconds,
+                        with no reprinting.
+                    </p>
+
+                    <a href="/login" class="primary-btn">
+                        Restaurant login
+                    </a>
+
+                </div>
+
+
+                <div class="hero-visual">
+
+                    <div class="phone">
+
+                        <div class="phone-screen">
+
+                            <div class="phone-header">
+                                Your Restaurant
+                            </div>
+
+                            <div class="phone-tabs">
+                                <span>Starters</span>
+                                <span>Main</span>
+                                <span>Desserts</span>
+                            </div>
+
+                            <div class="food-grid">
+
+                                <div class="food">
+                                    🍕
+                                    <small>Margherita</small>
+                                    <b>₹180</b>
+                                </div>
+
+                                <div class="food">
+                                    🍔
+                                    <small>Classic Burger</small>
+                                    <b>₹150</b>
+                                </div>
+
+                                <div class="food">
+                                    🥗
+                                    <small>Fresh Salad</small>
+                                    <b>₹120</b>
+                                </div>
+
+                                <div class="food">
+                                    🧁
+                                    <small>Chocolate Cake</small>
+                                    <b>₹90</b>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="qr-card">▦</div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- THREE STEPS -->
+
+        <section class="steps-section" id="how">
+
+            <h2 class="section-title">
+                Up and running in three steps
+            </h2>
+
+            <div class="steps">
+
+                <div class="step-card">
+
+                    <div class="step-number">1</div>
+
+                    <h3>Set up your account</h3>
+
+                    <p>
+                        Sign up and get your own dashboard login.
+                        Your restaurant gets a private menu page right away.
+                    </p>
+
+                </div>
+
+
+                <div class="step-card">
+
+                    <div class="step-number">2</div>
+
+                    <h3>Add your dishes</h3>
+
+                    <p>
+                        Create categories, add each item with a photo,
+                        name, description and price.
+                    </p>
+
+                </div>
+
+
+                <div class="step-card">
+
+                    <div class="step-number">3</div>
+
+                    <h3>Print the QR code</h3>
+
+                    <p>
+                        Download your QR code from the dashboard
+                        and place it on tables, counters or flyers.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- FEATURES -->
+
+        <section class="features-section" id="features">
+
+            <h2 class="section-title">
+                Everything a menu needs
+            </h2>
+
+            <div class="features">
+
+                <div class="feature-card">
+                    <h3>📱 Made for phones</h3>
+                    <p>
+                        A fast, thumb-friendly card grid that works
+                        on any screen, with no app to install.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>🖼️ Photo cards</h3>
+                    <p>
+                        Show off your dishes with images,
+                        descriptions and prices, grouped by category.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>⚡ Instant updates</h3>
+                    <p>
+                        Change a price or hide a sold-out dish
+                        and every guest sees it immediately.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>▦ Your own QR code</h3>
+                    <p>
+                        Download or print a high-resolution QR code
+                        that always points to your latest menu.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>🔐 Your own login</h3>
+                    <p>
+                        A private web dashboard for your team
+                        to manage the menu from any browser.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>📋 Tidy by category</h3>
+                    <p>
+                        Starters, mains, drinks and desserts.
+                        Guests jump straight to what they want.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- CTA -->
+
+        <section class="cta-section">
+
+            <div class="cta">
+
+                <div>
+                    <h2>Ready to go digital?</h2>
+
+                    <p>
+                        Already a customer? Sign in to manage your menu.
+                    </p>
+                </div>
+
+                <a href="/login">Login</a>
+
+            </div>
+
+        </section>
+
+
+        <!-- FOOTER -->
+
+        <footer>
+
+            <span>© 2026 Vigna Digital</span>
+
+            <a href="/login">Restaurant login</a>
+
+        </footer>
+
+    </body>
+    </html>

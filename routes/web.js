@@ -1,16 +1,56 @@
-// Page routes. The dashboards are static pages that talk to /api/v1; only the landing page is server-rendered.
-const router = require('express').Router();
+const express = require('express');
 const path = require('path');
+
 const svc = require('../lib/service');
 
-const file = name => path.join(__dirname, '..', 'public', name);
+const router = express.Router();
 
-router.get('/', (req, res) => res.render('landing', { contact: process.env.CONTACT_EMAIL || '' }));
-router.get('/login', (req, res) => res.sendFile(file('login.html')));
-router.get('/admin', (req, res) => res.sendFile(file('admin.html')));
-router.get('/api/docs', (req, res) => res.sendFile(file('api-docs.html')));
-router.get('/dashboard', (req, res) => res.sendFile(file('dashboard.html')));
-// The menu page loads its data from the API; a missing/inactive/expired menu gets a real 404 status.
-router.get('/m/:slug', async (req, res) => res.status(await svc.getMenu(req.params.slug) ? 200 : 404).sendFile(file('menu.html')));
+const publicDir = path.join(__dirname, '..', 'public');
+
+// Homepage
+router.get('/', (req, res) => {
+    res.sendFile(path.join(publicDir, 'index.html'));
+});
+
+// Login page
+router.get('/login', (req, res) => {
+    res.sendFile(path.join(publicDir, 'login.html'));
+});
+
+// Admin page
+router.get('/admin', (req, res) => {
+    res.sendFile(path.join(publicDir, 'admin.html'));
+});
+
+// Dashboard
+router.get('/dashboard', (req, res) => {
+    res.sendFile(path.join(publicDir, 'dashboard.html'));
+});
+
+// Kitchen page
+router.get('/kitchen', (req, res) => {
+    res.sendFile(path.join(publicDir, 'kitchen.html'));
+});
+
+// API documentation
+router.get('/api/docs', (req, res) => {
+    res.sendFile(path.join(publicDir, 'api-docs.html'));
+});
+
+// Customer restaurant menu
+router.get('/m/:slug', async (req, res, next) => {
+    try {
+        const menu = await svc.getMenu(req.params.slug);
+
+        if (!menu) {
+            return res.status(404).send('Menu not found');
+        }
+
+        res.sendFile(path.join(publicDir, 'menu.html'));
+
+    } catch (error) {
+        next(error);
+    }
+});
 
 module.exports = router;

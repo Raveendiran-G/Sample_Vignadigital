@@ -1,146 +1,423 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/style.css">
-<title>Dashboard · Digital Menu Card</title></head>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="/style.css">
+  <title>Dashboard · Digital Menu Card</title>
+  <style>
+    .page-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap
+    }
+
+    .orders-print-btn {
+      background: var(--brand);
+      color: var(--brand-ink);
+      border: 1px solid transparent;
+      border-radius: 10px;
+      padding: 10px 18px;
+      font: inherit;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background .15s
+    }
+
+    .orders-print-btn:hover {
+      background: var(--brand-600)
+    }
+
+    .orders-modal .modal-box {
+      background: #fff;
+      color: #172033;
+      border-radius: 16px;
+      max-width: 900px
+    }
+
+    .orders-modal .modal-head {
+      position: sticky;
+      top: -22px;
+      background: #fff;
+      z-index: 2;
+      padding: 6px 0 12px
+    }
+
+    .orders-tools {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 12px 0
+    }
+
+    .orders-tools button {
+      border-radius: 9px;
+      padding: 10px 13px;
+      transition: background .15s ease, border-color .15s ease, transform .15s ease
+    }
+
+    /* Keep the Orders / Print Bills palette aligned with the site's orange and deep-brown theme. */
+    .orders-modal .orders-tools button:not(.ghost):not(.danger) {
+      background: #f58220;
+      color: #fff;
+      border: 1px solid #f58220
+    }
+
+    .orders-modal .orders-tools button:not(.ghost):not(.danger):hover {
+      background: #df6b12;
+      border-color: #df6b12
+    }
+
+    .orders-modal .orders-tools button.ghost {
+      background: #f8eee7;
+      color: #63351f;
+      border: 1px solid #e8c9b5
+    }
+
+    .orders-modal .orders-tools button.ghost:hover {
+      background: #f1dfd2;
+      border-color: #d9a98a
+    }
+
+    .orders-modal .orders-tools button.danger {
+      background: #6f2c1d;
+      color: #fff;
+      border: 1px solid #6f2c1d
+    }
+
+    .orders-modal .orders-tools button.danger:hover {
+      background: #8a3822;
+      border-color: #8a3822
+    }
+
+    .orders-modal .orders-tools button:active,
+    .orders-modal .order-actions button:active {
+      transform: translateY(1px);
+      filter: brightness(.92)
+    }
+
+    .orders-modal .orders-tools button:focus-visible,
+    .orders-modal .order-actions button:focus-visible {
+      outline: 2px solid #f58220;
+      outline-offset: 2px
+    }
+
+    .orders-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px
+    }
+
+    .order-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 190px;
+      gap: 14px;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 12px;
+      background: #fff
+    }
+    #orderNotifications{position:fixed;top:18px;right:18px;z-index:100001;display:flex;flex-direction:column;gap:10px;width:min(360px,calc(100vw - 36px));pointer-events:none}
+    .order-notification{position:relative;display:flex;align-items:flex-start;padding:12px 38px 12px 14px;border:1px solid #bbf7d0;border-left:4px solid #16a34a;border-radius:10px;background:#f0fdf4;color:#14532d;box-shadow:0 10px 24px #0002;font:600 14px/1.35 system-ui,sans-serif;animation:orderNotificationIn .2s ease-out;pointer-events:auto}
+    .order-notification.prepared{border-color:#bfdbfe;border-left-color:#2563eb;background:#eff6ff;color:#1e3a8a}
+    .order-notification-close{position:absolute;top:4px;right:5px;width:28px;height:28px;border:0;background:transparent;color:inherit;font-size:20px;line-height:1;cursor:pointer}
+    @keyframes orderNotificationIn{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:translateX(0)}}
+
+    .order-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      align-content: start
+    }
+
+    .order-actions button {
+      padding: 10px 8px;
+      border-radius: 10px;
+      font-size: 12px;
+      border: 1px solid transparent;
+      transition: background .15s ease, transform .15s ease
+    }
+
+    .order-active {
+      background: #f58220;
+      color: #fff;
+      border-color: #f58220
+    }
+
+    .order-active:hover {
+      background: #df6b12
+    }
+
+    .order-prepared {
+      background: #b85c2a;
+      color: #fff;
+      border-color: #b85c2a
+    }
+
+    .order-prepared:hover {
+      background: #99471f
+    }
+
+    .order-print {
+      grid-column: 1/-1;
+      background: #4b2b20;
+      color: #fff;
+      border-color: #4b2b20
+    }
+
+    .order-print:hover {
+      background: #63351f
+    }
+
+    .order-meta {
+      font-size: 13px;
+      line-height: 1.65;
+      color: #334155
+    }
+
+    .order-title {
+      font-weight: 800;
+      color: #111827
+    }
+
+    @media(max-width:600px) {
+      .order-row {
+        grid-template-columns: 1fr
+      }
+
+      .order-actions {
+        grid-template-columns: 1fr 1fr
+      }
+
+      .order-print {
+        grid-column: 1/-1
+      }
+    }
+
+    @media print {
+      body * {
+        visibility: hidden
+      }
+
+      .receipt-print,
+      .receipt-print * {
+        visibility: visible
+      }
+
+      .receipt-print {
+        position: absolute;
+        inset: 0;
+        background: white
+      }
+    }
+  </style>
+</head>
+
 <body>
-<div class="shell">
-<aside class="side">
-  <div class="brand"><div class="mark" data-ico="menu"></div><div><span id="brandName">Restaurant</span><small>Menu dashboard</small></div></div>
-  <nav class="tabs" id="tabs">
-    <button class="on" data-tab="items" data-ico="list" data-title="Menu items" data-sub="Add dishes with a photo, price and category"><span>Menu items</span></button>
-    <button data-tab="categories" data-ico="tag" data-sub="Group your dishes, for example Starters or Drinks"><span>Categories</span></button>
-    <button data-tab="qr" data-ico="qr" data-title="QR code" data-sub="Guests scan this to open your menu on their phone"><span>QR code</span></button>
-    <button data-tab="details" data-ico="store" data-title="Restaurant details" data-sub="Branding, business information and password"><span>Restaurant details</span></button>
-  </nav>
-  <div class="spacer"></div>
-  <button class="logout" onclick="logout()" data-ico="logout"><span>Log out</span></button>
-</aside>
-<main class="main">
-  <div class="page-head"><h1 id="pageTitle">Menu items</h1><p id="pageSub">Add dishes with a photo, price and category</p></div>
-
-  <!-- MENU ITEMS -->
-  <section data-panel="items">
-    <div class="stats" id="itemStats"><div class="skel skel-stat"></div><div class="skel skel-stat"></div><div class="skel skel-stat"></div><div class="skel skel-stat"></div></div>
-    <div class="toolbar">
-      <div class="filters">
-        <input type="search" id="iSearch" placeholder="Search items…" aria-label="Search items">
-        <select id="iCat" aria-label="Filter by category"><option value="">All categories</option></select>
+  <div class="shell">
+    <aside class="side">
+      <div class="brand">
+        <div class="mark" data-ico="menu"></div>
+        <div><span id="brandName">Restaurant</span><small>Menu dashboard</small></div>
       </div>
-      <div class="actions"><div id="itemView"></div><button class="ghost" id="addMenu" data-ico="store">Add menu</button><button id="addItem" data-ico="plus">Add item</button></div>
-    </div>
-    <div id="itemList" class="items"><div class="skel skel-card"></div><div class="skel skel-card"></div><div class="skel skel-card"></div><div class="skel skel-card"></div></div>
-  </section>
-
-  <!-- CATEGORIES -->
-  <section data-panel="categories" class="hidden">
-    <form id="catForm" class="card">
-      <h3>Add a category</h3>
-      <div class="actions"><input name="name" placeholder="e.g. Starters, Main Course, Drinks" maxlength="40" required style="flex:1;min-width:200px" aria-label="Category name"><button class="lg">Add category</button></div>
-      <div class="err" id="catErr" role="alert"></div>
-    </form>
-    <div class="card"><h3>Your categories</h3><div class="table-wrap" id="catList"><div class="skel skel-row"></div><div class="skel skel-row"></div><div class="skel skel-row"></div></div></div>
-  </section>
-
-  <!-- QR -->
-  <section data-panel="qr" class="hidden">
-    <div class="grid2">
-      <div class="card"><div class="qr-box" id="qrBox"><img id="qrImg" alt="QR code for your menu"></div></div>
-      <div class="card">
-        <h3>Your menu link</h3>
-        <div class="secret" id="menuUrl"></div>
-        <div class="actions" style="margin-top:12px"><button class="ghost" id="copyUrl">Copy link</button><a class="btn ghost" id="openMenu" target="_blank" rel="noopener">Open menu</a></div>
-        <h3 style="margin-top:24px">Get your QR code</h3>
-        <label class="check" style="margin-top:0"><input type="checkbox" id="qrLogo" checked> Show my logo in the center of the QR code</label>
-        <p class="small muted" id="qrLogoNote" style="margin:4px 0 14px"></p>
-        <div class="actions"><a class="btn" id="dlQr" href="#">Download QR (PNG)</a><button class="ghost" id="dlPoster">Download table poster</button></div>
-        <div class="note">Print the poster and place it on tables. When you change your menu, the QR code stays the same.</div>
-        <p class="small muted" id="lanNote"></p>
+      <nav class="tabs" id="tabs">
+        <button class="on" data-tab="items" data-ico="list" data-title="Menu items"
+          data-sub="Add dishes with a photo, price and category"><span>Menu items</span></button>
+        <button data-tab="categories" data-ico="tag"
+          data-sub="Group your dishes, for example Starters or Drinks"><span>Categories</span></button>
+        <button data-tab="qr" data-ico="qr" data-title="QR code"
+          data-sub="Guests scan this to open your menu on their phone"><span>QR code</span></button>
+        <button data-tab="details" data-ico="store" data-title="Restaurant details"
+          data-sub="Branding, business information and password"><span>Restaurant details</span></button>
+        <button type="button" id="ordersPrintBillsSidebar" data-ico="list"><span>Orders / Print Bills</span></button>
+      </nav>
+      <div class="spacer"></div>
+      <button class="logout" onclick="logout()" data-ico="logout"><span>Log out</span></button>
+    </aside>
+    <main class="main">
+      <div class="page-head">
+        <div>
+          <h1 id="pageTitle">Menu items</h1>
+          <p id="pageSub">Add dishes with a photo, price and category</p>
+        </div><button type="button" id="ordersPrintBills" class="orders-print-btn">▤ Orders / Print Bills</button>
       </div>
-    </div>
-  </section>
 
-  <!-- DETAILS -->
-  <section data-panel="details" class="hidden">
-    <div class="subtabs">
-      <button type="button" data-subtab="branding" class="on">Branding</button>
-      <button type="button" data-subtab="business">Business information</button>
-      <button type="button" data-subtab="password">Change password</button>
-    </div>
-    <form id="pf">
-      <div class="card" data-subpanel="branding">
-        <h3>Branding</h3><p class="small muted">Shown at the top of your customer menu.</p>
-        <div class="row">
-          <div><label>Logo</label>
-            <div class="img-pick"><div class="thumb" id="logoPrev"></div><div><input type="file" id="logoFile" accept="image/png,image/jpeg,image/webp"><button type="button" class="ghost sm" id="logoRemove" style="margin-top:8px">Remove logo</button></div></div></div>
-          <div><label>Theme color</label><input type="color" name="theme_color"><label>Tagline</label><input name="tagline" maxlength="120" placeholder="Authentic family dining"></div>
+      <!-- MENU ITEMS -->
+      <section data-panel="items">
+        <div class="stats" id="itemStats">
+          <div class="skel skel-stat"></div>
+          <div class="skel skel-stat"></div>
+          <div class="skel skel-stat"></div>
+          <div class="skel skel-stat"></div>
         </div>
-        <div class="err pfErr" role="alert"></div><div class="card-foot"><button class="lg">Save details</button></div>
-      </div>
-      <div class="card hidden" data-subpanel="business">
-        <h3>Business information</h3>
-        <div class="row">
-          <div><label>Restaurant name</label><input name="name" required></div><div><label>Owner</label><input name="owner"></div>
-          <div><label>Phone shown on your menu <span class="muted small">· optional</span></label><input name="contact_phone" type="tel" maxlength="20"></div><div><label>City</label><input name="city"></div>
+        <div class="toolbar">
+          <div class="filters">
+            <input type="search" id="iSearch" placeholder="Search items…" aria-label="Search items">
+            <select id="iCat" aria-label="Filter by category">
+              <option value="">All categories</option>
+            </select>
+          </div>
+          <div class="actions">
+            <div id="itemView"></div><button class="ghost" id="addMenu" data-ico="store">Add menu</button><button
+              id="addItem" data-ico="plus">Add item</button>
+          </div>
         </div>
-        <label>Address</label><textarea name="address"></textarea>
-        <div class="row">
-          <div><label>Login mobile</label><input id="mobileRO" disabled></div>
-          <div><label>Login email</label><input id="emailRO" disabled></div>
+        <div id="itemList" class="items">
+          <div class="skel skel-card"></div>
+          <div class="skel skel-card"></div>
+          <div class="skel skel-card"></div>
+          <div class="skel skel-card"></div>
         </div>
-        <p class="small muted">To change your login mobile or email, contact support.</p>
-        <div class="err pfErr" role="alert"></div><div class="card-foot"><button class="lg">Save details</button></div>
-      </div>
-    </form>
-    <form id="pwf" class="card hidden" data-subpanel="password" autocomplete="off">
-      <h3>Change password</h3><p class="small muted">Choose something only you know. Use at least 8 characters.</p>
-      <div class="row">
-        <div><label>Current password</label><input type="password" name="current_password" required autocomplete="current-password"></div>
-        <div><label>New password</label><input type="password" name="new_password" minlength="8" required autocomplete="new-password"></div>
-        <div><label>Confirm new password</label><input type="password" name="confirm_password" minlength="8" required autocomplete="new-password"></div>
-      </div>
-      <div class="err" id="pwErr" role="alert"></div><div class="card-foot"><button class="lg">Update password</button></div>
-    </form>
-  </section>
-</main>
-</div>
-<script src="/app.js"></script>
-<script src="/menu-library.js"></script>
-<script>
-let profile, categories = [], items = [], logoData = null, logoRemoved = false;
-const thumbHtml = (img, name) => img ? `<img src="${esc(img)}" alt="" loading="lazy">` : esc((name || '?').trim().charAt(0).toUpperCase());
+      </section>
 
-// ---------- items ----------
-function renderItemStats() {
-  const on = items.filter((i) => i.available).length;
-  $('#itemStats').innerHTML = [['Total items', items.length, 'hl big'], ['Available', on], ['Hidden', items.length - on], ['Categories', categories.length]]
-    .map(([l, v, c]) => `<div class="stat ${c || ''}"><span>${l}</span><b>${v}</b></div>`).join('');
-}
-function renderItems() {
-  renderItemStats();
-  const q = $('#iSearch').value.trim().toLowerCase(), cat = $('#iCat').value;
-  const rows = items.filter((i) => (!cat || String(i.category_id) === cat) && (!q || i.name.toLowerCase().includes(q) || i.description.toLowerCase().includes(q)));
-  $('#itemList').innerHTML = rows.length ? rows.map((i) => `<div class="item ${i.available ? '' : 'off'}" style="--tc:${esc(profile.theme_color)}">
+      <!-- CATEGORIES -->
+      <section data-panel="categories" class="hidden">
+        <form id="catForm" class="card">
+          <h3>Add a category</h3>
+          <div class="actions"><input name="name" placeholder="e.g. Starters, Main Course, Drinks" maxlength="40"
+              required style="flex:1;min-width:200px" aria-label="Category name"><button class="lg">Add
+              category</button></div>
+          <div class="err" id="catErr" role="alert"></div>
+        </form>
+        <div class="card">
+          <h3>Your categories</h3>
+          <div class="table-wrap" id="catList">
+            <div class="skel skel-row"></div>
+            <div class="skel skel-row"></div>
+            <div class="skel skel-row"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- QR -->
+      <section data-panel="qr" class="hidden">
+        <div class="grid2">
+          <div class="card">
+            <div class="qr-box" id="qrBox"><img id="qrImg" alt="QR code for your menu"></div>
+          </div>
+          <div class="card">
+            <h3>Your menu link</h3>
+            <div class="secret" id="menuUrl"></div>
+            <div class="actions" style="margin-top:12px"><button class="ghost" id="copyUrl">Copy link</button><a
+                class="btn ghost" id="openMenu" target="_blank" rel="noopener">Open menu</a></div>
+            <h3 style="margin-top:24px">Get your QR code</h3>
+            <label class="check" style="margin-top:0"><input type="checkbox" id="qrLogo" checked> Show my logo in the
+              center of the QR code</label>
+            <p class="small muted" id="qrLogoNote" style="margin:4px 0 14px"></p>
+            <div class="actions"><a class="btn" id="dlQr" href="#">Download QR (PNG)</a><button class="ghost"
+                id="dlPoster">Download table poster</button></div>
+            <div class="note">Print the poster and place it on tables. When you change your menu, the QR code stays the
+              same.</div>
+            <p class="small muted" id="lanNote"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- DETAILS -->
+      <section data-panel="details" class="hidden">
+        <div class="subtabs">
+          <button type="button" data-subtab="branding" class="on">Branding</button>
+          <button type="button" data-subtab="business">Business information</button>
+          <button type="button" data-subtab="password">Change password</button>
+        </div>
+        <form id="pf">
+          <div class="card" data-subpanel="branding">
+            <h3>Branding</h3>
+            <p class="small muted">Shown at the top of your customer menu.</p>
+            <div class="row">
+              <div><label>Logo</label>
+                <div class="img-pick">
+                  <div class="thumb" id="logoPrev"></div>
+                  <div><input type="file" id="logoFile" accept="image/png,image/jpeg,image/webp"><button type="button"
+                      class="ghost sm" id="logoRemove" style="margin-top:8px">Remove logo</button></div>
+                </div>
+              </div>
+              <div><label>Theme color</label><input type="color" name="theme_color"><label>Tagline</label><input
+                  name="tagline" maxlength="120" placeholder="Authentic family dining"></div>
+            </div>
+            <div class="err pfErr" role="alert"></div>
+            <div class="card-foot"><button class="lg">Save details</button></div>
+          </div>
+          <div class="card hidden" data-subpanel="business">
+            <h3>Business information</h3>
+            <div class="row">
+              <div><label>Restaurant name</label><input name="name" required></div>
+              <div><label>Owner</label><input name="owner"></div>
+              <div><label>Phone shown on your menu <span class="muted small">· optional</span></label><input
+                  name="contact_phone" type="tel" maxlength="20"></div>
+              <div><label>City</label><input name="city"></div>
+            </div>
+            <label>Address</label><textarea name="address"></textarea>
+            <div class="row">
+              <div><label>Login mobile</label><input id="mobileRO" disabled></div>
+              <div><label>Login email</label><input id="emailRO" disabled></div>
+            </div>
+            <p class="small muted">To change your login mobile or email, contact support.</p>
+            <div class="err pfErr" role="alert"></div>
+            <div class="card-foot"><button class="lg">Save details</button></div>
+          </div>
+        </form>
+        <form id="pwf" class="card hidden" data-subpanel="password" autocomplete="off">
+          <h3>Change password</h3>
+          <p class="small muted">Choose something only you know. Use at least 8 characters.</p>
+          <div class="row">
+            <div><label>Current password</label><input type="password" name="current_password" required
+                autocomplete="current-password"></div>
+            <div><label>New password</label><input type="password" name="new_password" minlength="8" required
+                autocomplete="new-password"></div>
+            <div><label>Confirm new password</label><input type="password" name="confirm_password" minlength="8"
+                required autocomplete="new-password"></div>
+          </div>
+          <div class="err" id="pwErr" role="alert"></div>
+          <div class="card-foot"><button class="lg">Update password</button></div>
+        </form>
+      </section>
+    </main>
+  </div>
+  <script src="/app.js"></script>
+  <script src="/menu-library.js"></script>
+  <script>
+    let profile, categories = [], items = [], logoData = null, logoRemoved = false;
+    const thumbHtml = (img, name) => img ? `<img src="${esc(img)}" alt="" loading="lazy">` : esc((name || '?').trim().charAt(0).toUpperCase());
+
+    // ---------- items ----------
+    function renderItemStats() {
+      const on = items.filter((i) => i.available).length;
+      $('#itemStats').innerHTML = [['Total items', items.length, 'hl big'], ['Available', on], ['Hidden', items.length - on], ['Categories', categories.length]]
+        .map(([l, v, c]) => `<div class="stat ${c || ''}"><span>${l}</span><b>${v}</b></div>`).join('');
+    }
+    function renderItems() {
+      renderItemStats();
+      const q = $('#iSearch').value.trim().toLowerCase(), cat = $('#iCat').value;
+      const rows = items.filter((i) => (!cat || String(i.category_id) === cat) && (!q || i.name.toLowerCase().includes(q) || i.description.toLowerCase().includes(q)));
+      $('#itemList').innerHTML = rows.length ? rows.map((i) => `<div class="item ${i.available ? '' : 'off'}" style="--tc:${esc(profile.theme_color)}">
     <div class="thumb">${thumbHtml(i.image, i.name)}</div>
     <div class="item-body"><div class="nm">${esc(i.name)}</div><div><span class="pill">${esc(i.category)}</span> ${i.available ? '' : '<span class="pill warn">Hidden</span>'}</div>
       <div class="ds">${esc(i.description)}</div><div class="price">${rupees(i.price)}</div>
       <div class="item-foot"><button class="sm ghost" data-act="edit" data-id="${i.id}">Edit</button><button class="sm ghost" data-act="toggle" data-id="${i.id}">${i.available ? 'Hide' : 'Show'}</button><button class="sm danger" data-act="del" data-id="${i.id}">Delete</button></div></div></div>`).join('')
-    : `<div class="card empty" style="grid-column:1/-1">${items.length ? 'No items match your search.' : 'No items yet. Click “Add item” to create your first dish.'}</div>`;
-}
-function fillCategoryFilter() {
-  const cur = $('#iCat').value;
-  $('#iCat').innerHTML = '<option value="">All categories</option>' + categories.map((c) => `<option value="${c.id}">${esc(c.name)}</option>`).join('');
-  $('#iCat').value = cur;
-}
-async function loadAll() {
-  const [c, i] = await Promise.all([api('/api/v1/categories'), api('/api/v1/items')]);
-  categories = c.categories; items = i.items;
-  fillCategoryFilter(); renderItems(); renderCategories();
-}
-['input', 'change'].forEach((ev) => ['#iSearch', '#iCat'].forEach((id) => $(id).addEventListener(ev, renderItems)));
+        : `<div class="card empty" style="grid-column:1/-1">${items.length ? 'No items match your search.' : 'No items yet. Click “Add item” to create your first dish.'}</div>`;
+    }
+    function fillCategoryFilter() {
+      const cur = $('#iCat').value;
+      $('#iCat').innerHTML = '<option value="">All categories</option>' + categories.map((c) => `<option value="${c.id}">${esc(c.name)}</option>`).join('');
+      $('#iCat').value = cur;
+    }
+    async function loadAll() {
+      const [c, i] = await Promise.all([api('/api/v1/categories'), api('/api/v1/items')]);
+      categories = c.categories; items = i.items;
+      fillCategoryFilter(); renderItems(); renderCategories();
+    }
+    ['input', 'change'].forEach((ev) => ['#iSearch', '#iCat'].forEach((id) => $(id).addEventListener(ev, renderItems)));
 
-function itemModal(item) {
-  if (!categories.length) { toast('Create a category first'); showTab('categories'); return; }
-  let image, removeImg = false;
-  const m = openModal({ title: item ? 'Edit item' : 'Add item', wide: true, html: `
+    function itemModal(item) {
+      if (!categories.length) { toast('Create a category first'); showTab('categories'); return; }
+      let image, removeImg = false;
+      const m = openModal({
+        title: item ? 'Edit item' : 'Add item', wide: true, html: `
     <form id="itemForm">
       <div class="img-pick"><div class="thumb" id="ipPrev" style="--tc:${esc(profile.theme_color)}">${thumbHtml(item?.image, item?.name || '?')}</div>
         <div><input type="file" id="ipFile" accept="image/png,image/jpeg,image/webp"><button type="button" class="ghost sm" id="ipRemove" style="margin-top:8px">Remove image</button><div class="small muted" style="margin-top:6px">Photos are resized automatically.</div></div></div>
@@ -154,135 +431,704 @@ function itemModal(item) {
       <div class="err" id="itemErr" role="alert"></div>
       <div class="card-foot"><button type="button" class="ghost" data-close>Cancel</button><button id="itemSave">${item ? 'Save changes' : 'Add item'}</button></div>
     </form>` });
-  const prev = $('#ipPrev', m);
-  $('#ipFile', m).addEventListener('change', async (e) => {
-    const f = e.target.files[0]; if (!f) return;
-    try { image = await resizeImage(f); removeImg = false; prev.innerHTML = `<img src="${image}" alt="">`; } catch (er) { $('#itemErr', m).textContent = er.message; }
-  });
-  $('#ipRemove', m).addEventListener('click', () => { image = undefined; removeImg = true; prev.textContent = ($('[name=name]', m).value || '?').trim().charAt(0).toUpperCase(); $('#ipFile', m).value = ''; });
-  $('#itemForm', m).addEventListener('submit', async (e) => {
-    e.preventDefault(); $('#itemErr', m).textContent = ''; $('#itemSave', m).disabled = true;
-    const f = e.target.elements;
-    const body = { name: f.name.value, price: f.price.value, category_id: f.category_id.value, description: f.description.value, available: f.available.checked, image, remove_image: removeImg };
-    try { await api(item ? `/api/v1/items/${item.id}` : '/api/v1/items', item ? 'PUT' : 'POST', body); closeModal(); toast(item ? 'Item saved' : 'Item added'); await loadAll(); }
-    catch (er) { $('#itemErr', m).textContent = er.message; $('#itemSave', m).disabled = false; }
-  });
-}
-$('#addItem').addEventListener('click', () => itemModal(null));
-$('#addMenu').addEventListener('click', () => MenuLibrary.open({ base: '/api/v1', onDone: loadAll }));
-$('#itemList').addEventListener('click', async (e) => {
-  const b = e.target.closest('button[data-act]'); if (!b) return;
-  const i = items.find((x) => x.id == b.dataset.id);
-  try {
-    if (b.dataset.act === 'edit') itemModal(i);
-    else if (b.dataset.act === 'toggle') { await api(`/api/v1/items/${i.id}/availability`, 'PATCH', { available: !i.available }); await loadAll(); toast(i.available ? 'Item hidden from menu' : 'Item is visible again'); }
-    else if (await confirmDialog({ title: 'Delete this item?', message: `"${i.name}" will be removed from your menu. This can't be undone.`, confirmText: 'Delete item', danger: true })) { await api(`/api/v1/items/${i.id}`, 'DELETE'); await loadAll(); toast('Item deleted'); }
-  } catch (er) { toast(er.message); }
-});
-
-// ---------- categories ----------
-function renderCategories() {
-  $('#catList').innerHTML = categories.length ? `<table><thead><tr><th>Category</th><th>Items</th><th>Action</th></tr></thead><tbody>${categories.map((c) => `<tr><td><b>${esc(c.name)}</b></td><td>${c.items}</td>
-    <td><div class="actions"><button class="sm ghost" data-cat-edit="${c.id}">Rename</button><button class="sm danger" data-cat-del="${c.id}">Delete</button></div></td></tr>`).join('')}</tbody></table>`
-    : '<p class="empty">No categories yet. Add your first one above.</p>';
-}
-$('#catForm').addEventListener('submit', async (e) => {
-  e.preventDefault(); $('#catErr').textContent = '';
-  try { await api('/api/v1/categories', 'POST', { name: e.target.elements.name.value }); e.target.reset(); await loadAll(); toast('Category added'); }
-  catch (er) { $('#catErr').textContent = er.message; }
-});
-$('#catList').addEventListener('click', async (e) => {
-  const ed = e.target.closest('[data-cat-edit]'), del = e.target.closest('[data-cat-del]');
-  if (ed) {
-    const c = categories.find((x) => x.id == ed.dataset.catEdit);
-    const m = openModal({ title: 'Rename category', html: `<form id="renForm"><label style="margin-top:0">Name</label><input name="name" value="${esc(c.name)}" maxlength="40" required><div class="err" id="renErr" role="alert"></div><div class="card-foot"><button type="button" class="ghost" data-close>Cancel</button><button>Save</button></div></form>` });
-    $('#renForm', m).addEventListener('submit', async (ev) => {
-      ev.preventDefault();
-      try { await api(`/api/v1/categories/${c.id}`, 'PUT', { name: ev.target.elements.name.value }); closeModal(); await loadAll(); toast('Category renamed'); } catch (er) { $('#renErr', m).textContent = er.message; }
-    });
-  } else if (del) {
-    const c = categories.find((x) => x.id == del.dataset.catDel);
-    if (await confirmDialog({ title: 'Delete this category?', message: `"${c.name}" will be removed.`, confirmText: 'Delete category', danger: true })) {
-      try { await api(`/api/v1/categories/${c.id}`, 'DELETE'); await loadAll(); toast('Category deleted'); } catch (er) { toast(er.message); }
+      const prev = $('#ipPrev', m);
+      $('#ipFile', m).addEventListener('change', async (e) => {
+        const f = e.target.files[0]; if (!f) return;
+        try { image = await resizeImage(f); removeImg = false; prev.innerHTML = `<img src="${image}" alt="">`; } catch (er) { $('#itemErr', m).textContent = er.message; }
+      });
+      $('#ipRemove', m).addEventListener('click', () => { image = undefined; removeImg = true; prev.textContent = ($('[name=name]', m).value || '?').trim().charAt(0).toUpperCase(); $('#ipFile', m).value = ''; });
+      $('#itemForm', m).addEventListener('submit', async (e) => {
+        e.preventDefault(); $('#itemErr', m).textContent = ''; $('#itemSave', m).disabled = true;
+        const f = e.target.elements;
+        const body = { name: f.name.value, price: f.price.value, category_id: f.category_id.value, description: f.description.value, available: f.available.checked, image, remove_image: removeImg };
+        try { await api(item ? `/api/v1/items/${item.id}` : '/api/v1/items', item ? 'PUT' : 'POST', body); closeModal(); toast(item ? 'Item saved' : 'Item added'); await loadAll(); }
+        catch (er) { $('#itemErr', m).textContent = er.message; $('#itemSave', m).disabled = false; }
+      });
     }
-  }
-});
+    $('#addItem').addEventListener('click', () => itemModal(null));
+    $('#addMenu').addEventListener('click', () => MenuLibrary.open({ base: '/api/v1', onDone: loadAll }));
+    $('#itemList').addEventListener('click', async (e) => {
+      const b = e.target.closest('button[data-act]'); if (!b) return;
+      const i = items.find((x) => x.id == b.dataset.id);
+      try {
+        if (b.dataset.act === 'edit') itemModal(i);
+        else if (b.dataset.act === 'toggle') { await api(`/api/v1/items/${i.id}/availability`, 'PATCH', { available: !i.available }); await loadAll(); toast(i.available ? 'Item hidden from menu' : 'Item is visible again'); }
+        else if (await confirmDialog({ title: 'Delete this item?', message: `"${i.name}" will be removed from your menu. This can't be undone.`, confirmText: 'Delete item', danger: true })) { await api(`/api/v1/items/${i.id}`, 'DELETE'); await loadAll(); toast('Item deleted'); }
+      } catch (er) { toast(er.message); }
+    });
 
-// ---------- QR ----------
-const loadImg = (src) => new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => rej(new Error('Could not load image')); i.src = src; });
-// The QR code as a canvas, with the restaurant's logo in the middle when it has one and the box is ticked.
-// Logo side = 22% of the code (under 5% of its area) on a white plate, with error correction level H, so it still scans.
-async function makeQr(size) {
-  const logoOn = !!profile.logo && $('#qrLogo').checked;
-  const c = document.createElement('canvas'); c.width = c.height = size; const g = c.getContext('2d');
-  g.drawImage(await loadImg(`/api/v1/qr.png?size=${size}${logoOn ? '&level=H' : ''}&v=${Date.now()}`), 0, 0, size, size);
-  if (logoOn) {
-    const logo = await loadImg(profile.logo), box = Math.round(size * 0.22), at = Math.round((size - box) / 2), pad = Math.round(box * 0.1);
-    g.fillStyle = '#fff'; g.beginPath(); g.roundRect(at, at, box, box, box * 0.18); g.fill();
-    const k = Math.min((box - 2 * pad) / logo.width, (box - 2 * pad) / logo.height), w = logo.width * k, h = logo.height * k;
-    g.drawImage(logo, (size - w) / 2, (size - h) / 2, w, h);
-  }
-  return c;
-}
-async function renderQr() {
-  $('#qrBox').classList.add('skel'); const qr = $('#qrImg'); qr.style.opacity = 0;
-  $('#qrLogo').disabled = !profile.logo;
-  $('#qrLogoNote').textContent = profile.logo ? 'Keeps the code scannable. Untick it if you prefer the plain code.' : 'Add a logo under Restaurant details to show it in the center of the QR code.';
-  try { qr.src = (await makeQr(640)).toDataURL('image/png'); } catch { qr.src = `/api/v1/qr.png?size=640&v=${Date.now()}`; }
-  $('#qrBox').classList.remove('skel'); qr.style.opacity = 1;
-  $('#menuUrl').textContent = profile.menu_url; $('#openMenu').href = profile.menu_url;
-  $('#lanNote').textContent = /localhost|127\.0\.0\.1/.test(profile.menu_url) ? 'Tip: this QR points to a local address, so phones cannot open it. Set BASE_URL to your real web address when you deploy.' : '';
-}
-$('#qrLogo').addEventListener('change', renderQr);
-$('#dlQr').addEventListener('click', async (e) => {
-  e.preventDefault();
-  try { const a = document.createElement('a'); a.href = (await makeQr(1500)).toDataURL('image/png'); a.download = `${profile.slug}-menu-qr.png`; a.click(); }
-  catch (er) { toast(er.message); }
-});
-$('#copyUrl').addEventListener('click', () => copyText(profile.menu_url));
-$('#dlPoster').addEventListener('click', async () => {
-  const W = 1200, H = 1600, c = document.createElement('canvas'); c.width = W; c.height = H; const g = c.getContext('2d');
-  g.fillStyle = profile.theme_color; g.fillRect(0, 0, W, H); g.fillStyle = '#fff'; g.beginPath(); g.roundRect(90, 330, W - 180, 1000, 48); g.fill();
-  g.drawImage(await makeQr(900), 150, 400, 900, 900);
-  g.textAlign = 'center'; g.fillStyle = '#fff'; g.font = '800 84px Inter, system-ui, sans-serif'; g.fillText(profile.name.length > 22 ? profile.name.slice(0, 21) + '…' : profile.name, W / 2, 200);
-  g.font = '500 42px Inter, system-ui, sans-serif'; g.globalAlpha = .9; g.fillText('Scan to view our menu', W / 2, 270); g.globalAlpha = 1;
-  g.font = '500 30px Inter, system-ui, sans-serif'; g.fillText(profile.menu_url.replace(/^https?:\/\//, ''), W / 2, 1440);
-  const a = document.createElement('a'); a.href = c.toDataURL('image/png'); a.download = `${profile.slug}-table-poster.png`; a.click();
-});
+    // ---------- categories ----------
+    function renderCategories() {
+      $('#catList').innerHTML = categories.length ? `<table><thead><tr><th>Category</th><th>Items</th><th>Action</th></tr></thead><tbody>${categories.map((c) => `<tr><td><b>${esc(c.name)}</b></td><td>${c.items}</td>
+    <td><div class="actions"><button class="sm ghost" data-cat-edit="${c.id}">Rename</button><button class="sm danger" data-cat-del="${c.id}">Delete</button></div></td></tr>`).join('')}</tbody></table>`
+        : '<p class="empty">No categories yet. Add your first one above.</p>';
+    }
+    $('#catForm').addEventListener('submit', async (e) => {
+      e.preventDefault(); $('#catErr').textContent = '';
+      try { await api('/api/v1/categories', 'POST', { name: e.target.elements.name.value }); e.target.reset(); await loadAll(); toast('Category added'); }
+      catch (er) { $('#catErr').textContent = er.message; }
+    });
+    $('#catList').addEventListener('click', async (e) => {
+      const ed = e.target.closest('[data-cat-edit]'), del = e.target.closest('[data-cat-del]');
+      if (ed) {
+        const c = categories.find((x) => x.id == ed.dataset.catEdit);
+        const m = openModal({ title: 'Rename category', html: `<form id="renForm"><label style="margin-top:0">Name</label><input name="name" value="${esc(c.name)}" maxlength="40" required><div class="err" id="renErr" role="alert"></div><div class="card-foot"><button type="button" class="ghost" data-close>Cancel</button><button>Save</button></div></form>` });
+        $('#renForm', m).addEventListener('submit', async (ev) => {
+          ev.preventDefault();
+          try { await api(`/api/v1/categories/${c.id}`, 'PUT', { name: ev.target.elements.name.value }); closeModal(); await loadAll(); toast('Category renamed'); } catch (er) { $('#renErr', m).textContent = er.message; }
+        });
+      } else if (del) {
+        const c = categories.find((x) => x.id == del.dataset.catDel);
+        if (await confirmDialog({ title: 'Delete this category?', message: `"${c.name}" will be removed.`, confirmText: 'Delete category', danger: true })) {
+          try { await api(`/api/v1/categories/${c.id}`, 'DELETE'); await loadAll(); toast('Category deleted'); } catch (er) { toast(er.message); }
+        }
+      }
+    });
 
-// ---------- details ----------
-function fillProfile() {
-  $('#brandName').textContent = profile.name.length > 18 ? profile.name.slice(0, 17) + '…' : profile.name;
-  const f = $('#pf').elements; for (const k of ['name', 'owner', 'contact_phone', 'city', 'address', 'tagline', 'theme_color']) f[k].value = profile[k] || '';
-  $('#mobileRO').value = profile.owner_mobile || ''; $('#emailRO').value = profile.owner_email || ''; logoData = null; logoRemoved = false; showLogo(profile.logo);
-}
-function showLogo(src) { const p = $('#logoPrev'); p.style.setProperty('--tc', profile.theme_color); p.innerHTML = src ? `<img src="${esc(src)}" alt="" style="object-fit:contain;background:#fff">` : esc(profile.name.charAt(0).toUpperCase()); }
-$('#logoFile').addEventListener('change', async (e) => {
-  const f = e.target.files[0]; if (!f) return;
-  try { logoData = await resizeImage(f, { max: 400, type: 'image/png' }); logoRemoved = false; showLogo(logoData); } catch (er) { toast(er.message); }
-});
-$('#logoRemove').addEventListener('click', () => { logoData = null; logoRemoved = true; $('#logoFile').value = ''; showLogo(null); });
-$('#pf').addEventListener('submit', async (e) => {
-  e.preventDefault(); document.querySelectorAll('.pfErr').forEach((x) => (x.textContent = ''));
-  try {
-    const body = { ...Object.fromEntries(new FormData(e.target)), logo: logoData || undefined, remove_logo: logoRemoved };
-    profile = await api('/api/v1/restaurant', 'PATCH', body); fillProfile(); toast('Details saved'); renderItems();
-  } catch (er) { document.querySelectorAll('.pfErr').forEach((x) => (x.textContent = er.message)); }
-});
-$('#pwf').addEventListener('submit', async (e) => {
-  e.preventDefault(); $('#pwErr').textContent = ''; const f = Object.fromEntries(new FormData(e.target));
-  if (f.new_password !== f.confirm_password) { $('#pwErr').textContent = 'New passwords do not match'; return; }
-  try { await api('/api/v1/auth/password', 'POST', f); e.target.reset(); toast('Password updated'); } catch (er) { $('#pwErr').textContent = er.message; }
-});
+    // ---------- QR ----------
+    const loadImg = (src) => new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => rej(new Error('Could not load image')); i.src = src; });
+    // The QR code as a canvas, with the restaurant's logo in the middle when it has one and the box is ticked.
+    // Logo side = 22% of the code (under 5% of its area) on a white plate, with error correction level H, so it still scans.
+    async function makeQr(size) {
+      const logoOn = !!profile.logo && $('#qrLogo').checked;
+      const c = document.createElement('canvas'); c.width = c.height = size; const g = c.getContext('2d');
+      g.drawImage(await loadImg(`/api/v1/qr.png?size=${size}${logoOn ? '&level=H' : ''}&v=${Date.now()}`), 0, 0, size, size);
+      if (logoOn) {
+        const logo = await loadImg(profile.logo), box = Math.round(size * 0.22), at = Math.round((size - box) / 2), pad = Math.round(box * 0.1);
+        g.fillStyle = '#fff'; g.beginPath(); g.roundRect(at, at, box, box, box * 0.18); g.fill();
+        const k = Math.min((box - 2 * pad) / logo.width, (box - 2 * pad) / logo.height), w = logo.width * k, h = logo.height * k;
+        g.drawImage(logo, (size - w) / 2, (size - h) / 2, w, h);
+      }
+      return c;
+    }
+    async function renderQr() {
+      $('#qrBox').classList.add('skel'); const qr = $('#qrImg'); qr.style.opacity = 0;
+      $('#qrLogo').disabled = !profile.logo;
+      $('#qrLogoNote').textContent = profile.logo ? 'Keeps the code scannable. Untick it if you prefer the plain code.' : 'Add a logo under Restaurant details to show it in the center of the QR code.';
+      try { qr.src = (await makeQr(640)).toDataURL('image/png'); } catch { qr.src = `/api/v1/qr.png?size=640&v=${Date.now()}`; }
+      $('#qrBox').classList.remove('skel'); qr.style.opacity = 1;
+      $('#menuUrl').textContent = profile.menu_url; $('#openMenu').href = profile.menu_url;
+      $('#lanNote').textContent = /localhost|127\.0\.0\.1/.test(profile.menu_url) ? 'Tip: this QR points to a local address, so phones cannot open it. Set BASE_URL to your real web address when you deploy.' : '';
+    }
+    $('#qrLogo').addEventListener('change', renderQr);
+    $('#dlQr').addEventListener('click', async (e) => {
+      e.preventDefault();
+      try { const a = document.createElement('a'); a.href = (await makeQr(1500)).toDataURL('image/png'); a.download = `${profile.slug}-menu-qr.png`; a.click(); }
+      catch (er) { toast(er.message); }
+    });
+    $('#copyUrl').addEventListener('click', () => copyText(profile.menu_url));
+    $('#dlPoster').addEventListener('click', async () => {
+      const W = 1200, H = 1600, c = document.createElement('canvas'); c.width = W; c.height = H; const g = c.getContext('2d');
+      g.fillStyle = profile.theme_color; g.fillRect(0, 0, W, H); g.fillStyle = '#fff'; g.beginPath(); g.roundRect(90, 330, W - 180, 1000, 48); g.fill();
+      g.drawImage(await makeQr(900), 150, 400, 900, 900);
+      g.textAlign = 'center'; g.fillStyle = '#fff'; g.font = '800 84px Inter, system-ui, sans-serif'; g.fillText(profile.name.length > 22 ? profile.name.slice(0, 21) + '…' : profile.name, W / 2, 200);
+      g.font = '500 42px Inter, system-ui, sans-serif'; g.globalAlpha = .9; g.fillText('Scan to view our menu', W / 2, 270); g.globalAlpha = 1;
+      g.font = '500 30px Inter, system-ui, sans-serif'; g.fillText(profile.menu_url.replace(/^https?:\/\//, ''), W / 2, 1440);
+      const a = document.createElement('a'); a.href = c.toDataURL('image/png'); a.download = `${profile.slug}-table-poster.png`; a.click();
+    });
 
-viewToggle($('#itemView'), 'dm_view_items', (m) => $('#itemList').classList.toggle('as-list', m === 'list'));
+    // ---------- details ----------
+    function fillProfile() {
+      $('#brandName').textContent = profile.name.length > 18 ? profile.name.slice(0, 17) + '…' : profile.name;
+      const f = $('#pf').elements; for (const k of ['name', 'owner', 'contact_phone', 'city', 'address', 'tagline', 'theme_color']) f[k].value = profile[k] || '';
+      $('#mobileRO').value = profile.owner_mobile || ''; $('#emailRO').value = profile.owner_email || ''; logoData = null; logoRemoved = false; showLogo(profile.logo);
+    }
+    function showLogo(src) { const p = $('#logoPrev'); p.style.setProperty('--tc', profile.theme_color); p.innerHTML = src ? `<img src="${esc(src)}" alt="" style="object-fit:contain;background:#fff">` : esc(profile.name.charAt(0).toUpperCase()); }
+    $('#logoFile').addEventListener('change', async (e) => {
+      const f = e.target.files[0]; if (!f) return;
+      try { logoData = await resizeImage(f, { max: 400, type: 'image/png' }); logoRemoved = false; showLogo(logoData); } catch (er) { toast(er.message); }
+    });
+    $('#logoRemove').addEventListener('click', () => { logoData = null; logoRemoved = true; $('#logoFile').value = ''; showLogo(null); });
+    $('#pf').addEventListener('submit', async (e) => {
+      e.preventDefault(); document.querySelectorAll('.pfErr').forEach((x) => (x.textContent = ''));
+      try {
+        const body = { ...Object.fromEntries(new FormData(e.target)), logo: logoData || undefined, remove_logo: logoRemoved };
+        profile = await api('/api/v1/restaurant', 'PATCH', body); fillProfile(); toast('Details saved'); renderItems();
+      } catch (er) { document.querySelectorAll('.pfErr').forEach((x) => (x.textContent = er.message)); }
+    });
+    $('#pwf').addEventListener('submit', async (e) => {
+      e.preventDefault(); $('#pwErr').textContent = ''; const f = Object.fromEntries(new FormData(e.target));
+      if (f.new_password !== f.confirm_password) { $('#pwErr').textContent = 'New passwords do not match'; return; }
+      try { await api('/api/v1/auth/password', 'POST', f); e.target.reset(); toast('Password updated'); } catch (er) { $('#pwErr').textContent = er.message; }
+    });
 
-let showTab;
-(async () => {
-  await requireRole('owner');
-  profile = await api('/api/v1/restaurant'); fillProfile(); renderQr();
-  subTabs(); await loadAll();
-  showTab = tabs($('#tabs'), (n) => { if (n === 'qr') renderQr(); });
-})();
-</script>
-</body></html>
+    // ---------- Orders / Print Bills ----------
+
+    const orderMoney = n =>
+      '₹' + Number(n || 0).toFixed(2);
+
+    let cachedOrders = [];
+    const orderNotificationKeys = new Set();
+    function showOrderNotification(orderNumber, status, orderId) {
+      const key = `${orderId}:${status}`;
+      if (orderNotificationKeys.has(key)) return;
+      orderNotificationKeys.add(key);
+      let stack = document.getElementById('orderNotifications');
+      if (!stack) {
+        stack = document.createElement('div');
+        stack.id = 'orderNotifications';
+        stack.setAttribute('aria-live', 'polite');
+        stack.setAttribute('aria-label', 'Order updates');
+        document.body.appendChild(stack);
+      }
+      const item = document.createElement('div');
+      item.className = `order-notification${status === 'Ready' ? ' prepared' : ''}`;
+      item.innerHTML = `<span>${safeOrderText(status === 'Ready' ? `Order #${orderNumber} is Prepared and ready!` : `Order #${orderNumber} is now Active.`)}</span><button type="button" class="order-notification-close" aria-label="Close notification">×</button>`;
+      item.querySelector('button').addEventListener('click', event => {
+        event.stopPropagation();
+        orderNotificationKeys.delete(key);
+        item.remove();
+      });
+      stack.appendChild(item);
+    }
+
+    function safeOrderText(v) {
+      return esc(String(v ?? ''));
+    }
+
+    function printOrder(o) {
+      const w = window.open('', '_blank', 'width=420,height=700');
+
+      if (!w) {
+        toast('Allow pop-ups to print bills');
+        return;
+      }
+
+      const lines = (o.items || []).map(i => `
+        <tr>
+            <td>${safeOrderText(i.name)} × ${Number(i.qty || 1)}</td>
+            <td style="text-align:right">
+                ${orderMoney(i.line_total ?? i.price * i.qty)}
+            </td>
+        </tr>
+    `).join('');
+
+      w.document.write(`
+        <!doctype html>
+        <html>
+        <head>
+            <title>Bill ${safeOrderText(o.order_no)}</title>
+            <style>
+                body {
+                    font:14px Arial,sans-serif;
+                    width:280px;
+                    margin:16px auto;
+                    color:#111;
+                }
+
+                h2,p {
+                    text-align:center;
+                    margin:5px 0;
+                }
+
+                table {
+                    width:100%;
+                    border-collapse:collapse;
+                    margin:18px 0;
+                }
+
+                td {
+                    padding:5px 0;
+                    border-bottom:1px dashed #aaa;
+                }
+
+                .total {
+                    border-top:1px dashed #111;
+                    border-bottom:1px dashed #111;
+                    padding:8px 0;
+                    font-weight:bold;
+                    display:flex;
+                    justify-content:space-between;
+                }
+            </style>
+        </head>
+        <body>
+            <h2>${safeOrderText(profile.name)}</h2>
+            <p>Order Bill</p>
+            <hr>
+
+            <p>Order: ${safeOrderText(o.order_no)}</p>
+            <p>${new Date(o.created_at).toLocaleString('en-IN')}</p>
+            <p>${safeOrderText(o.customer)} · ${safeOrderText(o.phone)}</p>
+
+            <hr>
+
+            <table>${lines}</table>
+
+            <div class="total">
+                <span>Total</span>
+                <span>${orderMoney(o.total)}</span>
+            </div>
+
+            <p style="margin-top:18px">Thank you!</p>
+
+            <script>
+                window.onload = () => window.print();
+            <\/script>
+        </body>
+        </html>
+    `);
+
+      w.document.close();
+    }
+
+
+    // Render orders
+
+    function renderOrders() {
+
+      const host = $('#ordersList');
+
+      host.innerHTML = cachedOrders.length
+        ? cachedOrders.map(o => {
+
+          const status = String(o.status || 'Pending');
+
+          const activeDisabled =
+            ['Preparing', 'Ready', 'Completed', 'Cancelled', 'Rejected']
+              .includes(status);
+
+          const preparedDisabled =
+            ['Ready', 'Completed', 'Cancelled', 'Rejected']
+              .includes(status);
+
+          return `
+                <article class="order-row">
+
+                    <div>
+
+                        <label style="display:flex;gap:8px;align-items:center;margin:0 0 8px">
+
+                            <input
+                                type="checkbox"
+                                data-order-select="${safeOrderText(o.id)}"
+                            >
+
+                            <b>Select order</b>
+
+                        </label>
+
+                        <div class="order-title">
+                            ${safeOrderText(o.order_no)}
+                        </div>
+
+                        <div class="order-meta">
+
+                            ${safeOrderText(o.customer)}
+                            ·
+                            ${safeOrderText(o.phone)}
+
+                            <br>
+
+                            ${safeOrderText(o.order_type || 'Dine In')}
+
+                            ${o.table_no
+              ? ' · Table ' + safeOrderText(o.table_no)
+              : ''
+            }
+
+                            <br>
+
+                            ${safeOrderText(o.note || '')}
+
+                            <br>
+
+                            <b>${orderMoney(o.total)}</b>
+
+                            <br>
+
+                            Status:
+                            <b>${safeOrderText(status)}</b>
+
+                        </div>
+
+                    </div>
+
+                    <div class="order-actions">
+
+                        <button
+                            type="button"
+                            class="order-active"
+                            data-order-status="active"
+                            data-order-id="${safeOrderText(o.id)}"
+                            ${activeDisabled ? 'disabled' : ''}
+                        >
+                            Active
+                        </button>
+
+                        <button
+                            type="button"
+                            class="order-prepared"
+                            data-order-status="prepared"
+                            data-order-id="${safeOrderText(o.id)}"
+                            ${preparedDisabled ? 'disabled' : ''}
+                        >
+                            Prepared
+                        </button>
+
+                        <button
+                            type="button"
+                            class="order-print"
+                            data-print-order="${safeOrderText(o.id)}"
+                        >
+                            Print Bill
+                        </button>
+
+                    </div>
+
+                </article>
+            `;
+
+        }).join('')
+
+        : '<p class="muted">No orders found.</p>';
+
+      $('#ordersCount').textContent =
+        `Loaded ${cachedOrders.length} order(s).`;
+
+    }
+
+
+    // Load orders
+
+    async function refreshOrders() {
+
+      $('#ordersCount').textContent = 'Loading orders...';
+
+      try {
+
+        const out = await api('/api/v1/orders');
+
+        cachedOrders = out.orders || [];
+
+        renderOrders();
+
+      } catch (error) {
+
+        $('#ordersCount').textContent = error.message;
+
+      }
+
+    }
+
+
+    // Open orders modal
+
+    function openOrders() {
+
+      const m = openModal({
+        title: '▤ Orders / Print Bills',
+        sub: 'Only orders available to your authenticated owner session are shown here.',
+        wide: true,
+
+        html: `
+            <div class="orders-tools">
+
+                <button id="refreshOrders">
+                    Refresh Orders
+                </button>
+
+                <button class="ghost" id="downloadOrdersPdf">
+                    Download All Past Orders as PDF
+                </button>
+
+                <button class="danger" id="deleteOldOrders">
+                    Delete Orders Older Than 15 Days
+                </button>
+
+            </div>
+
+            <div class="orders-tools">
+
+                <label style="display:flex;align-items:center;gap:8px;margin:0">
+
+                    <input type="checkbox" id="selectAllOrders">
+
+                    Select all listed orders
+
+                </label>
+
+                <button class="danger" id="deleteSelectedOrders" disabled>
+                    Delete Selected (0)
+                </button>
+
+            </div>
+
+            <div id="ordersCount" class="small muted">
+                Loading orders...
+            </div>
+
+            <div id="ordersList" class="orders-list"></div>
+        `
+      });
+
+      m.classList.add('orders-modal');
+
+
+      // Refresh
+
+      $('#refreshOrders', m).addEventListener(
+        'click',
+        refreshOrders
+      );
+
+
+      // Print/download all orders
+
+      $('#downloadOrdersPdf', m).addEventListener('click', () => {
+
+        const w = window.open('', '_blank');
+
+        if (!w) {
+          toast('Allow pop-ups to download/print');
+          return;
+        }
+
+        const rows = cachedOrders.map(o => `
+            <section style="border:1px solid #ddd;padding:12px;margin:10px 0">
+
+                <b>${safeOrderText(o.order_no)}</b>
+
+                <p>
+                    ${safeOrderText(o.customer)}
+                    ·
+                    ${safeOrderText(o.phone)}
+                </p>
+
+                <p>
+                    ${safeOrderText(o.status)}
+                    ·
+                    ${orderMoney(o.total)}
+                </p>
+
+                <p>
+                    ${(o.items || []).map(i =>
+          `${safeOrderText(i.name)} × ${Number(i.qty || 1)}`
+        ).join('<br>')}
+                </p>
+
+            </section>
+        `).join('');
+
+        w.document.write(`
+            <html>
+            <head><title>Past Orders</title></head>
+            <body>
+
+                <h1>${safeOrderText(profile.name)} — Orders</h1>
+
+                ${rows}
+
+                <script>
+                    window.onload = () => window.print();
+                <\/script>
+
+            </body>
+            </html>
+        `);
+
+        w.document.close();
+
+      });
+
+
+      // Select all
+
+      $('#selectAllOrders', m).addEventListener('change', e => {
+
+        m.querySelectorAll('[data-order-select]').forEach(cb => {
+          cb.checked = e.target.checked;
+        });
+
+        updateSelected();
+
+      });
+
+
+      // Update selected count
+
+      function updateSelected() {
+
+        const checks = [
+          ...m.querySelectorAll('[data-order-select]')
+        ];
+
+        const selected = checks.filter(cb => cb.checked);
+
+        const button = $('#deleteSelectedOrders', m);
+
+        button.disabled = selected.length === 0;
+
+        button.textContent =
+          `Delete Selected (${selected.length})`;
+
+        $('#selectAllOrders', m).checked =
+          checks.length > 0 &&
+          selected.length === checks.length;
+
+      }
+
+
+      // Delete selected orders
+
+      $('#deleteSelectedOrders', m).addEventListener('click', async () => {
+
+        const ids = [
+          ...m.querySelectorAll('[data-order-select]:checked')
+        ].map(cb => cb.dataset.orderSelect);
+
+        if (!ids.length) return;
+
+        if (!(await confirmDialog({
+          title: 'Confirm deletion',
+          message: `Are you sure you want to delete ${ids.length} selected order(s)? Archived copies will be retained.`,
+          confirmText: 'Confirm Delete',
+          danger: true
+        }))) return;
+
+        try {
+
+          const result = await api(
+            '/api/v1/orders/delete-selected',
+            'POST',
+            { ids }
+          );
+
+          toast(
+            `${result.deleted} order(s) deleted. Archived copies retained.`
+          );
+
+          $('#selectAllOrders', m).checked = false;
+
+          await refreshOrders();
+
+          updateSelected();
+
+        } catch (error) {
+
+          toast(error.message);
+
+        }
+
+      });
+
+
+      // Delete orders older than 15 days
+
+      $('#deleteOldOrders', m).addEventListener('click', async () => {
+
+        if (!confirm(
+          'Delete all orders older than 15 days? Archived copies will be retained.'
+        )) return;
+
+        const button = $('#deleteOldOrders', m);
+
+        button.disabled = true;
+
+        try {
+
+          const result = await api(
+            '/api/v1/orders/delete-older-than-15-days',
+            'POST',
+            {}
+          );
+
+          toast(
+            `${result.deleted} old order(s) deleted. Archived copies retained.`
+          );
+
+          await refreshOrders();
+
+        } catch (error) {
+
+          toast(error.message);
+
+        } finally {
+
+          button.disabled = false;
+
+        }
+
+      });
+
+
+      // Order actions: Active, Prepared and Print Bill
+
+      $('#ordersList', m).addEventListener('click', async e => {
+
+        const statusButton = e.target.closest('[data-order-status]');
+
+        const printButton = e.target.closest('[data-print-order]');
+
+
+        if (printButton) {
+
+          const order = cachedOrders.find(
+            o => String(o.id) === printButton.dataset.printOrder
+          );
+
+          if (order) printOrder(order);
+
+          return;
+
+        }
+
+
+        if (!statusButton) return;
+
+        const id = statusButton.dataset.orderId;
+
+        const requestedStatus =
+          statusButton.dataset.orderStatus === 'active'
+            ? 'Preparing'
+            : 'Ready';
+
+        statusButton.disabled = true;
+
+        try {
+
+          const result = await api(
+            `/api/v1/orders/${encodeURIComponent(id)}/status`,
+            'PATCH',
+            { status: requestedStatus }
+          );
+
+          showOrderNotification(result.order?.order_no || id, result.status, id);
+
+          await refreshOrders();
+
+        } catch (error) {
+
+          toast(error.message);
+
+          statusButton.disabled = false;
+
+        }
+
+      });
+
+
+      refreshOrders();
+
+    }
+
+
+    // Open orders modal
+
+    $('#ordersPrintBills').addEventListener('click', openOrders);
+
+    $('#ordersPrintBillsSidebar').addEventListener('click', openOrders);
+
+    viewToggle($('#itemView'), 'dm_view_items', (m) => $('#itemList').classList.toggle('as-list', m === 'list'));
+
+    let showTab;
+    (async () => {
+      await requireRole('owner');
+      profile = await api('/api/v1/restaurant'); fillProfile(); renderQr();
+      subTabs(); await loadAll();
+      showTab = tabs($('#tabs'), (n) => { if (n === 'qr') renderQr(); });
+    })();
+  </script>
+</body>
+
+</html>

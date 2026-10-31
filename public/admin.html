@@ -1,244 +1,3276 @@
-<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/style.css">
-<title>Admin · Digital Menu</title></head>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>New Desi Tadka</title>
+
+    <link rel="icon" type="image/png" href="/images/logo.png">
+    <style>
+        :root {
+            --brown: #5a2d22;
+            --orange: #e8761f;
+            --cream: #f7f3ee;
+            --border: #e5ddd5;
+            --text: #241d19;
+            --muted: #756b64;
+            --red: #c9362b;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        .login-box {
+            text-align: center;
+        }
+
+        .admin-logo {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 20px;
+
+            border-radius: 50%;
+            overflow: hidden;
+
+            border: 3px solid #f07818;
+            background: #fff;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        }
+
+        .admin-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .login-box h1 {
+            margin: 0;
+            text-align: center;
+        }
+
+        .subtitle {
+            margin-top: 8px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .google-button-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        body {
+            margin: 0;
+            font-family:
+                system-ui,
+                -apple-system,
+                "Segoe UI",
+                Roboto,
+                sans-serif;
+
+            background: var(--cream);
+            color: var(--text);
+        }
+
+        /* =========================
+         LOGIN
+        ========================= */
+
+        .login-page {
+
+            min-height: 100vh;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 20px;
+        }
+
+        .login-box {
+
+            width: min(420px, 100%);
+
+            background: white;
+
+            padding: 35px;
+
+            border-radius: 18px;
+
+            box-shadow:
+                0 15px 50px #0002;
+        }
+
+        .login-logo {
+
+            text-align: center;
+
+            margin-bottom: 25px;
+        }
+
+        .login-logo h1 {
+
+            margin: 0;
+
+            color: var(--brown);
+
+            font-size: 28px;
+        }
+
+        .login-logo p {
+
+            margin-top: 6px;
+
+            color: var(--muted);
+
+            font-size: 13px;
+
+            letter-spacing: 2px;
+        }
+
+        .login-field {
+
+            margin-bottom: 16px;
+        }
+
+        .login-field label {
+
+            display: block;
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+            margin-bottom: 6px;
+        }
+
+        input,
+        select,
+        textarea {
+
+            width: 100%;
+
+            border:
+                1.5px solid var(--border);
+
+            border-radius: 9px;
+
+            padding: 11px 12px;
+
+            font: inherit;
+
+            outline: none;
+
+            background: white;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+
+            border-color:
+                var(--orange);
+        }
+
+        .login-button {
+
+            width: 100%;
+
+            border: 0;
+
+            border-radius: 9px;
+
+            padding: 12px;
+
+            background: var(--orange);
+
+            color: white;
+
+            font-weight: 700;
+
+            font-size: 15px;
+
+            cursor: pointer;
+        }
+
+        .login-error {
+
+            color: var(--red);
+
+            font-size: 13px;
+
+            margin-top: 12px;
+
+            text-align: center;
+
+            display: none;
+        }
+
+        /* =========================
+   ADMIN DASHBOARD
+========================= */
+
+        #dashboard {
+
+            display: none;
+        }
+
+        header {
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 20;
+
+            background: var(--brown);
+
+            color: white;
+
+            padding: 14px 18px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 14px;
+
+            box-shadow:
+                0 2px 10px #0002;
+        }
+
+        .brand b {
+
+            display: block;
+
+            font-size: 20px;
+        }
+
+        .brand small {
+
+            color: #f6b94c;
+
+            letter-spacing: 2px;
+        }
+
+        .actions {
+
+            display: flex;
+
+            gap: 8px;
+
+            flex-wrap: wrap;
+        }
+
+        button {
+
+            border: 0;
+
+            border-radius: 9px;
+
+            padding: 10px 14px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            font-size: 14px;
+        }
+
+        .primary {
+
+            background: var(--orange);
+
+            color: white;
+        }
+
+        .light {
+
+            background: white;
+
+            color: var(--brown);
+        }
+
+        .danger {
+
+            background: #fee9e7;
+
+            color: var(--red);
+        }
+
+        .ghost {
+
+            background: #ffffff20;
+
+            color: white;
+        }
+
+        .logout {
+
+            background: #ffffff20;
+
+            color: white;
+        }
+
+        main {
+
+            max-width: 1200px;
+
+            margin: auto;
+
+            padding:
+                20px 16px 50px;
+        }
+
+        .top {
+
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            align-items: center;
+
+            gap: 12px;
+
+            margin-bottom: 14px;
+        }
+
+        .top h1 {
+
+            margin: 0;
+
+            font-size: 24px;
+        }
+
+        .count {
+
+            color: var(--muted);
+
+            font-size: 14px;
+        }
+
+        .toolbar {
+
+            background: white;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 14px;
+
+            padding: 12px;
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 190px auto;
+
+            gap: 10px;
+
+            margin-bottom: 16px;
+        }
+
+        .table-wrap {
+
+            background: white;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 14px;
+
+            overflow: auto;
+        }
+
+        .table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 760px;
+        }
+
+        .table th,
+        .table td {
+
+            padding: 12px;
+
+            border-bottom:
+                1px solid var(--border);
+
+            text-align: left;
+
+            vertical-align: middle;
+        }
+
+        .table th {
+
+            background: #fbf8f5;
+
+            font-size: 13px;
+
+            color: var(--muted);
+        }
+
+        .name {
+
+            font-weight: 700;
+        }
+
+        .sub {
+
+            font-size: 12px;
+
+            color: var(--muted);
+
+            margin-top: 3px;
+        }
+
+        .price {
+
+            font-weight: 800;
+
+            color: var(--brown);
+        }
+
+        .row-actions {
+
+            display: flex;
+
+            gap: 7px;
+        }
+
+        .empty {
+
+            text-align: center;
+
+            padding: 40px;
+
+            color: var(--muted);
+        }
+
+        .onboard-restaurant-btn {
+            background: linear-gradient(135deg, #ff8a00, #ff5e00);
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 20px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .onboard-restaurant-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(255, 110, 0, 0.3);
+        }
+
+        /* =========================
+   MODAL
+========================= */
+
+        .overlay {
+
+            position: fixed;
+
+            inset: 0;
+
+            background: #0008;
+
+            display: none;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 16px;
+
+            z-index: 50;
+        }
+
+        .overlay.show {
+
+            display: flex;
+        }
+
+        .modal {
+
+            background: white;
+
+            width: min(620px, 100%);
+
+            max-height: 92vh;
+
+            overflow: auto;
+
+            border-radius: 16px;
+
+            padding: 20px;
+
+            box-shadow:
+                0 20px 60px #0005;
+        }
+
+        .modal h2 {
+
+            margin:
+                0 0 16px;
+        }
+
+        .form-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 12px;
+        }
+
+        .field.full {
+
+            grid-column: 1 / -1;
+        }
+
+        .field label {
+
+            display: block;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            margin-bottom: 6px;
+        }
+
+        textarea {
+
+            min-height: 90px;
+
+            resize: vertical;
+        }
+
+        .modal-actions {
+
+            display: flex;
+
+            justify-content: flex-end;
+
+            gap: 8px;
+
+            margin-top: 18px;
+        }
+
+        .error {
+
+            color: var(--red);
+
+            font-size: 13px;
+
+            margin-top: 10px;
+
+            display: none;
+        }
+
+        .toast {
+
+            position: fixed;
+
+            right: 18px;
+
+            bottom: 18px;
+
+            background: var(--brown);
+
+            color: white;
+
+            padding: 12px 16px;
+
+            border-radius: 10px;
+
+            display: none;
+
+            z-index: 100;
+        }
+
+        .toast.show {
+
+            display: block;
+        }
+
+        @media(max-width:700px) {
+
+            header {
+
+                align-items: flex-start;
+
+                flex-direction: column;
+            }
+
+            .toolbar {
+
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+
+                grid-template-columns: 1fr;
+            }
+
+            .field.full {
+
+                grid-column: auto;
+            }
+        }
+    </style>
+    <script src="https://accounts.google.com/gsi/client" async defer>
+    </script>
+
+
+
+
+
+    <style id="new-order-notification-styles">
+        #ordersPrintBillsButton {
+            position: relative !important
+        }
+
+        #newOrderRedDot {
+            display: none;
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ef233c;
+            border: 2px solid #fff;
+            box-shadow: 0 0 0 1px #ddd;
+            z-index: 9
+        }
+
+        #newOrderRedDot.is-visible {
+            display: block;
+            animation: vignaDotPulse 1.2s infinite
+        }
+
+        @keyframes vignaDotPulse {
+            50% {
+                transform: scale(1.2)
+            }
+        }
+
+        #newOrderPopup {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            top: auto;
+            left: auto;
+            z-index: 100000;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            max-width: calc(100vw - 32px);
+            padding: 14px 42px 14px 16px;
+            border-radius: 12px;
+            color: #7f1d1d;
+            background: #fff1f2;
+            border: 1px solid #fecdd3;
+            border-left: 5px solid #ef233c;
+            box-shadow: 0 12px 34px #0002;
+            font: 600 14px/1.4 system-ui, sans-serif
+        }
+
+        #newOrderPopup.is-visible {
+            display: flex
+        }
+
+        #newOrderPopup .new-order-popup-close {
+            position: absolute;
+            top: 4px;
+            right: 6px;
+            width: 30px;
+            height: 30px;
+            border: 0;
+            background: transparent;
+            color: #7f1d1d;
+            font-size: 22px;
+            cursor: pointer
+        }
+
+        .new-order-popup-title {
+            display: block;
+            font-weight: 800;
+            margin-bottom: 2px
+        }
+
+        #orderNotifications {
+            position: fixed;
+            top: 18px;
+            right: 18px;
+            z-index: 100001;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: min(360px, calc(100vw - 36px));
+            pointer-events: none
+        }
+
+        .order-notification {
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 12px 38px 12px 14px;
+            border: 1px solid #bbf7d0;
+            border-left: 4px solid #16a34a;
+            border-radius: 10px;
+            background: #f0fdf4;
+            color: #14532d;
+            box-shadow: 0 10px 24px #0002;
+            font: 600 14px/1.35 system-ui, sans-serif;
+            animation: orderNotificationIn .2s ease-out;
+            pointer-events: auto
+        }
+
+        .order-notification-close {
+            position: absolute;
+            top: 4px;
+            right: 5px;
+            width: 28px;
+            height: 28px;
+            border: 0;
+            background: transparent;
+            color: inherit;
+            font-size: 20px;
+            line-height: 1;
+            cursor: pointer
+        }
+
+        .order-notification.prepared {
+            border-color: #bfdbfe;
+            border-left-color: #2563eb;
+            background: #eff6ff;
+            color: #1e3a8a
+        }
+
+        @keyframes orderNotificationIn {
+            from {
+                opacity: 0;
+                transform: translateX(18px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0)
+            }
+        }
+    </style>
+
+    <style id="admin-bottom-popup-override">
+        #newOrderPopup {
+            top: auto !important;
+            bottom: 20px !important;
+            right: 20px !important;
+            left: auto !important;
+        }
+
+        @media(max-width:480px) {
+            #newOrderPopup {
+                bottom: 10px !important;
+                right: 10px !important;
+                max-width: calc(100vw - 20px) !important;
+            }
+        }
+    </style>
+
+
+
+
+
+
+
+
+
+
+
+    <style id="order-actions-requested-layout">
+        #ordersList .order-preview-row {
+            display: grid !important;
+            grid-template-columns: minmax(0, 1fr) 190px !important;
+            grid-template-rows: auto auto auto !important;
+            column-gap: 14px !important;
+            row-gap: 5px !important;
+            align-items: start !important;
+            padding: 12px !important;
+            border-radius: 10px !important;
+        }
+
+        #ordersList .order-preview-row>div:first-child {
+            grid-column: 1 !important;
+            grid-row: 1 !important;
+            min-width: 0 !important;
+        }
+
+        #ordersList .order-preview-row>div:nth-child(2) {
+            grid-column: 1 !important;
+            grid-row: 2 !important;
+            min-width: 0 !important;
+        }
+
+        #ordersList .order-preview-row>button[data-order-status="active"],
+        #ordersList .order-preview-row>button[data-order-status="prepared"],
+        #ordersList .order-preview-row>button[data-print-order] {
+            min-width: 0 !important;
+            width: 100% !important;
+            min-height: 32px !important;
+            margin: 0 !important;
+            padding: 7px 9px !important;
+            border: 1px solid transparent !important;
+            border-radius: 7px !important;
+            color: #fff !important;
+            font: 600 12px/1.2 system-ui, -apple-system, "Segoe UI", sans-serif !important;
+            box-shadow: none !important;
+            cursor: pointer !important;
+        }
+
+        /* Active | Print Bill on the first action row */
+        #ordersList .order-preview-row>button[data-order-status="active"] {
+            grid-column: 2 !important;
+            grid-row: 1 !important;
+            width: calc(50% - 4px) !important;
+            justify-self: start !important;
+            background: #198754 !important;
+            border-color: #198754 !important;
+        }
+
+        #ordersList .order-preview-row>button[data-print-order] {
+            grid-column: 2 !important;
+            grid-row: 1 !important;
+            width: calc(50% - 4px) !important;
+            justify-self: end !important;
+            background: #475569 !important;
+            border-color: #475569 !important;
+        }
+
+        /* Prepared below Active | Print Bill */
+        #ordersList .order-preview-row>button[data-order-status="prepared"] {
+            grid-column: 2 !important;
+            grid-row: 2 !important;
+            background: #2563eb !important;
+            border-color: #2563eb !important;
+        }
+
+        #ordersList .order-preview-row>button:hover {
+            filter: brightness(.93) !important;
+        }
+
+        @media(max-width:560px) {
+            #ordersList .order-preview-row {
+                grid-template-columns: minmax(0, 1fr) 160px !important;
+                column-gap: 8px !important;
+            }
+
+            #ordersList .order-preview-row>button[data-order-status="active"],
+            #ordersList .order-preview-row>button[data-print-order] {
+                font-size: 11px !important;
+                padding: 7px 5px !important;
+            }
+        }
+    </style>
+
+
+
+
+
+
+
+
+    <style id="colourful-order-actions-final">
+        #ordersList .order-preview-row .order-actions {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 8px !important;
+            width: 100% !important;
+            min-width: 0 !important;
+        }
+
+        #ordersList .order-preview-row .order-actions-top {
+            display: grid !important;
+            grid-template-columns: 1fr 1.2fr !important;
+            gap: 8px !important;
+            width: 100% !important;
+        }
+
+        #ordersList .order-preview-row .order-actions button {
+            box-sizing: border-box !important;
+            width: 100% !important;
+            min-width: 0 !important;
+            min-height: 40px !important;
+            padding: 9px 12px !important;
+            border: 1px solid transparent !important;
+            border-radius: 9px !important;
+            color: #fff !important;
+            font: 600 12px/1.2 system-ui, -apple-system, "Segoe UI", sans-serif !important;
+            letter-spacing: .15px !important;
+            box-shadow: 0 2px 5px rgba(15, 23, 42, .12) !important;
+            text-align: center !important;
+            cursor: pointer !important;
+            transition: transform .16s ease, filter .16s ease, box-shadow .16s ease !important;
+        }
+
+        #ordersList .order-preview-row .order-actions button:hover:not(:disabled) {
+            filter: brightness(1.06) !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 4px 9px rgba(15, 23, 42, .16) !important;
+        }
+
+        #ordersList .order-preview-row .order-actions button:active:not(:disabled) {
+            transform: translateY(0) !important;
+        }
+
+        #ordersList .order-preview-row .order-actions button[data-order-status="active"] {
+            background: linear-gradient(135deg, #16a34a, #15803d) !important;
+            border-color: #15803d !important;
+            color: #fff !important;
+        }
+
+        #ordersList .order-preview-row .order-actions button[data-order-status="prepared"] {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
+            border-color: #1d4ed8 !important;
+            color: #fff !important;
+        }
+
+        #ordersList .order-preview-row .order-actions button[data-print-order] {
+            background: linear-gradient(135deg, #475569, #334155) !important;
+            border-color: #334155 !important;
+            color: #fff !important;
+            min-height: 42px !important;
+        }
+
+        #ordersList .order-preview-row .order-actions button:disabled {
+            opacity: .58 !important;
+            cursor: not-allowed !important;
+            box-shadow: none !important;
+        }
+
+        @media(max-width:560px) {
+            #ordersList .order-preview-row .order-actions-top {
+                gap: 6px !important;
+            }
+
+            #ordersList .order-preview-row .order-actions button {
+                min-height: 36px !important;
+                padding: 8px 5px !important;
+                font-size: 11px !important;
+            }
+        }
+    </style>
+
+</head>
+
 <body>
-<div class="shell">
-<aside class="side">
-  <div class="brand"><div class="mark" data-ico="shield"></div><div>Digital Menu<small>Admin console</small></div></div>
-  <nav class="tabs" id="tabs">
-    <button class="on" data-tab="restaurants" data-ico="store" data-sub="Every onboarded restaurant, its onboarding price and status"><span>Restaurants</span></button>
-    <button data-tab="onboard" data-ico="plus" data-title="Onboard restaurant" data-sub="Create the restaurant and its dashboard login"><span>Onboard restaurant</span></button>
-    <button data-tab="password" data-ico="key" data-title="Change password" data-sub="Update the password you use to log in"><span>Change password</span></button>
-  </nav>
-  <div class="spacer"></div>
-  <button class="logout" onclick="logout()" data-ico="logout"><span>Log out</span></button>
-</aside>
-<main class="main wide">
-  <div class="page-head"><h1 id="pageTitle">Restaurants</h1><p id="pageSub">Every onboarded restaurant, its onboarding price and status</p></div>
 
-  <section data-panel="restaurants">
-    <div class="stats" id="stats"><div class="skel skel-stat"></div><div class="skel skel-stat"></div><div class="skel skel-stat"></div><div class="skel skel-stat"></div><div class="skel skel-stat"></div></div>
-    <div class="card">
-      <div class="toolbar">
-        <h3 style="margin:0">Onboarded restaurants</h3>
-        <div class="filters" style="justify-content:flex-end">
-          <input type="search" id="rSearch" placeholder="Search name, owner, email, mobile, city…" aria-label="Search restaurants">
-          <select id="rStatus" aria-label="Filter by status"><option value="">All statuses</option><option value="active">Active</option><option value="inactive">Inactive</option><option value="unpaid">Payment pending</option></select>
+    <!-- =========================
+     LOGIN PAGE
+========================= -->
+
+    <div class="login-page" id="loginPage">
+
+        <div class="login-box">
+
+            <!-- 1. LOGO -->
+            <div class="admin-logo">
+                <img src="/images/logo.png" alt="New Desi Tadka Logo">
+            </div>
+
+            <!-- 2. TITLE -->
+            <h1>New Desi Tadka</h1>
+
+            <!-- 3. ADMIN PANEL -->
+            <div class="subtitle">
+                ADMIN PANEL
+            </div>
+
+            <!-- 4. GOOGLE LOGIN -->
+            <div id="googleButton" class="google-button-container">
+            </div>
+
+            <div class="login-error" id="loginError">
+            </div>
+
         </div>
-      </div>
-      <div class="table-wrap" id="rList"><div class="skel skel-row"></div><div class="skel skel-row"></div><div class="skel skel-row"></div><div class="skel skel-row"></div><div class="skel skel-row"></div></div>
+
     </div>
-  </section>
 
-  <section data-panel="menu" class="hidden">
-    <div class="card" id="menuHead"></div>
-    <div id="menuMount"></div>
-  </section>
 
-  <section data-panel="onboard" class="hidden">
-    <form id="obForm" class="card" autocomplete="off">
-      <h3>Restaurant details</h3>
-      <div class="row">
-        <div><label style="margin-top:0">Restaurant name</label><input name="name" required></div>
-        <div><label style="margin-top:0">Owner name</label><input name="owner" required></div>
-        <div><label>Mobile number <span class="muted small">· login ID</span></label><input name="mobile" type="tel" inputmode="tel" required placeholder="e.g. 9876543210"></div>
-        <div><label>Email <span class="muted small">· optional</span></label><input name="email" type="email"></div>
-        <div><label>City</label><input name="city"></div>
-        <div><label>Onboarding price (₹)</label><input name="price_paid" type="number" min="0" step="1" inputmode="numeric" value="0" required></div>
-        <div><label>Plan</label><select name="plan_type"><option value="one_time">One time</option><option value="limited">Limited</option></select></div>
-        <div data-validwrap class="hidden"><label>Valid until</label><input name="plan_expires" type="date"></div>
-      </div>
-      <h3 style="margin-top:24px">UPI payment details <span class="muted small">· optional</span></h3>
-      <div class="row">
-        <div><label style="margin-top:0">UPI ID</label><input name="upi_id" placeholder="restaurant@upi" inputmode="text" autocomplete="off"><p class="small muted">Customers can copy this ID to pay.</p></div>
-        <div><label style="margin-top:0">UPI QR image</label><input name="upi_qr" type="file" accept="image/png,image/jpeg,image/webp,image/gif"><p class="small muted">PNG, JPG, WebP or GIF · maximum 5 MB.</p><div id="upiQrPreview" class="upi-qr-preview hidden"></div></div>
-      </div>
-      <label>Login password <span class="muted small">· leave blank to generate one</span></label>
-      <div class="pw-row"><input name="password" minlength="6" placeholder="Auto-generated if empty" autocomplete="new-password"><button type="button" class="ghost" data-genpw>Generate</button></div>
-      <label class="check"><input type="checkbox" name="paid"> Onboarding payment received</label>
-      <p class="small muted">The login password is shown once after you create the restaurant, and you can view it again later from the restaurants table.</p>
-      <div class="err" id="obErr" role="alert"></div>
-      <div class="card-foot"><button class="lg">Create restaurant &amp; login</button></div>
-    </form>
-  </section>
+    <!-- =========================
+     DASHBOARD
+========================= -->
 
-  <section data-panel="password" class="hidden">
-    <form id="pwf" class="card" autocomplete="off">
-      <h3>Change password</h3><p class="small muted">Use at least 8 characters.</p>
-      <div class="row">
-        <div><label>Current password</label><input type="password" name="current_password" required autocomplete="current-password"></div>
-        <div><label>New password</label><input type="password" name="new_password" minlength="8" required autocomplete="new-password"></div>
-        <div><label>Confirm new password</label><input type="password" name="confirm_password" minlength="8" required autocomplete="new-password"></div>
-      </div>
-      <div class="err" id="pwErr" role="alert"></div><div class="card-foot"><button class="lg">Update password</button></div>
-    </form>
-  </section>
-</main>
-</div>
-<script src="/app.js"></script>
-<script src="/menu-library.js"></script>
-<script src="/menu-manager.js"></script>
-<script>
-let restaurants = [], showTab;
-const today = new Date().toISOString().slice(0, 10);
-const expired = (r) => r.plan_expires && r.plan_expires < today;
-const planPill = (r) => !r.plan_expires ? '<span class="pill">One time</span>' : `<span class="pill ${expired(r) ? 'warn' : ''}">${expired(r) ? 'Expired ' : 'Until '}${esc(r.plan_expires)}</span>`;
+    <div id="dashboard">
 
-async function load() {
-  const [s, { restaurants: list }] = await Promise.all([api('/api/v1/admin/summary'), api('/api/v1/admin/restaurants')]);
-  restaurants = list;
-  $('#stats').innerHTML = [['Total restaurants', s.restaurants, 'hl big'], ['Active', s.active], ['Inactive', s.inactive], ['Onboarding revenue', money(s.revenue)], ['Payment pending', money(s.outstanding)]]
-    .map(([l, v, c]) => `<div class="stat ${c || ''}"><span>${l}</span><b>${v}</b></div>`).join('');
-  render();
-}
+        <header>
 
-function render() {
-  const q = $('#rSearch').value.trim().toLowerCase(), st = $('#rStatus').value;
-  const ok = (r) => !st || (st === 'active' ? r.active : st === 'inactive' ? !r.active : !r.paid);
-  const rows = restaurants.filter((r) => ok(r) && (!q || [r.name, r.owner, r.owner_email, r.owner_mobile, r.city].some((v) => String(v || '').toLowerCase().includes(q))));
-  $('#rList').innerHTML = rows.length ? `<table><thead><tr><th>Restaurant</th><th>Owner</th><th>Mobile</th><th>Email</th><th>Password</th><th>Plan</th><th>Onboarding price</th><th>Payment</th><th>Items</th><th>Status</th><th>Action</th></tr></thead><tbody>${
-    rows.map((r) => `<tr><td><b>${esc(r.name)}</b></td><td>${esc(r.owner) || '—'}</td><td>${esc(r.owner_mobile) || '—'}</td><td>${esc(r.owner_email) || '—'}</td>
-      <td>${r.has_password ? `<span class="pwcell"><span class="pwtxt" data-pwtxt="${r.id}">••••••••</span><button class="ghost sm icon" data-eye="${r.id}" aria-pressed="false" aria-label="Show password" title="Show / hide password">${ico('eye')}</button></span>` : '<span class="muted" title="Changed by the owner. Use Reset password to set a new one.">Not available</span>'}</td>
-      <td>${planPill(r)}</td><td>${money(r.price_paid)}</td>
-      <td>${r.paid ? '<span class="pill ok">Paid</span>' : '<span class="pill warn">Pending</span>'}</td><td>${r.item_count}</td>
-      <td>${r.active ? '<span class="pill ok">Active</span>' : '<span class="pill bad">Inactive</span>'}</td>
-      <td><div class="actions" style="flex-wrap:nowrap"><button class="sm" data-menu="${r.id}">Manage menu</button><button class="sm ghost" data-view="${r.id}">View</button><button class="sm ghost" data-edit="${r.id}">Edit</button>
-        <button class="sm ghost" data-reset="${r.id}">Reset password</button><button class="sm ${r.active ? 'danger' : 'ghost'}" data-toggle="${r.id}">${r.active ? 'Deactivate' : 'Activate'}</button><button class="sm danger" data-del="${r.id}">Delete</button></div></td></tr>`).join('')
-  }</tbody></table>` : `<p class="empty">${restaurants.length ? 'No restaurants match your search or filter.' : 'No restaurants yet. Use “Onboard restaurant” to add the first one.'}</p>`;
-}
-['input', 'change'].forEach((ev) => ['#rSearch', '#rStatus'].forEach((id) => $(id).addEventListener(ev, render)));
+            <div class="brand">
 
-const kv = (k, v) => `<div class="kv"><span>${k}</span><b>${v}</b></div>`;
-function credentialsModal(title, r, password) {
-  const login = location.origin + '/login';
-  const text = `Digital Menu login\nLogin: ${login}\nMobile: ${r.owner_mobile || r.mobile}${(r.owner_email || r.email) ? `\nEmail: ${r.owner_email || r.email}` : ''}\nPassword: ${password}${r.menu_url ? `\nYour menu: ${r.menu_url}` : ''}`;
-  const m = openModal({ title, sub: 'Share these with the restaurant. You can view the password again from the table.', html: `
-    <div class="kv-grid">${kv('Mobile', esc(r.owner_mobile || r.mobile))}${(r.owner_email || r.email) ? kv('Email', esc(r.owner_email || r.email)) : ''}${kv('Password', `<span class="secret">${esc(password)}</span>`)}${kv('Login page', esc(login))}${r.menu_url ? kv('Menu link', esc(r.menu_url)) : ''}</div>
-    <div class="card-foot"><button class="ghost" data-close>Close</button><button id="copyCreds">Copy details</button></div>` });
-  $('#copyCreds', m).addEventListener('click', () => copyText(text));
-}
-// plan select shows "valid until" only for limited plans
-const planToggle = (scope) => {
-  const sel = $('[name=plan_type]', scope), wrap = $('[data-validwrap]', scope), date = $('[name=plan_expires]', scope);
-  const sync = () => { const lim = sel.value === 'limited'; wrap.classList.toggle('hidden', !lim); date.required = lim; if (!lim) date.value = ''; };
-  sel.addEventListener('change', sync); sync();
-};
-const wireGenerate = (scope) => $('[data-genpw]', scope).addEventListener('click', () => { const i = $('[name=password]', scope); i.value = genPassword(); i.focus(); i.select(); });
-planToggle($('#obForm')); wireGenerate($('#obForm'));
+                <b>
+                    New Desi Tadka — Admin
+                </b>
 
-// "Manage menu": edit a restaurant's categories, dishes and photos on its behalf (a panel, not a sidebar tab)
-function openMenu(r) {
-  document.querySelectorAll('[data-panel]').forEach((p) => p.classList.toggle('hidden', p.dataset.panel !== 'menu'));
-  document.querySelectorAll('#tabs [data-tab]').forEach((b) => b.classList.toggle('on', b.dataset.tab === 'restaurants'));
-  $('#pageTitle').textContent = `Menu · ${r.name}`;
-  $('#pageSub').textContent = 'Add and edit this restaurant\'s dishes. Changes appear on the guest menu straight away.';
-  $('#menuHead').innerHTML = `<div class="toolbar" style="margin:0">
-    <div class="actions"><button class="ghost" data-backlist>← All restaurants</button>
-      <b>${esc(r.name)}</b> ${r.active ? '<span class="pill ok">Active</span>' : '<span class="pill bad">Inactive: guests cannot see this menu</span>'}</div>
-    <a class="btn ghost" href="${esc(r.menu_url)}" target="_blank" rel="noopener">Open guest menu ↗</a></div>
-    <div class="note" style="margin-bottom:0">You are editing this menu on behalf of ${esc(r.owner || r.name)}. The restaurant sees these changes in its own dashboard.</div>`;
-  $('#menuHead [data-backlist]').addEventListener('click', () => showTab('restaurants'));
-  $('#menuMount').innerHTML = `<div class="stats">${skelStats(4)}</div><div class="items">${skelCards(4)}</div>`;
-  history.replaceState(null, '', '#menu-' + r.id);
-  scrollTo(0, 0);
-  MenuManager.mount($('#menuMount'), { base: `/api/v1/admin/restaurants/${r.id}`, themeColor: r.theme_color, onChange: load })
-    .catch((er) => { $('#menuMount').innerHTML = `<p class="err">${esc(er.message)}</p>`; });
-}
+                <small>
+                    MENU MANAGEMENT
+                </small>
 
-// hide a revealed password again
-function hidePw(b) { const t = document.querySelector(`[data-pwtxt="${b.dataset.eye}"]`); t.textContent = '••••••••'; t.classList.remove('on'); b.setAttribute('aria-pressed', 'false'); b.setAttribute('aria-label', 'Show password'); b.innerHTML = ico('eye'); clearTimeout(b._t); }
+            </div>
 
-document.addEventListener('click', async (e) => {
-  if (!e.target.closest('#rList')) return; // only the restaurants table's buttons (the menu editor has its own handlers)
-  const id = (k) => e.target.closest(`[data-${k}]`)?.dataset[k];
-  const get = (v) => restaurants.find((r) => r.id == v);
-  try {
-    if (id('menu')) { openMenu(get(id('menu'))); }
-    else if (id('eye')) {
-      const b = e.target.closest('[data-eye]');
-      if (b.getAttribute('aria-pressed') === 'true') return hidePw(b);
-      const t = document.querySelector(`[data-pwtxt="${b.dataset.eye}"]`); b.disabled = true;
-      try {
-        const { password } = await api(`/api/v1/admin/restaurants/${b.dataset.eye}/reveal-password`, 'POST');
-        if (!password) { toast('Password not available. Use Reset password.'); return; }
-        t.textContent = password; t.classList.add('on'); b.setAttribute('aria-pressed', 'true'); b.setAttribute('aria-label', 'Hide password'); b.innerHTML = ico('eyeoff');
-        b._t = setTimeout(() => hidePw(b), 30000); // auto-hide after 30 seconds
-      } finally { b.disabled = false; }
-    } else if (id('view')) {
-      const r = get(id('view'));
-      openModal({ title: r.name, sub: `Onboarded ${new Date(r.created_at + 'Z').toLocaleDateString('en-IN', { dateStyle: 'medium' })}`, html: `<div class="kv-grid">${kv('Owner', esc(r.owner) || '—')}${kv('Mobile (login)', esc(r.owner_mobile) || '—')}${kv('Email', esc(r.owner_email) || '—')}${kv('City', esc(r.city) || '—')}
-        ${kv('Plan', r.plan_expires ? `Limited · until ${esc(r.plan_expires)}${expired(r) ? ' (expired)' : ''}` : 'One time')}${kv('Onboarding price', money(r.price_paid))}${kv('Payment', r.paid ? 'Paid' : 'Pending')}${kv('Status', r.active ? 'Active' : 'Inactive')}${kv('Menu items', r.item_count)}
-        ${kv('Menu link', `<a href="${esc(r.menu_url)}" target="_blank" rel="noopener">${esc(r.menu_url)}</a>`)}</div>` });
-    } else if (id('edit')) {
-      const r = get(id('edit'));
-      const m = openModal({ title: `Edit ${r.name}`, wide: true, html: `<form id="editForm" autocomplete="off"><div class="row">
-        <div><label style="margin-top:0">Restaurant name</label><input name="name" value="${esc(r.name)}" required></div><div><label style="margin-top:0">Owner</label><input name="owner" value="${esc(r.owner)}" required></div>
-        <div><label>Mobile number</label><input name="mobile" type="tel" value="${esc(r.owner_mobile)}" required></div><div><label>Email <span class="muted small">· optional</span></label><input name="email" type="email" value="${esc(r.owner_email)}"></div>
-        <div><label>City</label><input name="city" value="${esc(r.city)}"></div><div><label>Onboarding price (₹)</label><input name="price_paid" type="number" min="0" step="1" value="${r.price_paid}" required></div>
-        <div><label>Plan</label><select name="plan_type"><option value="one_time" ${r.plan_expires ? '' : 'selected'}>One time</option><option value="limited" ${r.plan_expires ? 'selected' : ''}>Limited</option></select></div>
-        <div data-validwrap><label>Valid until</label><input name="plan_expires" type="date" value="${esc(r.plan_expires)}"></div></div>
-        <h3 style="margin-top:22px">UPI payment details</h3><div class="row">
-          <div><label>UPI ID</label><input name="upi_id" value="${esc(r.upi_id || '')}" placeholder="restaurant@upi"></div>
-          <div><label>Replace UPI QR image</label><input name="upi_qr" type="file" accept="image/png,image/jpeg,image/webp,image/gif">${r.upi_qr ? `<p class="small muted">Current QR image: <a href="${esc(r.upi_qr)}" target="_blank" rel="noopener">View image</a></p><label class="check"><input type="checkbox" name="remove_upi_qr"> Remove current QR image</label>` : '<p class="small muted">PNG, JPG, WebP or GIF · maximum 5 MB.</p>'}</div>
+            <button type="button" id="onboardRestaurantBtn" class="onboard-restaurant-btn"
+                onclick="goToRestaurantOnboarding(event)">
+                + Onboard New Restaurant
+            </button>
+
+            <div class="actions">
+
+                <button class="ghost" onclick="window.location.href='/'">
+                    View Website
+                </button>
+
+                <button class="primary" onclick="openAdd()">
+                    + Add Item
+                </button>
+                <button class="primary" type="button" id="ordersPrintBillsButton">🧾 Orders / Print Bills<span
+                        id="newOrderRedDot" aria-label="New order"></span></button>
+
+                <button class="logout" onclick="logout()">
+                    Logout
+                </button>
+
+            </div>
+
+        </header>
+
+
+        <main>
+
+            <div class="top">
+
+                <div>
+
+                    <h1>
+                        Menu Items
+                    </h1>
+
+                    <div class="count" id="count">
+                        Loading…
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="toolbar">
+
+                <input id="search" placeholder="Search item, category or description..." oninput="render()">
+
+                <select id="category" onchange="render()">
+
+                    <option value="">
+                        All categories
+                    </option>
+
+                </select>
+
+                <button class="light" onclick="loadMenu()">
+                    ↻ Refresh
+                </button>
+
+            </div>
+
+
+            <div class="table-wrap">
+
+                <table class="table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Item
+                            </th>
+
+                            <th>
+                                Category
+                            </th>
+
+                            <th>
+                                Price
+                            </th>
+
+                            <th>
+                                Description
+                            </th>
+
+                            <th>
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="rows">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </main>
+
+    </div>
+
+
+    <!-- =========================
+     ADD / EDIT MODAL
+========================= -->
+
+    <div class="overlay" id="overlay">
+
+        <div class="modal">
+
+            <h2 id="modalTitle">
+                Add Menu Item
+            </h2>
+
+            <form id="itemForm">
+
+                <div class="form-grid">
+
+                    <div class="field full">
+
+                        <label>
+                            Item name *
+                        </label>
+
+                        <input id="name" required>
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label>
+                            Category *
+                        </label>
+
+                        <input id="cat" list="catList" required>
+
+                        <datalist id="catList">
+                        </datalist>
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label>
+                            Price (₹) *
+                        </label>
+
+                        <input id="price" type="number" min="0" step="1" required>
+
+                    </div>
+
+
+                    <div class="field full">
+
+                        <label>
+                            Description
+                        </label>
+
+                        <textarea id="desc" placeholder="Example: Indian Starters"></textarea>
+
+                    </div>
+
+
+                    <div class="field full">
+                        <label>Image</label>
+
+                        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                            <input type="file" id="imageFile" accept="image/*">
+
+                            <input type="url" id="imageUrl" placeholder="Or paste image URL"
+                                style="flex:1; min-width:250px;">
+                        </div>
+
+                        <img id="imagePreview" style="
+            display:none;
+            width:150px;
+            height:100px;
+            object-fit:cover;
+            margin-top:10px;
+            border-radius:10px;
+        ">
+                    </div>
+
+                </div>
+
+
+                <div class="error" id="formError"></div>
+
+
+                <div class="modal-actions">
+
+                    <button type="button" class="light" onclick="closeModal()">
+                        Cancel
+                    </button>
+
+                    <button type="submit" class="primary" id="saveBtn">
+                        Add Item
+                    </button>
+
+                </div>
+
+            </form>
+
         </div>
-        <label>New login password <span class="muted small">· leave blank to keep the current one</span></label>
-        <div class="pw-row"><input name="password" minlength="6" placeholder="Unchanged" autocomplete="new-password"><button type="button" class="ghost" data-genpw>Generate</button></div>
-        <label class="check"><input type="checkbox" name="paid" ${r.paid ? 'checked' : ''}> Onboarding payment received</label><div class="err" id="editErr" role="alert"></div>
-        <div class="card-foot"><button type="button" class="ghost" data-close>Cancel</button><button>Save changes</button></div></form>` });
-      const form = $('#editForm', m); planToggle(form); wireGenerate(form);
-      form.addEventListener('submit', async (ev) => {
-        ev.preventDefault(); const f = new FormData(ev.target); f.set('paid', ev.target.elements.paid.checked ? 'true' : 'false'); if (!f.get('password')) f.delete('password');
-        try {
-          const out = await api(`/api/v1/admin/restaurants/${r.id}`, 'PATCH', f); closeModal(); toast('Restaurant updated'); await load();
-          if (f.get('password')) credentialsModal('Password changed', out, f.get('password'));
-        } catch (er) { $('#editErr', m).textContent = er.message; }
-      });
-    } else if (id('reset')) {
-      const r = get(id('reset'));
-      if (await confirmDialog({ title: `Reset password for ${r.name}?`, message: 'A new password is generated. The old one stops working immediately.', confirmText: 'Reset password' })) {
-        const out = await api(`/api/v1/admin/restaurants/${r.id}/reset-password`, 'POST'); credentialsModal('New password', { ...r, owner_mobile: out.mobile, owner_email: out.email }, out.password); load();
-      }
-    } else if (id('toggle')) {
-      const r = get(id('toggle')), off = r.active;
-      if (await confirmDialog(off ? { title: `Deactivate ${r.name}?`, message: 'Their menu will stop showing and they will not be able to log in.', confirmText: 'Deactivate', danger: true } : { title: `Activate ${r.name}?`, message: 'They can log in again and their menu will be visible.', confirmText: 'Activate' })) {
-        await api(`/api/v1/admin/restaurants/${r.id}`, 'PATCH', { active: !off }); toast(off ? 'Restaurant deactivated' : 'Restaurant activated'); load();
-      }
-    } else if (id('del')) {
-      const r = get(id('del'));
-      if (await confirmDialog({ title: `Delete ${r.name}?`, message: 'This permanently removes the restaurant, its login, menu items and photos. This cannot be undone.', confirmText: 'Delete restaurant', danger: true })) {
-        await api(`/api/v1/admin/restaurants/${r.id}`, 'DELETE'); toast('Restaurant deleted'); load();
-      }
-    }
-  } catch (er) { toast(er.message); }
-});
 
-const upiQrInput = $('#obForm [name=upi_qr]');
-upiQrInput.addEventListener('change', () => {
-  const preview = $('#upiQrPreview'); const file = upiQrInput.files?.[0];
-  preview.replaceChildren(); preview.classList.toggle('hidden', !file);
-  if (!file) return;
-  if (!file.type.startsWith('image/')) { upiQrInput.value = ''; preview.classList.add('hidden'); toast('Choose an image file for the UPI QR'); return; }
-  const img = document.createElement('img'); img.alt = 'UPI QR preview'; img.src = URL.createObjectURL(file); img.onload = () => URL.revokeObjectURL(img.src); preview.append(img);
-});
-$('#obForm').addEventListener('submit', async (e) => {
-  e.preventDefault(); $('#obErr').textContent = ''; const f = new FormData(e.target); f.set('paid', e.target.elements.paid.checked ? 'true' : 'false'); if (!f.get('password')) f.delete('password');
-  try {
-    const out = await api('/api/v1/admin/restaurants', 'POST', f); e.target.reset(); $('#upiQrPreview').replaceChildren(); $('#upiQrPreview').classList.add('hidden'); e.target.elements.plan_type.dispatchEvent(new Event('change'));
-    await load(); showTab('restaurants'); credentialsModal('Restaurant created', out, out.generated_password || f.get('password'));
-  } catch (er) { $('#obErr').textContent = er.message; }
-});
-$('#pwf').addEventListener('submit', async (e) => {
-  e.preventDefault(); $('#pwErr').textContent = ''; const f = Object.fromEntries(new FormData(e.target));
-  if (f.new_password !== f.confirm_password) { $('#pwErr').textContent = 'New passwords do not match'; return; }
-  try { await api('/api/v1/auth/password', 'POST', f); e.target.reset(); toast('Password updated'); } catch (er) { $('#pwErr').textContent = er.message; }
-});
+    </div>
 
-(async () => {
-  await requireRole('admin'); await load();
-  const deep = /^#menu-(\d+)$/.exec(location.hash); // read before the tabs reset the address: a reload keeps you on the same menu
-  showTab = tabs($('#tabs'), () => { if (location.hash.startsWith('#menu-')) history.replaceState(null, '', location.pathname); });
-  const r = deep && restaurants.find((x) => x.id == deep[1]);
-  if (r) openMenu(r);
-})();
-</script>
-</body></html>
+
+    <div class="toast" id="toast"></div>
+    <div id="orderNotifications" aria-live="polite" aria-label="Order updates"></div>
+
+
+    <script>
+
+        let menu = [];
+        let editingId = null;
+
+
+        // =========================
+        // SHORTCUT
+        // =========================
+
+        const $ = id => document.getElementById(id);
+
+
+        // =========================
+        // IMAGE FILE PREVIEW
+        // =========================
+
+        $("imageFile").addEventListener("change", function () {
+
+            const file = this.files[0];
+
+            if (!file) return;
+
+            // If user selects a file,
+            // clear the URL field
+            $("imageUrl").value = "";
+
+            const preview = $("imagePreview");
+
+            preview.src = URL.createObjectURL(file);
+            preview.style.display = "block";
+
+        });
+
+
+        // =========================
+        // IMAGE URL PREVIEW
+        // =========================
+
+        $("imageUrl").addEventListener("input", function () {
+
+            const url = this.value.trim();
+            const preview = $("imagePreview");
+
+            // If URL is empty
+            if (!url) {
+
+                preview.src = "";
+                preview.style.display = "none";
+
+                return;
+            }
+
+            // Show URL preview
+            preview.src = url;
+            preview.style.display = "block";
+
+            // Invalid image URL
+            preview.onerror = function () {
+
+                preview.style.display = "none";
+
+            };
+
+        });
+
+
+        // =========================
+        // ESCAPE HTML
+        // =========================
+
+        function esc(value) {
+
+            return String(value ?? "")
+                .replace(
+                    /[&<>'"]/g,
+                    character => ({
+                        "&": "&amp;",
+                        "<": "&lt;",
+                        ">": "&gt;",
+                        "'": "&#39;",
+                        '"': "&quot;"
+                    }[character])
+                );
+
+        }
+
+
+        // =========================
+        // MONEY
+        // =========================
+
+        function money(value) {
+
+            return "₹" +
+                Number(value || 0)
+                    .toLocaleString("en-IN");
+
+        }
+
+
+        // =========================
+        // CHECK LOGIN
+        // =========================
+
+        async function checkLogin() {
+
+            try {
+
+                const response =
+                    await fetch("/api/admin/check");
+
+                const data =
+                    await response.json();
+
+                if (data.loggedIn) {
+
+                    showDashboard();
+
+                }
+
+            } catch (error) {
+
+                console.error(error);
+
+            }
+
+        }
+
+
+
+
+        // ========================================
+        // GOOGLE LOGIN
+        // ========================================
+
+        function handleGoogleLogin(response) {
+
+            fetch(
+                "/api/admin/google-login",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        credential:
+                            response.credential
+                    })
+                }
+            )
+                .then(
+                    async response => {
+
+                        const data =
+                            await response.json();
+
+
+                        if (!response.ok) {
+
+                            throw new Error(
+                                data.message ||
+                                "Google login failed"
+                            );
+
+                        }
+
+
+                        $("loginError")
+                            .style.display =
+                            "none";
+
+
+                        showDashboard();
+
+                    }
+                )
+                .catch(
+                    error => {
+
+                        console.error(
+                            "Google login error:",
+                            error
+                        );
+
+
+                        $("loginError")
+                            .style.display =
+                            "block";
+
+
+                        $("loginError")
+                            .textContent =
+                            error.message;
+
+                    }
+                );
+
+        }
+
+
+        // ========================================
+        // INITIALIZE GOOGLE BUTTON
+        // ========================================
+
+        function initializeGoogleLogin() {
+
+            if (
+                typeof google === "undefined" ||
+                !google.accounts
+            ) {
+
+                console.error(
+                    "Google Sign-In library has not loaded."
+                );
+
+                return;
+
+            }
+
+
+            google.accounts.id.initialize({
+
+                client_id:
+                    "132884412252-jokiu99i47enkg2ciugap6lqpgfk7vnk.apps.googleusercontent.com",
+
+                callback:
+                    handleGoogleLogin
+
+            });
+
+
+            google.accounts.id.renderButton(
+
+                $("googleButton"),
+
+                {
+                    theme:
+                        "outline",
+
+                    size:
+                        "large",
+
+                    text:
+                        "signin_with",
+
+                    shape:
+                        "rectangular",
+
+                    width:
+                        350
+                }
+
+            );
+
+        }
+
+
+        // ========================================
+        // START
+        // ========================================
+
+        window.addEventListener(
+            "load",
+            initializeGoogleLogin
+        );
+
+
+
+
+        // =========================
+        // SHOW DASHBOARD
+        // =========================
+
+        function showDashboard() {
+
+            $("loginPage")
+                .style.display = "none";
+
+            $("dashboard")
+                .style.display = "block";
+
+            loadMenu();
+
+        }
+
+
+        // =========================
+        // LOGOUT
+        // =========================
+
+        async function logout() {
+
+            await fetch(
+                "/api/admin/logout",
+                {
+                    method: "POST"
+                }
+            );
+
+            location.reload();
+
+        }
+
+
+        // =========================
+        // LOAD MENU
+        // =========================
+
+        async function loadMenu() {
+
+            try {
+
+                const response =
+                    await fetch("/api/menu");
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Could not load menu"
+                    );
+
+                }
+
+                menu =
+                    await response.json();
+
+                fillCategories();
+
+                render();
+
+            } catch (error) {
+
+                showToast(
+                    "Could not load menu"
+                );
+
+                console.error(error);
+
+            }
+
+        }
+
+
+        // =========================
+        // CATEGORY LIST
+        // =========================
+
+        function fillCategories() {
+
+            const categories = [
+                ...new Set(
+                    menu
+                        .map(item => item.category)
+                        .filter(Boolean)
+                )
+            ].sort(
+                (a, b) =>
+                    a.localeCompare(b)
+            );
+
+            const selected =
+                $("category").value;
+
+            $("category").innerHTML =
+                `<option value="">
+                All categories
+            </option>` +
+
+                categories
+                    .map(
+                        category =>
+                            `<option value="${esc(category)}">
+                            ${esc(category)}
+                        </option>`
+                    )
+                    .join("");
+
+            $("category").value =
+                selected;
+
+
+            $("catList").innerHTML =
+                categories
+                    .map(
+                        category =>
+                            `<option value="${esc(category)}">`
+                    )
+                    .join("");
+
+        }
+
+
+        // =========================
+        // RENDER
+        // =========================
+
+        function render() {
+
+            const search =
+                $("search")
+                    .value
+                    .trim()
+                    .toLowerCase();
+
+            const category =
+                $("category").value;
+
+
+            const filtered =
+                menu.filter(item => {
+
+                    const matchesCategory =
+                        !category ||
+                        item.category === category;
+
+                    const matchesSearch =
+                        !search ||
+                        [
+                            item.name,
+                            item.category,
+                            item.description
+                        ]
+                            .some(
+                                value =>
+                                    String(value || "")
+                                        .toLowerCase()
+                                        .includes(search)
+                            );
+
+                    return (
+                        matchesCategory &&
+                        matchesSearch
+                    );
+
+                });
+
+
+            $("count").textContent =
+                `Showing ${filtered.length} of ${menu.length} items`;
+
+
+            $("rows").innerHTML =
+                filtered.length
+
+                    ?
+
+                    filtered
+                        .map(
+                            item => `
+                    <tr>
+
+                        <td>
+
+                            <div class="name">
+                                ${esc(item.name)}
+                            </div>
+
+                            <div class="sub">
+                                ID:
+                                ${esc(item.id)}
+                            </div>
+
+                        </td>
+
+                        <td>
+                            ${esc(item.category)}
+                        </td>
+
+                        <td class="price">
+                            ${money(item.price)}
+                        </td>
+
+                        <td>
+                            ${esc(
+                                item.description || "—"
+                            )}
+                        </td>
+
+                        <td>
+
+                            <div class="row-actions">
+
+                                <button
+                                    class="light"
+                                    onclick="openEdit('${esc(item.id)}')"
+                                >
+                                    Edit
+                                </button>
+
+                                <button
+                                    class="danger"
+                                    onclick="removeItem('${esc(item.id)}')"
+                                >
+                                    Delete
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+                `
+                        )
+                        .join("")
+
+                    :
+
+                    `
+                    <tr>
+
+                        <td colspan="5">
+
+                            <div class="empty">
+                                No menu items found.
+                            </div>
+
+                        </td>
+
+                    </tr>
+                `;
+
+        }
+
+
+        // =========================
+        // ADD
+        // =========================
+
+        function openAdd() {
+
+            editingId = null;
+
+            $("modalTitle").textContent =
+                "Add Menu Item";
+
+            $("saveBtn").textContent =
+                "Add Item";
+
+            $("itemForm").reset();
+
+
+            // Clear image preview
+            $("imagePreview").src = "";
+            $("imagePreview").style.display = "none";
+
+
+            // Clear image URL
+            $("imageUrl").value = "";
+
+
+            $("formError").style.display =
+                "none";
+
+            $("overlay")
+                .classList
+                .add("show");
+
+            $("name").focus();
+
+        }
+
+
+        // =========================
+        // EDIT
+        // =========================
+
+        function openEdit(id) {
+
+            const item =
+                menu.find(
+                    product =>
+                        String(product.id) ===
+                        String(id)
+                );
+
+            if (!item) return;
+
+
+            editingId = id;
+
+
+            $("modalTitle")
+                .textContent =
+                "Edit Menu Item";
+
+
+            $("saveBtn")
+                .textContent =
+                "Save Changes";
+
+
+            $("name").value =
+                item.name || "";
+
+            $("cat").value =
+                item.category || "";
+
+            $("price").value =
+                item.price ?? "";
+
+            $("desc").value =
+                item.description || "";
+
+
+            // Reset file selector
+            $("imageFile").value = "";
+
+
+            // Put existing URL into URL field
+            $("imageUrl").value =
+                item.image || "";
+
+
+            // Show existing image
+            if (item.image) {
+
+                $("imagePreview").src =
+                    item.image;
+
+                $("imagePreview").style.display =
+                    "block";
+
+            } else {
+
+                $("imagePreview").src = "";
+
+                $("imagePreview").style.display =
+                    "none";
+
+            }
+
+
+            $("formError")
+                .style.display =
+                "none";
+
+
+            $("overlay")
+                .classList
+                .add("show");
+
+
+            $("name").focus();
+
+        }
+
+
+        // =========================
+        // CLOSE MODAL
+        // =========================
+
+        function closeModal() {
+
+            $("overlay")
+                .classList
+                .remove("show");
+
+        }
+
+
+        // =========================
+        // CLOSE WHEN CLICKING OUTSIDE
+        // =========================
+
+        $("overlay")
+            .addEventListener(
+                "click",
+                event => {
+
+                    if (
+                        event.target.id ===
+                        "overlay"
+                    ) {
+
+                        closeModal();
+
+                    }
+
+                }
+            );
+
+        // Navigate to the restaurant onboarding page.
+        // Use the current site's origin so this works on localhost and Vercel.
+        function goToRestaurantOnboarding(event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
+            window.location.assign(
+                new URL("/onboard-restaurant", window.location.origin).href
+            );
+        }
+
+        // =========================
+        // ADD / EDIT SUBMIT
+        // =========================
+        $("itemForm").addEventListener("submit", async event => {
+
+            event.preventDefault();
+
+            const file = $("imageFile").files[0];
+            const pastedImageUrl = $("imageUrl").value.trim();
+
+            const name = $("name").value.trim();
+            const category = $("cat").value.trim();
+            const price = Number($("price").value);
+            const description = $("desc").value.trim();
+
+            if (!name || !category || Number.isNaN(price)) {
+                showError("Name, category and valid price are required.");
+                return;
+            }
+
+            $("saveBtn").disabled = true;
+            $("saveBtn").textContent = "Saving...";
+
+            try {
+
+                let imageUrl = null;
+
+                // 1. FILE UPLOAD
+                if (file) {
+
+                    $("saveBtn").textContent = "Uploading image...";
+
+                    const formData = new FormData();
+                    formData.append("image", file);
+
+                    const uploadResponse = await fetch("/api/upload-image", {
+                        method: "POST",
+                        body: formData
+                    });
+
+                    const uploadData = await uploadResponse.json();
+
+                    if (!uploadResponse.ok) {
+                        throw new Error(
+                            uploadData.message || "Image upload failed"
+                        );
+                    }
+
+                    imageUrl = uploadData.imageUrl;
+
+                }
+
+                // 2. PASTED IMAGE URL
+                else if (pastedImageUrl) {
+
+                    imageUrl = pastedImageUrl;
+
+                }
+
+                // 3. KEEP EXISTING IMAGE WHEN EDITING
+                else if (editingId) {
+
+                    const existingItem = menu.find(
+                        item => String(item.id) === String(editingId)
+                    );
+
+                    imageUrl = existingItem?.image || null;
+                }
+
+                const payload = {
+                    name,
+                    category,
+                    price,
+                    description,
+                    image: imageUrl
+                };
+
+                const url = editingId
+                    ? `/api/menu/${encodeURIComponent(editingId)}`
+                    : "/api/menu";
+
+                const response = await fetch(url, {
+                    method: editingId ? "PUT" : "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(
+                        data.message || "Request failed"
+                    );
+                }
+
+                closeModal();
+
+                await loadMenu();
+
+                showToast(
+                    editingId
+                        ? "Item updated successfully"
+                        : "Item added successfully"
+                );
+
+            } catch (error) {
+
+                console.error(error);
+                showError(error.message);
+
+            } finally {
+
+                $("saveBtn").disabled = false;
+
+                $("saveBtn").textContent =
+                    editingId
+                        ? "Save Changes"
+                        : "Add Item";
+            }
+
+        });
+        // =========================
+        // DELETE
+        // =========================
+
+        async function removeItem(id) {
+
+            const item =
+                menu.find(
+                    product =>
+                        String(product.id) ===
+                        String(id)
+                );
+
+
+            if (!item) return;
+
+
+            const confirmed =
+                confirm(
+                    `Delete "${item.name}"?\n\nThis cannot be undone.`
+                );
+
+
+            if (!confirmed) return;
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `/api/menu/${encodeURIComponent(id)}`,
+                        {
+                            method: "DELETE"
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.message ||
+                        "Delete failed"
+                    );
+
+                }
+
+
+                await loadMenu();
+
+
+                showToast(
+                    "Item deleted successfully"
+                );
+
+
+            } catch (error) {
+
+                showToast(
+                    error.message
+                );
+
+            }
+
+        }
+
+
+        // =========================
+        // ERROR
+        // =========================
+
+        function showError(message) {
+
+            $("formError")
+                .textContent =
+                message;
+
+            $("formError")
+                .style.display =
+                "block";
+
+        }
+
+
+        // =========================
+        // TOAST
+        // =========================
+
+        function showToast(message) {
+
+            $("toast")
+                .textContent =
+                message;
+
+            $("toast")
+                .classList
+                .add("show");
+
+
+            setTimeout(
+                () => {
+
+                    $("toast")
+                        .classList
+                        .remove("show");
+
+                },
+                2200
+            );
+
+        }
+
+
+        // =========================
+        // START
+        // =========================
+
+        checkLogin();
+
+    </script>
+
+
+    <style>
+        .feature-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: #0008;
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 16px
+        }
+
+        .feature-modal.show {
+            display: flex
+        }
+
+        .feature-panel {
+            background: #fff;
+            border-radius: 16px;
+            padding: 22px;
+            width: min(900px, 100%);
+            max-height: 90vh;
+            overflow: auto;
+            box-shadow: 0 20px 70px #0003
+        }
+
+        .feature-panel h2 {
+            margin-top: 0
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px
+        }
+
+        .feature-grid label {
+            display: block;
+            font-weight: 600;
+            font-size: 13px
+        }
+
+        .feature-grid input,
+        .feature-grid select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-top: 5px
+        }
+
+        .feature-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 14px
+        }
+
+        .ai-preview-row,
+        .order-preview-row {
+            padding: 12px;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            margin-top: 10px;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 8px;
+            align-items: center
+        }
+
+        .ai-preview-row input,
+        .ai-preview-row select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 7px
+        }
+
+        .feature-status {
+            margin-top: 10px;
+            color: #7b3422
+        }
+
+        .feature-close {
+            float: right
+        }
+
+        .bill-print {
+            font-family: Arial, sans-serif;
+            color: #111;
+            background: #fff;
+            padding: 24px;
+            max-width: 760px;
+            margin: auto
+        }
+
+        .bill-print h2,
+        .bill-print p {
+            text-align: center
+        }
+
+        .bill-print table {
+            width: 100%;
+            border-collapse: collapse
+        }
+
+        .bill-print th,
+        .bill-print td {
+            padding: 8px;
+            border-bottom: 1px dashed #aaa;
+            text-align: left
+        }
+
+        .bill-print .right {
+            text-align: right
+        }
+
+        @media(max-width:650px) {
+            .feature-grid {
+                grid-template-columns: 1fr
+            }
+
+            .ai-preview-row,
+            .order-preview-row {
+                grid-template-columns: 1fr
+            }
+        }
+
+        @media print {
+            body.printing-bill * {
+                visibility: hidden !important
+            }
+
+            body.printing-bill #adminPrintArea,
+            body.printing-bill #adminPrintArea * {
+                visibility: visible !important
+            }
+
+            body.printing-bill #adminPrintArea {
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                display: block !important
+            }
+
+            body.printing-bill .feature-modal {
+                display: none !important
+            }
+        }
+    </style>
+    <div class="feature-modal" id="aiMenuModal" role="dialog" aria-modal="true" aria-labelledby="aiMenuTitle">
+        <section class="feature-panel">
+            <button class="feature-close" type="button" data-close-feature="aiMenuModal">Close ✕</button>
+            <h2 id="aiMenuTitle">✨ Generate Menu with AI</h2>
+            <div class="feature-grid"><label>Restaurant name<input id="aiRestaurant" value="New Desi Tadka"
+                        maxlength="100"></label><label>Cuisine<input id="aiCuisine" value="Indian vegetarian"
+                        maxlength="80"></label><label>Categories (comma separated)<input id="aiCategories"
+                        value="Starters, Main Course, Desserts, Beverages"></label><label>Number of items<input
+                        id="aiCount" type="number" min="1" max="30" value="10"></label><label>Minimum price (₹)<input
+                        id="aiPriceMin" type="number" min="0" value="80"></label><label>Maximum price (₹)<input
+                        id="aiPriceMax" type="number" min="0" value="500"></label></div>
+            <div class="feature-actions"><button type="button" class="primary" id="generateAiMenu">Generate
+                    Menu</button><button type="button" class="primary" id="saveAiMenu" disabled>Save Selected
+                    Items</button></div>
+            <p class="feature-status" id="aiMenuStatus" role="status"></p>
+            <div id="aiMenuPreview"></div>
+        </section>
+    </div>
+    <div class="feature-modal" id="ordersModal" role="dialog" aria-modal="true" aria-labelledby="ordersTitle">
+        <section class="feature-panel">
+            <button class="feature-close" type="button" data-close-feature="ordersModal">Close ✕</button>
+            <h2 id="ordersTitle">🧾 Orders / Print Bills</h2>
+            <p>Only orders available to your authenticated admin session are shown here.</p>
+            <div class="feature-actions"><button type="button" class="primary" id="refreshOrders">Refresh
+                    Orders</button><button type="button" class="light" id="deleteOldOrders">Delete Orders Older Than 15
+                    Days</button><button type="button" class="danger" id="deleteSelectedOrders" disabled>Delete Selected
+                    (0)</button></div><label
+                style="display:flex;align-items:center;gap:8px;margin:12px 0;font-weight:700"><input type="checkbox"
+                    id="selectAllOrders"> Select all listed orders</label>
+            <p class="feature-status" id="ordersStatus" role="status"></p>
+            <div id="ordersList"></div>
+        </section>
+    </div>
+    <div class="feature-modal" id="deleteConfirmModal" role="dialog" aria-modal="true"
+        aria-labelledby="deleteConfirmTitle">
+        <section class="feature-panel" style="max-width:460px">
+            <h2 id="deleteConfirmTitle">Confirm deletion</h2>
+            <p id="deleteConfirmMessage"></p>
+            <div class="feature-actions" style="justify-content:flex-end"><button type="button" class="light"
+                    id="cancelDeleteOrders">Cancel</button><button type="button" class="danger"
+                    id="confirmDeleteOrders">Confirm Delete</button></div>
+        </section>
+    </div>
+    <div id="adminPrintArea" style="display:none"></div>
+    <script>
+        (() => {
+            const $ = id => document.getElementById(id);
+
+            let generatedItems = [];
+            let currentOrders = [];
+            const selectedOrderIds = new Set();
+            const notificationKeys = new Set();
+
+            const esc = value => String(value ?? "").replace(/[&<>"']/g, c => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;"
+            }[c]));
+
+            const money = n => "₹" + Number(n || 0).toLocaleString("en-IN", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+
+            const open = id => $(id)?.classList.add("show");
+            const close = id => $(id)?.classList.remove("show");
+
+            // ==========================================
+            // OPEN ORDERS
+            // ==========================================
+
+            $("ordersPrintBillsButton")?.addEventListener("click", () => {
+                open("ordersModal");
+                loadOrders();
+
+                $("newOrderRedDot")?.classList.remove("is-visible");
+                $("newOrderPopup")?.classList.remove("is-visible");
+            });
+
+            document.querySelectorAll("[data-close-feature]").forEach(button => {
+                button.addEventListener("click", () => {
+                    close(button.dataset.closeFeature);
+                });
+            });
+
+            document.querySelectorAll(".feature-modal").forEach(modal => {
+                modal.addEventListener("click", event => {
+                    if (event.target === modal) {
+                        if (modal.id === "deleteConfirmModal") {
+                            $("cancelDeleteOrders")?.click();
+                        } else {
+                            close(modal.id);
+                        }
+                    }
+                });
+            });
+
+            // ==========================================
+            // AI MENU
+            // ==========================================
+
+            $("generateAiMenu")?.addEventListener("click", async () => {
+                const status = $("aiMenuStatus");
+
+                status.textContent = "Generating menu…";
+                $("generateAiMenu").disabled = true;
+                $("saveAiMenu").disabled = true;
+                $("aiMenuPreview").innerHTML = "";
+
+                try {
+                    const categories = $("aiCategories").value
+                        .split(",")
+                        .map(s => s.trim())
+                        .filter(Boolean);
+
+                    const response = await fetch("/api/ai/generate-menu", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            restaurantName: $("aiRestaurant").value,
+                            cuisine: $("aiCuisine").value,
+                            categories,
+                            count: Number($("aiCount").value),
+                            priceMin: Number($("aiPriceMin").value),
+                            priceMax: Number($("aiPriceMax").value)
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(data.message || "Menu generation failed");
+                    }
+
+                    generatedItems = data.items.map((item, index) => ({
+                        ...item,
+                        selected: true,
+                        _key: index
+                    }));
+
+                    renderAiPreview();
+
+                    status.textContent =
+                        `Generated ${generatedItems.length} items.`;
+
+                    $("saveAiMenu").disabled = !generatedItems.length;
+
+                } catch (error) {
+                    status.textContent = error.message;
+                } finally {
+                    $("generateAiMenu").disabled = false;
+                }
+            });
+
+            function renderAiPreview() {
+                $("aiMenuPreview").innerHTML = generatedItems.map((item, index) => `
+            <div class="ai-preview-row">
+                <label>
+                    <input type="checkbox" data-ai-select="${index}"
+                    ${item.selected ? "checked" : ""}>
+                    Include
+                    <br>
+                    <input data-ai-name="${index}"
+                    value="${esc(item.name)}">
+                </label>
+
+                <label>
+                    Category
+                    <select data-ai-category="${index}">
+                        ${[...new Set([
+                    item.category,
+                    "Starters",
+                    "Main Course",
+                    "Desserts",
+                    "Beverages",
+                    "Breads",
+                    "Sides"
+                ])].map(category => `
+                            <option ${category === item.category ? "selected" : ""}>
+                                ${esc(category)}
+                            </option>
+                        `).join("")}
+                    </select>
+                </label>
+
+                <label>
+                    Price
+                    <input data-ai-price="${index}"
+                    type="number" value="${Number(item.price) || 0}">
+
+                    <input data-ai-desc="${index}"
+                    value="${esc(item.description)}"
+                    placeholder="Description">
+                </label>
+
+                <button type="button" data-ai-remove="${index}">
+                    Remove
+                </button>
+            </div>
+        `).join("");
+
+                generatedItems.forEach((item, index) => {
+                    $(`[data-ai-select="${index}"]`).addEventListener("change", e => {
+                        item.selected = e.target.checked;
+                    });
+
+                    $(`[data-ai-name="${index}"]`).addEventListener("input", e => {
+                        item.name = e.target.value;
+                    });
+
+                    $(`[data-ai-category="${index}"]`).addEventListener("change", e => {
+                        item.category = e.target.value;
+                    });
+
+                    $(`[data-ai-price="${index}"]`).addEventListener("input", e => {
+                        item.price = Number(e.target.value);
+                    });
+
+                    $(`[data-ai-desc="${index}"]`).addEventListener("input", e => {
+                        item.description = e.target.value;
+                    });
+
+                    $(`[data-ai-remove="${index}"]`).addEventListener("click", () => {
+                        generatedItems.splice(index, 1);
+                        renderAiPreview();
+                    });
+                });
+            }
+
+            $("saveAiMenu")?.addEventListener("click", async () => {
+                const selected = generatedItems.filter(item => item.selected);
+
+                if (!selected.length) {
+                    $("aiMenuStatus").textContent = "Select at least one item.";
+                    return;
+                }
+
+                $("saveAiMenu").disabled = true;
+
+                let saved = 0;
+
+                try {
+                    for (const item of selected) {
+                        const response = await fetch("/api/menu", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                name: item.name,
+                                category: item.category,
+                                price: Number(item.price),
+                                description: item.description,
+                                image: null
+                            })
+                        });
+
+                        const data = await response.json();
+
+                        if (!response.ok) {
+                            throw new Error(data.message || "Menu save failed");
+                        }
+
+                        saved++;
+                    }
+
+                    $("aiMenuStatus").textContent =
+                        `Saved ${saved} menu items successfully.`;
+
+                    if (typeof loadMenu === "function") await loadMenu();
+
+                    generatedItems = [];
+                    $("aiMenuPreview").innerHTML = "";
+
+                } catch (error) {
+                    $("aiMenuStatus").textContent =
+                        `Saved ${saved} item(s). ${error.message}`;
+                } finally {
+                    $("saveAiMenu").disabled = false;
+                }
+            });
+
+            // ==========================================
+            // ORDER NOTIFICATIONS
+            // ==========================================
+
+            function showOrderNotification(orderNumber, status, orderId) {
+                const key = `${orderId}:${status}`;
+
+                if (notificationKeys.has(key)) return;
+
+                notificationKeys.add(key);
+
+                const stack = $("orderNotifications");
+
+                if (!stack) return;
+
+                const item = document.createElement("div");
+
+                item.className =
+                    `order-notification ${status === "Ready" ? "prepared" : ""}`;
+
+                item.innerHTML = `
+            <span>
+                ${esc(
+                    status === "Ready"
+                        ? `Order #${orderNumber} is Prepared and ready!`
+                        : `Order #${orderNumber} is now Active.`
+                )}
+            </span>
+
+            <button type="button"
+                class="order-notification-close"
+                aria-label="Close notification">
+                ×
+            </button>
+        `;
+
+                item.querySelector("button").addEventListener("click", event => {
+                    event.stopPropagation();
+                    item.remove();
+                    notificationKeys.delete(key);
+                });
+
+                stack.appendChild(item);
+            }
+
+            // ==========================================
+            // ORDER SELECTION
+            // ==========================================
+
+            function updateDeleteCount() {
+                const checkboxes = [
+                    ...document.querySelectorAll('#ordersList [data-select-order]')
+                ];
+
+                const count = selectedOrderIds.size;
+                const button = document.getElementById('deleteSelectedOrders');
+                const selectAll = document.getElementById('selectAllOrders');
+
+                if (button) {
+                    button.textContent = `Delete Selected (${count})`;
+                    button.disabled = count === 0;
+                }
+
+                if (selectAll) {
+                    selectAll.checked =
+                        checkboxes.length > 0 &&
+                        checkboxes.every(cb => cb.checked);
+
+                    selectAll.indeterminate =
+                        count > 0 && !selectAll.checked;
+                }
+            }
+
+            // ==========================================
+            // DELETE CONFIRMATION
+            // ==========================================
+
+            function confirmOrderDeletion(count) {
+                return new Promise(resolve => {
+                    const modal = $("deleteConfirmModal");
+
+                    if (!modal) {
+                        resolve(confirm(
+                            `Delete ${count} selected orders?`
+                        ));
+                        return;
+                    }
+
+                    $("deleteConfirmMessage").textContent =
+                        `Are you sure you want to delete ${count} selected order(s)? Archived copies will be retained.`;
+
+                    const finish = confirmed => {
+                        modal.classList.remove("show");
+
+                        $("confirmDeleteOrders").removeEventListener(
+                            "click", onConfirm
+                        );
+
+                        $("cancelDeleteOrders").removeEventListener(
+                            "click", onCancel
+                        );
+
+                        resolve(confirmed);
+                    };
+
+                    const onConfirm = () => finish(true);
+                    const onCancel = () => finish(false);
+
+                    $("confirmDeleteOrders").addEventListener(
+                        "click", onConfirm
+                    );
+
+                    $("cancelDeleteOrders").addEventListener(
+                        "click", onCancel
+                    );
+
+                    modal.classList.add("show");
+                });
+            }
+
+            // ==========================================
+            // LOAD ORDERS
+            // ==========================================
+
+            async function loadOrders() {
+                const status = $("ordersStatus");
+                const list = $("ordersList");
+
+                if (!status || !list) return;
+
+                status.textContent = "Loading orders…";
+
+                try {
+                    const response = await fetch("/api/orders", {
+                        credentials: "same-origin",
+                        cache: "no-store"
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(data.message || "Unable to load orders");
+                    }
+
+                    currentOrders = Array.isArray(data.orders)
+                        ? data.orders
+                        : [];
+
+                    if (!currentOrders.length) {
+                        selectedOrderIds.clear();
+                        list.innerHTML = "";
+                        status.textContent = "No orders found.";
+                        updateDeleteCount();
+                        return;
+                    }
+
+                    // Remove IDs that no longer exist.
+                    const existingIds = new Set(
+                        currentOrders.map(order =>
+                            String(order.id ?? order._id)
+                        )
+                    );
+
+                    selectedOrderIds.forEach(id => {
+                        if (!existingIds.has(id)) {
+                            selectedOrderIds.delete(id);
+                        }
+                    });
+
+                    status.textContent =
+                        `Loaded ${currentOrders.length} order(s).`;
+
+                    list.innerHTML = currentOrders.map(order => {
+                        const id = String(order.id ?? order._id);
+
+                        const current = String(
+                            order.status || "Pending"
+                        ).toLowerCase();
+
+                        const activeDisabled = [
+                            "preparing",
+                            "ready",
+                            "completed",
+                            "cancelled",
+                            "rejected"
+                        ].includes(current);
+
+                        const preparedDisabled = [
+                            "ready",
+                            "completed",
+                            "cancelled",
+                            "rejected"
+                        ].includes(current);
+
+                        const items = (order.items || [])
+                            .map(item =>
+                                `${esc(item.name)} × ${Number(item.qty || 1)}`
+                            ).join(", ");
+
+                        return `
+                    <div class="order-preview-row">
+
+                        <div>
+                            <label style="display:flex;gap:8px;align-items:flex-start">
+
+                                <input
+                                    type="checkbox"
+                                    data-select-order="${esc(id)}"
+                                    ${selectedOrderIds.has(id) ? "checked" : ""}
+                                >
+
+                                <span>
+                                    <strong>${esc(order.order_no || id)}</strong>
+                                    <br>
+                                    ${esc(order.customer || "Customer")}
+                                    · ${esc(order.phone || "")}
+                                    <br>
+                                    <small>
+                                        ${esc(order.order_type || "Takeaway")}
+                                        · ${esc(order.table_no || "No table")}
+                                    </small>
+                                    <br>
+                                    <small>${items}</small>
+                                </span>
+
+                            </label>
+                        </div>
+
+                        <div>
+                            ${money(order.total)}
+                            <br>
+                            <small>Status: ${esc(current)}</small>
+                            <br>
+                            <small>
+                                ${esc(order.created_at
+                            ? new Date(order.created_at).toLocaleString("en-IN")
+                            : "")}
+                            </small>
+                        </div>
+
+                        <div class="order-actions">
+
+                            <div class="order-actions-top">
+
+                                <button
+                                    type="button"
+                                    data-order-status="active"
+                                    data-order-id="${esc(id)}"
+                                    ${activeDisabled ? "disabled" : ""}
+                                >
+                                    Active
+                                </button>
+
+                                <button
+                                    type="button"
+                                    data-order-status="prepared"
+                                    data-order-id="${esc(id)}"
+                                    ${preparedDisabled ? "disabled" : ""}
+                                >
+                                    Prepared
+                                </button>
+
+                            </div>
+
+                            <button
+                                type="button"
+                                data-print-order="${esc(id)}"
+                            >
+                                Print Bill
+                            </button>
+
+                        </div>
+
+                    </div>
+                `;
+                    }).join("");
+
+                    // Individual checkbox events.
+                    list.querySelectorAll('[data-select-order]').forEach(cb => {
+                        cb.addEventListener('change', function () {
+
+                            const id = String(this.dataset.selectOrder);
+
+                            if (this.checked) {
+                                selectedOrderIds.add(id);
+                            } else {
+                                selectedOrderIds.delete(id);
+                            }
+
+                            updateDeleteCount();
+                        });
+                    });
+
+                    // Print and status buttons.
+                    currentOrders.forEach(order => {
+                        const id = String(order.id ?? order._id);
+
+                        list.querySelector(
+                            `[data-print-order="${CSS.escape(id)}"]`
+                        )?.addEventListener("click", () => printOrder(order));
+
+                        list.querySelectorAll(
+                            `[data-order-id="${CSS.escape(id)}"]`
+                        ).forEach(button => {
+
+                            button.addEventListener("click", async () => {
+
+                                const next =
+                                    button.dataset.orderStatus === "active"
+                                        ? "Preparing"
+                                        : "Ready";
+
+                                button.disabled = true;
+
+                                try {
+                                    const response = await fetch(
+                                        `/api/orders/${encodeURIComponent(id)}/status`,
+                                        {
+                                            method: "PATCH",
+                                            headers: {
+                                                "Content-Type": "application/json"
+                                            },
+                                            credentials: "same-origin",
+                                            body: JSON.stringify({
+                                                status: next
+                                            })
+                                        }
+                                    );
+
+                                    const result = await response.json();
+
+                                    if (!response.ok) {
+                                        throw new Error(
+                                            result.message || "Status update failed"
+                                        );
+                                    }
+
+                                    showOrderNotification(
+                                        order.order_no || id,
+                                        result.status,
+                                        id
+                                    );
+
+                                    status.textContent =
+                                        `${order.order_no || id} updated to ${result.status}.`;
+
+                                    await loadOrders();
+
+                                } catch (error) {
+                                    status.textContent = error.message;
+                                    button.disabled = false;
+                                }
+                            });
+                        });
+                    });
+
+                    updateDeleteCount();
+
+                } catch (error) {
+                    status.textContent = error.message;
+                }
+            }
+
+            // ==========================================
+            // SELECT ALL
+            // ==========================================
+
+            $("selectAllOrders")?.addEventListener("change", function () {
+
+                const checked = this.checked;
+
+                document.querySelectorAll(
+                    '#ordersList [data-select-order]'
+                ).forEach(cb => {
+
+                    cb.checked = checked;
+
+                    const id = String(cb.dataset.selectOrder);
+
+                    if (checked) {
+                        selectedOrderIds.add(id);
+                    } else {
+                        selectedOrderIds.delete(id);
+                    }
+                });
+
+                updateDeleteCount();
+            });
+            // ==========================================
+            // DELETE SELECTED ORDERS
+            // ==========================================
+
+            $("deleteSelectedOrders")?.addEventListener("click", async function () {
+
+                const ids = [...selectedOrderIds];
+
+                if (!ids.length) return;
+
+                if (!await confirmOrderDeletion(ids.length)) return;
+
+                this.disabled = true;
+
+                try {
+                    const response = await fetch('/api/orders/delete-selected', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        credentials: 'same-origin',
+                        body: JSON.stringify({ ids })
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(data.error || data.message || 'Deletion failed');
+                    }
+
+                    selectedOrderIds.clear();
+
+                    $("ordersStatus").textContent =
+                        `Successfully deleted ${data.deleted} orders.`;
+
+                    await loadOrders();
+
+                } catch (error) {
+                    $("ordersStatus").textContent = error.message;
+                } finally {
+                    updateDeleteCount();
+                }
+            });
+
+            // ==========================================
+            // AUTOMATIC 15-DAY CLEANUP BUTTON
+            // ==========================================
+
+            $("deleteOldOrders")?.addEventListener("click", async () => {
+
+                if (!confirm(
+                    "Delete all orders older than 15 days? Archived copies will be retained."
+                )) return;
+
+                const button = $("deleteOldOrders");
+
+                button.disabled = true;
+
+                try {
+                    const response = await fetch(
+                        "/api/orders/delete-older-than-15-days",
+                        {
+                            method: "POST",
+                            credentials: "same-origin"
+                        }
+                    );
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(data.message || "Cleanup failed");
+                    }
+
+                    $("ordersStatus").textContent =
+                        `Deleted ${data.deletedCount ?? data.deleted ?? 0} old orders.`;
+
+                    await loadOrders();
+
+                } catch (error) {
+                    $("ordersStatus").textContent = error.message;
+                } finally {
+                    button.disabled = false;
+                }
+            });
+
+            // ==========================================
+            // REFRESH ORDERS
+            // ==========================================
+
+            $("refreshOrders")?.addEventListener("click", loadOrders);
+
+            // ==========================================
+            // PRINT BILL
+            // ==========================================
+
+            function printOrder(order) {
+
+                const items = Array.isArray(order.items)
+                    ? order.items
+                    : [];
+
+                const subtotal = Number(
+                    order.subtotal ??
+                    items.reduce((sum, item) =>
+                        sum + Number(
+                            item.line_total ||
+                            Number(item.price || 0) * Number(item.qty || 0)
+                        ), 0
+                    )
+                );
+
+                const tax = Number(
+                    order.tax_amount ??
+                    Math.round(subtotal * 0.05 * 100) / 100
+                );
+
+                const location =
+                    order.order_type === "Dine In"
+                        ? `Table Number: ${order.table_no || "—"}`
+                        : order.order_type === "Room Service"
+                            ? `Room Number: ${order.room_number || "—"}`
+                            : order.order_type === "Delivery"
+                                ? `Delivery Address: ${order.delivery_address || "—"}`
+                                : "Takeaway";
+
+                const area = $("adminPrintArea");
+
+                area.innerHTML = `
+            <article class="bill-print">
+
+                <h2>NEW DESI TADKA</h2>
+
+                <p>ORDER RECEIPT</p>
+
+                <hr>
+
+                <p>
+                    Order: ${esc(order.order_no || order.id)}
+                    <br>
+                    Date: ${esc(order.created_at
+                    ? new Date(order.created_at).toLocaleString("en-IN")
+                    : "")}
+                    <br>
+                    Customer: ${esc(order.customer)}
+                    <br>
+                    Phone: ${esc(order.phone)}
+                    <br>
+                    Order Type: ${esc(order.order_type || "Takeaway")}
+                    <br>
+                    ${esc(location)}
+                </p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Qty</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        ${items.map(item => `
+                            <tr>
+                                <td>${esc(item.name)}</td>
+                                <td>${Number(item.qty || 0)}</td>
+                                <td>${money(item.price)}</td>
+                                <td>${money(
+                        item.line_total ||
+                        Number(item.price || 0) * Number(item.qty || 0)
+                    )}</td>
+                            </tr>
+                        `).join("")}
+                    </tbody>
+                </table>
+
+                <p>
+                    Subtotal: ${money(subtotal)}
+                    <br>
+                    Tax: ${money(tax)}
+                    <br>
+                    <strong>TOTAL: ${money(order.total)}</strong>
+                </p>
+
+                <hr>
+
+                <p>Thank you for ordering!</p>
+
+            </article>
+        `;
+
+                area.style.display = "block";
+
+                document.body.classList.add("printing-bill");
+
+                window.print();
+
+                setTimeout(() => {
+                    document.body.classList.remove("printing-bill");
+                    area.style.display = "none";
+                }, 500);
+            }
+
+        })();
+    </script>
+
+
+    <div id="newOrderPopup" role="status" aria-live="assertive">
+        <button type="button" class="new-order-popup-close" id="newOrderPopupClose"
+            aria-label="Close notification">×</button>
+        <span aria-hidden="true" style="font-size:24px">🧾</span>
+        <span><span class="new-order-popup-title">New order received!</span><span id="newOrderPopupMessage">A new
+                customer order has arrived.</span></span>
+    </div>
+
+    <script id="new-order-notification-script">
+        (() => {
+            if (window.__vignaNewOrderNotificationsStarted) return;
+            window.__vignaNewOrderNotificationsStarted = true;
+            const popup = document.getElementById('newOrderPopup'), message = document.getElementById('newOrderPopupMessage');
+            const close = document.getElementById('newOrderPopupClose'), dot = document.getElementById('newOrderRedDot');
+            const ordersButton = document.getElementById('ordersPrintBillsButton');
+            const setDot = v => dot && dot.classList.toggle('is-visible', v);
+            const show = o => { const no = o.order_no || o.orderNumber || o.id || ''; if (message) message.textContent = no ? `Order ${no} has arrived. Open Orders / Print Bills to view it.` : 'A new customer order has arrived.'; popup?.classList.add('is-visible'); };
+            close?.addEventListener('click', () => popup?.classList.remove('is-visible'));
+            ordersButton?.addEventListener('click', () => { setDot(false); popup?.classList.remove('is-visible'); });
+            if (!('EventSource' in window)) return;
+            const stream = new EventSource('/api/orders/events');
+            stream.addEventListener('new-order', event => { try { const order = JSON.parse(event.data); setDot(true); show(order); document.getElementById('ordersModal')?.classList.contains('show') && document.getElementById('refreshOrders')?.click(); } catch (e) { console.error('Invalid new-order event', e); } });
+            stream.onerror = () => console.warn('Order event stream disconnected; browser will retry automatically.');
+            window.addEventListener('beforeunload', () => stream.close(), { once: true });
+        })();
+    </script>
+
+
+
+</body>
+
+</html>

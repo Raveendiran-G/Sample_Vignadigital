@@ -55,6 +55,12 @@ Errors: `{"error": "message"}` with a 4xx/5xx status. Login is rate-limited (20 
 | GET | `/library/items?q=&category=&restaurant_id=&limit=&offset=` | Search those dishes: `q` matches name or description, `category` is a category name, `limit` up to 100. Returns `{total, items}`. |
 | POST | `/library/import` | `{items: [dishIds], categories: [{category_id, with_items}]}` copies them into your menu: categories are matched by name (created when missing), dishes already in the same category are skipped, photos are copied. Max 300 dishes per call. → `{added_items, skipped_items, added_categories}`. The admin can do the same for any restaurant under `/admin/restaurants/:id/library/...`. |
 | GET | `/qr.png` | PNG QR for the menu URL; `?size=800` (128-2048), `?download=1` |
+| GET | `/orders` | Current orders for this restaurant, newest first. |
+| PATCH | `/orders/:orderId/status` | `{status: "Preparing"\|"Ready"}` updates the order and notifies the customer through the live order stream. |
+| POST | `/orders/delete-selected` | `{ids: ["..."]}` archives and permanently deletes only the selected orders. |
+| POST | `/orders/delete-older-than-15-days` | Archives and permanently deletes orders whose `created_at` is more than 15 days old. This cleanup also runs automatically on application startup and periodically while the server is running. |
+
+Deleted orders are copied once to the MongoDB `order_archive` collection, keyed by `original_id`, before deletion. Archived records include `archived_at` and `archive_reason`.
 
 ### Example
 ```bash

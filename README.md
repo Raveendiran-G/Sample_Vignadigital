@@ -42,16 +42,6 @@ Put a TLS-terminating proxy in front (Caddy: `menu.vignadigital.com { reverse_pr
 ### Render / Railway / Fly.io
 Deploy from this repo using the `Dockerfile`; attach a persistent disk/volume mounted at `/data`, set the env vars above and use `/health` as the health check. `render.yaml` is a ready Render blueprint.
 
-### Vercel
-This repository includes a Vercel Node function entry point and `vercel.json` routing. Import the repository into Vercel and set these Project Environment Variables:
-
-- `MONGODB_URI` for MongoDB Atlas (allow Vercel connections in Atlas Network Access; `0.0.0.0/0` is the usual option when Vercel egress IPs are not fixed).
-- `SESSION_SECRET` (at least 32 characters).
-- `ADMIN_EMAIL` and `ADMIN_PASSWORD` for the first deployment.
-- `BASE_URL` set to the stable public URL or custom domain, especially before generating QR codes. Vercel's `VERCEL_URL` is used as a fallback when `BASE_URL` is omitted, but preview URLs can change.
-
-Vercel's deployment filesystem is read-only, so this app uses `/tmp` for photo uploads there. `/tmp` is temporary and may not be shared across function instances; uploaded photos can disappear. For durable photo storage, connect an object-storage service before relying on uploads in production. MongoDB stores the application records and sessions.
-
 ### Moving from the old SQLite version
 If you ran an earlier version that kept data in `DATA_DIR/app.db`, copy it into MongoDB once (ids, logins and photos are kept; run it again safely; everyone logs in again):
 ```bash

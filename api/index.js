@@ -1,14 +1,19 @@
 const app = require('../app');
 const db = require('../lib/db');
+const { startOrderCleanup } = require('../lib/order-retention');
 
 let initPromise;
 
 function initializeDatabase() {
   if (!initPromise) {
-    initPromise = db.init().catch((error) => {
-      initPromise = null;
-      throw error;
-    });
+    initPromise = db.init()
+      .then(() => {
+        startOrderCleanup();
+      })
+      .catch((error) => {
+        initPromise = null;
+        throw error;
+      });
   }
 
   return initPromise;
