@@ -1,42 +1,18 @@
-// Load environment variables first
-require('dotenv').config();
 
+require('dotenv').config();
 const { PORT, BASE_URL } = require('./lib/config');
 const db = require('./lib/db');
-const { startOrderCleanup } = require('./lib/order-retention');
 const app = require('./app');
 
 (async () => {
-    try {
-        // Connect to MongoDB
-        await db.init();
-        const orderCleanupTimer = startOrderCleanup();
+  await db.init(); // connect to MongoDB, create indexes, make sure the super admin exists
+  const server = app.listen(PORT, () => console.log(`Menu Card listening on :${PORT} (public URL ${BASE_URL})`));
 
-        // Start the actual application from app.js
-        const server = app.listen(PORT, () => {
-            console.log(
-                `Menu Card listening on :${PORT} (public URL ${BASE_URL})`
-            );
-        });
-
-        // Graceful shutdown
-        function shutdown(signal) {
-            console.log(`${signal} received, shutting down`);
-            clearInterval(orderCleanupTimer);
-
-            server.close(async () => {
-                await db.close();
-                process.exit(0);
-            });
-
-            setTimeout(() => process.exit(1), 10000).unref();
-        }
-
-        process.on('SIGTERM', () => shutdown('SIGTERM'));
-        process.on('SIGINT', () => shutdown('SIGINT'));
-
-    } catch (error) {
-        console.error('Application startup failed:', error);
-        process.exit(1);
-    }
-})();
+  // Graceful shutdown so in-flight requests finish and the database connection closes on deploys/restarts.
+  function shutdown(sig) {
+    console.log(`${sig} received, shutting down`);
+    server.close(async () => { await db.close(); process.exit(0); });
+    setTimeout(() => process.exit(1), 10000).unref();
+  }
+  ['SIGTERM', 'SIGINT'].forEach(s => process.on(s, () => shutdown(s)));
+})().catch(e => { console.error(e.message); process.exit(1); });
