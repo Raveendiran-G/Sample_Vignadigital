@@ -12,7 +12,7 @@ const { HttpError } = require('./lib/service');
 const app = express();
 app.disable('x-powered-by');
 // Behind a reverse proxy / PaaS load balancer: needed for secure cookies and correct client IPs in rate limiting.
-app.set('trust proxy', process.env.TRUST_PROXY ? Number(process.env.TRUST_PROXY) || process.env.TRUST_PROXY : 1);
+app.set('trust proxy', 1);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
