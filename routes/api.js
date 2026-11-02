@@ -186,11 +186,22 @@ router.get('/public/menu/:slug', async (req, res) => {
     const imageUrl = image => {
         if (!image) return null;
 
-        if (/^https?:\/\//i.test(image)) {
-            return image;
+        const value = String(image).trim();
+
+        if (/^https?:\/\//i.test(value)) {
+            return value;
         }
 
-        return `/uploads/${encodeURIComponent(image)}`;
+        const filename = value
+            .replace(/^\/+/, '')
+            .replace(/^uploads\//i, '');
+
+        if (!filename) return null;
+
+        return '/uploads/' + filename
+            .split('/')
+            .map(part => encodeURIComponent(part))
+            .join('/');
     };
 
     res.set('Cache-Control', 'no-store');
@@ -793,6 +804,103 @@ admin.delete('/restaurants/:id', async (req, res) => {
     await svc.deleteRestaurant(id(req));
 
     res.status(204).end();
+});
+// ======================================================
+// AI CUSTOM MENU HTML
+// ======================================================
+
+const CUSTOM_MENU_MAX_SIZE = 1024 * 1024; // 1 MB
+
+admin.get('/restaurants/:id/custom-menu', async (req, res) => {
+    const restaurant = await svc.getRestaurant(id(req));
+
+    res.set('Cache-Control', 'no-store');
+
+    res.json({
+        exists: !!restaurant.custom_menu_html,
+        enabled: restaurant.custom_menu_enabled === true,
+        updated_at: restaurant.custom_menu_updated_at || null
+    });
+});
+
+admin.put('/restaurants/:id/custom-menu', async (req, res) => {
+    const restaurant = await svc.getRestaurant(id(req));
+
+    const html = req.body?.html;
+
+    if (typeof html !== 'string' || !html.trim()) {
+        throw new HttpError(400, 'HTML file content is required');
+    }
+
+    if (Buffer.byteLength(html, 'utf8') > CUSTOM_MENU_MAX_SIZE) {
+        throw new HttpError(413, 'HTML file must be smaller than 1 MB');
+    }
+
+    if (!/<html[\s>]/i.test(html) || !/<\/html>/i.test(html)) {
+        throw new HttpError(400, 'Please upload a complete HTML document');
+    }
+
+    await cols.restaurants.updateOne(
+        { _id: restaurant.id },
+        {
+            $set: {
+                custom_menu_html: html,
+                custom_menu_enabled: false,
+                custom_menu_updated_at: new Date()
+            }
+        }
+    );
+
+    res.json({
+        success: true,
+        message: 'Custom menu uploaded. Activate it to display it.',
+        enabled: false
+    });
+});
+
+admin.patch('/restaurants/:id/custom-menu', async (req, res) => {
+    const restaurant = await svc.getRestaurant(id(req));
+
+    const enabled = req.body?.enabled === true;
+
+    if (enabled && !restaurant.custom_menu_html) {
+        throw new HttpError(400, 'Upload a custom HTML menu first');
+    }
+
+    await cols.restaurants.updateOne(
+        { _id: restaurant.id },
+        {
+            $set: {
+                custom_menu_enabled: enabled,
+                custom_menu_updated_at: new Date()
+            }
+        }
+    );
+
+    res.json({
+        success: true,
+        enabled
+    });
+});
+
+admin.delete('/restaurants/:id/custom-menu', async (req, res) => {
+    const restaurant = await svc.getRestaurant(id(req));
+
+    await cols.restaurants.updateOne(
+        { _id: restaurant.id },
+        {
+            $unset: {
+                custom_menu_html: '',
+                custom_menu_enabled: '',
+                custom_menu_updated_at: ''
+            }
+        }
+    );
+
+    res.json({
+        success: true,
+        message: 'Default menu restored'
+    });
 });
 
 admin.get('/restaurants/:id/orders', async (req, res) => {

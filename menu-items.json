@@ -1,0 +1,1762 @@
+[
+  {
+    "_id": 1,
+    "restaurant_id": 2,
+    "category_id": 2,
+    "name": "Aloo Golden Fry",
+    "description": "",
+    "price": 193,
+    "image": "423bb7f0-9f50-46d0-92d1-3e91bce54843.jpg",
+    "available": true
+  },
+  {
+    "_id": 2,
+    "restaurant_id": 2,
+    "category_id": 2,
+    "name": "Gobi 65",
+    "description": "",
+    "price": 197,
+    "image": "5729430d-8ee2-4f48-9749-955e209be8f1.jpg",
+    "available": true
+  },
+  {
+    "_id": 3,
+    "restaurant_id": 2,
+    "category_id": 2,
+    "name": "Paneer 65",
+    "description": "",
+    "price": 208,
+    "image": "d34884f4-ca4a-4b3c-aa10-ed264334a0be.jpg",
+    "available": true
+  },
+  {
+    "_id": 4,
+    "restaurant_id": 2,
+    "category_id": 2,
+    "name": "Mushroom 65",
+    "description": "",
+    "price": 238,
+    "image": "faf46a75-fddc-45d7-8ef7-2b9ca5850d8d.jpg",
+    "available": true
+  },
+  {
+    "_id": 5,
+    "restaurant_id": 2,
+    "category_id": 2,
+    "name": "Babycorn 65",
+    "description": "",
+    "price": 204,
+    "image": "64487934-6ff9-475f-8e78-ac2ae88707ec.jpg",
+    "available": true
+  },
+  {
+    "_id": 6,
+    "restaurant_id": 2,
+    "category_id": 2,
+    "name": "Aloo Chatpata",
+    "description": "",
+    "price": 147,
+    "image": "223e42c6-dcd2-4353-b05a-4eede0881d5c.jpg",
+    "available": true
+  },
+  {
+    "_id": 7,
+    "restaurant_id": 2,
+    "category_id": 2,
+    "name": "Masala Papad",
+    "description": "",
+    "price": 122,
+    "image": "7a3ef15d-b666-4323-8e91-3b125a607809.jpg",
+    "available": true
+  },
+  {
+    "_id": 8,
+    "restaurant_id": 2,
+    "category_id": 3,
+    "name": "Paneer Crispy",
+    "description": "",
+    "price": 239,
+    "image": "c47b46b2-99fd-4214-836e-daffbc86214a.jpg",
+    "available": true
+  },
+  {
+    "_id": 9,
+    "restaurant_id": 2,
+    "category_id": 3,
+    "name": "Paneer Pepper Salt",
+    "description": "",
+    "price": 239,
+    "image": "dba7d969-b4ee-47d7-9c44-df5ce63a6adc.jpg",
+    "available": true
+  },
+  {
+    "_id": 10,
+    "restaurant_id": 2,
+    "category_id": 3,
+    "name": "Paneer Dragon",
+    "description": "",
+    "price": 239,
+    "image": "22e8b7e4-2c86-4695-8441-aef9a2617bef.jpg",
+    "available": true
+  },
+  {
+    "_id": 11,
+    "restaurant_id": 2,
+    "category_id": 3,
+    "name": "Paneer Chilly/Garlic/Ginger",
+    "description": "",
+    "price": 239,
+    "image": "9db89886-f25f-4f44-9023-c85012997786.jpg",
+    "available": true
+  },
+  {
+    "_id": 12,
+    "restaurant_id": 2,
+    "category_id": 3,
+    "name": "Paneer Manchurian",
+    "description": "",
+    "price": 239,
+    "image": "97df264a-9d38-41dd-a1fb-0759c8841e8d.jpg",
+    "available": true
+  },
+  {
+    "_id": 13,
+    "restaurant_id": 2,
+    "category_id": 3,
+    "name": "Babycorn Crispy",
+    "description": "",
+    "price": 239,
+    "image": "2c9df656-3592-4fc4-afdb-9d44e529279e.jpg",
+    "available": true
+  },
+  {
+    "_id": 14,
+    "restaurant_id": 2,
+    "category_id": 3,
+    "name": "Babycorn Pepper Salt",
+    "description": "",
+    "price": 239,
+    "image": "90a6c298-19f4-453b-bea6-5a76b89aa6bc.jpg",
+    "available": true
+  },
+  {
+    "_id": 15,
+    "restaurant_id": 2,
+    "category_id": 3,
+    "name": "Babycorn Dragon",
+    "description": "",
+    "price": 239,
+    "image": "5de4e623-6bbb-4fbb-acd5-e5433f74490d.jpg",
+    "available": true
+  },
+  {
+    "_id": 16,
+    "restaurant_id": 2,
+    "category_id": 3,
+    "name": "Babycorn Chilly/Garlic/Ginger",
+    "description": "",
+    "price": 239,
+    "image": "1da25488-73a5-4602-8724-9752ac44a5d0.jpg",
+    "available": true
+  },
+  {
+    "_id": 17,
+    "restaurant_id": 2,
+    "category_id": 3,
+    "name": "Babycorn Manchurian",
+    "description": "",
+    "price": 239,
+    "image": "3110c89a-26ee-4bfe-9c32-8124392ea283.jpg",
+    "available": true
+  },
+  {
+    "_id": 18,
+    "restaurant_id": 2,
+    "category_id": 3,
+    "name": "Mushroom Crispy",
+    "description": "",
+    "price": 254,
+    "image": "58f15dab-a4d4-4463-9e1b-a9b3677787cb.jpg",
+    "available": true
+  },
+  {
+    "_id": 19,
+    "restaurant_id": 2,
+    "category_id": 3,
+    "name": "Mushroom Pepper Salt",
+    "description": "",
+    "price": 254,
+    "image": "37def1ae-25d8-440d-b02b-df5d262f459c.jpg",
+    "available": true
+  },
+  {
+    "_id": 20,
+    "restaurant_id": 2,
+    "category_id": 3,
+    "name": "Mushroom Dragon",
+    "description": "",
+    "price": 254,
+    "image": "00f430e2-c73a-450b-8f50-5c3da01c4d3b.jpg",
+    "available": true
+  },
+  {
+    "_id": 21,
+    "restaurant_id": 2,
+    "category_id": 3,
+    "name": "Mushroom Chilly/Garlic/Ginger",
+    "description": "",
+    "price": 254,
+    "image": "83c63194-2f9a-45bd-836a-796496297bb9.jpg",
+    "available": true
+  },
+  {
+    "_id": 22,
+    "restaurant_id": 2,
+    "category_id": 3,
+    "name": "Mushroom Manchurian",
+    "description": "",
+    "price": 254,
+    "image": "3b32a098-a5c8-4061-a0ca-34f93db61e69.jpg",
+    "available": true
+  },
+  {
+    "_id": 23,
+    "restaurant_id": 2,
+    "category_id": 3,
+    "name": "Gobi Crispy",
+    "description": "",
+    "price": 239,
+    "image": "be511973-4d5f-4dfb-a587-a018e8c4c81d.jpg",
+    "available": true
+  },
+  {
+    "_id": 24,
+    "restaurant_id": 2,
+    "category_id": 3,
+    "name": "Gobi Pepper Salt",
+    "description": "",
+    "price": 239,
+    "image": "058b0561-eb55-4f6f-97bc-afbfe14b74d2.jpg",
+    "available": true
+  },
+  {
+    "_id": 25,
+    "restaurant_id": 2,
+    "category_id": 3,
+    "name": "Gobi Dragon",
+    "description": "",
+    "price": 239,
+    "image": "1b356dfc-d994-4b2a-8cb9-485acfdfe72c.jpg",
+    "available": true
+  },
+  {
+    "_id": 26,
+    "restaurant_id": 2,
+    "category_id": 3,
+    "name": "Gobi Chilly/Garlic/Ginger",
+    "description": "",
+    "price": 239,
+    "image": "a4f3467f-5b69-43f0-93ac-f219f38c1e02.jpg",
+    "available": true
+  },
+  {
+    "_id": 27,
+    "restaurant_id": 2,
+    "category_id": 3,
+    "name": "Gobi Manchurian",
+    "description": "",
+    "price": 239,
+    "image": "1e8cf8cf-18c7-4c96-b416-66659e446b0b.jpg",
+    "available": true
+  },
+  {
+    "_id": 28,
+    "restaurant_id": 2,
+    "category_id": 3,
+    "name": "Veg Ball Dry",
+    "description": "",
+    "price": 186,
+    "image": "7e860da1-96ab-4c34-8b32-16cb9615faf6.jpg",
+    "available": true
+  },
+  {
+    "_id": 29,
+    "restaurant_id": 2,
+    "category_id": 3,
+    "name": "Potato Crispy",
+    "description": "",
+    "price": 239,
+    "image": "1a353fca-9dea-4ca2-923f-556644997e2d.jpg",
+    "available": true
+  },
+  {
+    "_id": 30,
+    "restaurant_id": 2,
+    "category_id": 3,
+    "name": "Potato Pepper Salt",
+    "description": "",
+    "price": 239,
+    "image": "66bb7807-0451-4f8b-8541-2e0653060325.jpg",
+    "available": true
+  },
+  {
+    "_id": 31,
+    "restaurant_id": 2,
+    "category_id": 3,
+    "name": "Potato Dragon",
+    "description": "",
+    "price": 239,
+    "image": "7db1578a-a8d0-4388-81cf-7ced81953fca.jpg",
+    "available": true
+  },
+  {
+    "_id": 32,
+    "restaurant_id": 2,
+    "category_id": 3,
+    "name": "Potato Chilly/Garlic/Ginger",
+    "description": "",
+    "price": 239,
+    "image": "69e0d0c0-7065-4c6e-8bc3-4d289e3d8e45.jpg",
+    "available": true
+  },
+  {
+    "_id": 33,
+    "restaurant_id": 2,
+    "category_id": 3,
+    "name": "Potato Manchurian",
+    "description": "",
+    "price": 239,
+    "image": "d528721c-2b71-4f57-8db2-a8e481a98cca.jpg",
+    "available": true
+  },
+  {
+    "_id": 34,
+    "restaurant_id": 2,
+    "category_id": 3,
+    "name": "Honey Chilli Potato",
+    "description": "",
+    "price": 293,
+    "image": "ce954e9f-2684-4680-8c15-afff140959bc.jpg",
+    "available": true
+  },
+  {
+    "_id": 35,
+    "restaurant_id": 2,
+    "category_id": 3,
+    "name": "Fried Onion Rings",
+    "description": "",
+    "price": 254,
+    "image": "7f3b3cd3-9ddd-49a5-91cf-880580abec66.jpg",
+    "available": true
+  },
+  {
+    "_id": 36,
+    "restaurant_id": 2,
+    "category_id": 3,
+    "name": "American Fried Corn",
+    "description": "",
+    "price": 222,
+    "image": "686d595a-dc4f-4032-9598-3b3b20cfc28b.jpg",
+    "available": true
+  },
+  {
+    "_id": 37,
+    "restaurant_id": 2,
+    "category_id": 4,
+    "name": "Paneer Tikka",
+    "description": "",
+    "price": 262,
+    "image": "8484b57b-0a1f-4488-8db1-edfbea6f9a64.jpg",
+    "available": true
+  },
+  {
+    "_id": 38,
+    "restaurant_id": 2,
+    "category_id": 4,
+    "name": "Aloo Tikka",
+    "description": "",
+    "price": 244,
+    "image": "ec915c0d-1549-4f17-8a2d-d5193818a410.jpg",
+    "available": true
+  },
+  {
+    "_id": 39,
+    "restaurant_id": 2,
+    "category_id": 4,
+    "name": "Mushroom Tikka",
+    "description": "",
+    "price": 294,
+    "image": "ac4f3ca5-0ff2-4dbc-b627-57ace1d9b24b.jpg",
+    "available": true
+  },
+  {
+    "_id": 40,
+    "restaurant_id": 2,
+    "category_id": 4,
+    "name": "Gobi Tikka",
+    "description": "",
+    "price": 238,
+    "image": "01c45bc1-522b-475a-ae52-e9fbd9bd486d.jpg",
+    "available": true
+  },
+  {
+    "_id": 41,
+    "restaurant_id": 2,
+    "category_id": 4,
+    "name": "Gobi Haryali Tikka",
+    "description": "",
+    "price": 247,
+    "image": "ea87c397-6e5d-44ec-85f4-0b55f2ef02a8.jpg",
+    "available": true
+  },
+  {
+    "_id": 42,
+    "restaurant_id": 2,
+    "category_id": 4,
+    "name": "Harabara Tikka",
+    "description": "",
+    "price": 173,
+    "image": "f7776af8-c5d0-4f89-b8bd-8c518c0a71b0.jpg",
+    "available": true
+  },
+  {
+    "_id": 43,
+    "restaurant_id": 2,
+    "category_id": 4,
+    "name": "Pineapple Tikka",
+    "description": "",
+    "price": 181,
+    "image": "268d057b-2dcf-470f-ad25-8e8d81f2753d.jpg",
+    "available": true
+  },
+  {
+    "_id": 44,
+    "restaurant_id": 2,
+    "category_id": 4,
+    "name": "Veg Seekh Kabab",
+    "description": "",
+    "price": 262,
+    "image": "29682c5f-5a22-4dab-b343-1332ab837744.jpg",
+    "available": true
+  },
+  {
+    "_id": 45,
+    "restaurant_id": 2,
+    "category_id": 4,
+    "name": "Paneer Seekh Kabab",
+    "description": "",
+    "price": 273,
+    "image": "2542c6f8-948f-4a5f-b4e6-68d6878641a1.jpg",
+    "available": true
+  },
+  {
+    "_id": 46,
+    "restaurant_id": 2,
+    "category_id": 4,
+    "name": "Corn Seekh Kebab",
+    "description": "",
+    "price": 262,
+    "image": "b8fc4c77-584b-4a36-92d2-cf9aa9c28897.jpg",
+    "available": true
+  },
+  {
+    "_id": 47,
+    "restaurant_id": 2,
+    "category_id": 4,
+    "name": "Paneer Malai Kebab",
+    "description": "",
+    "price": 271,
+    "image": "85b2184c-a6c6-4f4b-8d98-c9ed2b0a76d9.jpg",
+    "available": true
+  },
+  {
+    "_id": 48,
+    "restaurant_id": 2,
+    "category_id": 4,
+    "name": "Afghani Paneer Tikka",
+    "description": "",
+    "price": 277,
+    "image": "fc23d5fc-a3cb-4b14-b71b-7fa8f1b11999.jpg",
+    "available": true
+  },
+  {
+    "_id": 49,
+    "restaurant_id": 2,
+    "category_id": 4,
+    "name": "Achari Paneer Tikka",
+    "description": "",
+    "price": 264,
+    "image": "571bb5ab-5c02-4965-afee-f1869a6f9b30.jpg",
+    "available": true
+  },
+  {
+    "_id": 50,
+    "restaurant_id": 2,
+    "category_id": 5,
+    "name": "Aloo Mutter Fry",
+    "description": "",
+    "price": 186,
+    "image": "3fa00e1d-0f20-4142-99b2-7ba5011dbe24.jpg",
+    "available": true
+  },
+  {
+    "_id": 51,
+    "restaurant_id": 2,
+    "category_id": 5,
+    "name": "Aloo Jeera Sukha",
+    "description": "",
+    "price": 189,
+    "image": "29f2c378-f8a8-4807-b35a-f8924ab889e6.jpg",
+    "available": true
+  },
+  {
+    "_id": 52,
+    "restaurant_id": 2,
+    "category_id": 5,
+    "name": "Bhendi Fry",
+    "description": "",
+    "price": 185,
+    "image": "286952c4-53d4-4975-a610-9b4bfda26a76.jpg",
+    "available": true
+  },
+  {
+    "_id": 53,
+    "restaurant_id": 2,
+    "category_id": 5,
+    "name": "Paneer Mutter Fry",
+    "description": "",
+    "price": 228,
+    "image": "0aefd91f-eb01-497b-a5d2-413bba617315.jpg",
+    "available": true
+  },
+  {
+    "_id": 54,
+    "restaurant_id": 2,
+    "category_id": 5,
+    "name": "Babycorn Pepper Fry",
+    "description": "",
+    "price": 246,
+    "image": "2228d206-4dd8-47f4-bf75-e1e360a6ed23.jpg",
+    "available": true
+  },
+  {
+    "_id": 55,
+    "restaurant_id": 2,
+    "category_id": 5,
+    "name": "Gobi Capsicum Fry",
+    "description": "",
+    "price": 197,
+    "image": "6aa45721-8d6f-4800-851b-3966e3eaad84.jpg",
+    "available": true
+  },
+  {
+    "_id": 56,
+    "restaurant_id": 2,
+    "category_id": 5,
+    "name": "Aloo Gobi Dry",
+    "description": "",
+    "price": 193,
+    "image": "72359ddc-1dce-480a-8927-9c46982139f0.jpg",
+    "available": true
+  },
+  {
+    "_id": 57,
+    "restaurant_id": 2,
+    "category_id": 6,
+    "name": "Veg Spring Roll",
+    "description": "",
+    "price": 146,
+    "image": "8101a522-8a05-4cc7-968c-e9409ccd179e.jpg",
+    "available": true
+  },
+  {
+    "_id": 58,
+    "restaurant_id": 2,
+    "category_id": 6,
+    "name": "Veg Kaati Roll",
+    "description": "",
+    "price": 133,
+    "image": "951f0495-9149-49ce-951b-35f2ff2873fb.jpg",
+    "available": true
+  },
+  {
+    "_id": 59,
+    "restaurant_id": 2,
+    "category_id": 7,
+    "name": "Matka Biryani",
+    "description": "",
+    "price": 274,
+    "image": "d726da59-8551-4b32-b9be-7c72082ceeff.jpg",
+    "available": true
+  },
+  {
+    "_id": 60,
+    "restaurant_id": 2,
+    "category_id": 7,
+    "name": "Special Biryani",
+    "description": "",
+    "price": 252,
+    "image": "ec2a6cbd-4779-480a-95f7-fab11f11972b.jpg",
+    "available": true
+  },
+  {
+    "_id": 61,
+    "restaurant_id": 2,
+    "category_id": 7,
+    "name": "Mushroom Biryani",
+    "description": "",
+    "price": 245,
+    "image": "898d64dc-71de-45ae-90e2-234cdf4d0b59.jpg",
+    "available": true
+  },
+  {
+    "_id": 62,
+    "restaurant_id": 2,
+    "category_id": 7,
+    "name": "Babycorn Biryani",
+    "description": "",
+    "price": 227,
+    "image": "51e3d7d8-1a7d-4921-93fd-3f32a94c7ae5.jpg",
+    "available": true
+  },
+  {
+    "_id": 63,
+    "restaurant_id": 2,
+    "category_id": 7,
+    "name": "Paneer Biryani",
+    "description": "",
+    "price": 227,
+    "image": "8ac21fb4-f6af-426c-8b1f-acb793d11e3e.jpg",
+    "available": true
+  },
+  {
+    "_id": 64,
+    "restaurant_id": 2,
+    "category_id": 7,
+    "name": "Gobi Biryani",
+    "description": "",
+    "price": 201,
+    "image": "833bbd0b-c668-4139-991c-e81aeecf4cfa.jpg",
+    "available": true
+  },
+  {
+    "_id": 65,
+    "restaurant_id": 2,
+    "category_id": 7,
+    "name": "Veg Biryani",
+    "description": "",
+    "price": 193,
+    "image": "1a33190e-fe6d-4371-aaf6-a2114532ab28.jpg",
+    "available": true
+  },
+  {
+    "_id": 66,
+    "restaurant_id": 2,
+    "category_id": 8,
+    "name": "Tandoori Paratha",
+    "description": "",
+    "price": 89,
+    "image": "0527ceb4-6f04-409b-990b-873dbec85899.jpg",
+    "available": true
+  },
+  {
+    "_id": 67,
+    "restaurant_id": 2,
+    "category_id": 8,
+    "name": "Lachcha Paratha",
+    "description": "",
+    "price": 89,
+    "image": "a4572243-b4ac-405f-8f0e-7d09b3851777.jpg",
+    "available": true
+  },
+  {
+    "_id": 68,
+    "restaurant_id": 2,
+    "category_id": 8,
+    "name": "Aloo Paratha",
+    "description": "",
+    "price": 122,
+    "image": "fffba155-1141-45e7-8d00-b238bb4d59d8.jpg",
+    "available": true
+  },
+  {
+    "_id": 69,
+    "restaurant_id": 2,
+    "category_id": 8,
+    "name": "Gobi Paratha",
+    "description": "",
+    "price": 122,
+    "image": "e26ce5be-ba30-41fb-a3fd-dc08ee30d075.jpg",
+    "available": true
+  },
+  {
+    "_id": 70,
+    "restaurant_id": 2,
+    "category_id": 8,
+    "name": "Plain Paratha",
+    "description": "",
+    "price": 128,
+    "image": "9cdc69c6-1153-41da-96ed-fb67d3dc569f.jpg",
+    "available": true
+  },
+  {
+    "_id": 71,
+    "restaurant_id": 2,
+    "category_id": 8,
+    "name": "Paneer Paratha",
+    "description": "",
+    "price": 137,
+    "image": "f7686c6e-10f4-4ef2-a4af-213588a282f6.jpg",
+    "available": true
+  },
+  {
+    "_id": 72,
+    "restaurant_id": 2,
+    "category_id": 8,
+    "name": "Cheese Paratha",
+    "description": "",
+    "price": 137,
+    "image": "71200186-bd16-4383-9494-de874a59f4ed.jpg",
+    "available": true
+  },
+  {
+    "_id": 73,
+    "restaurant_id": 2,
+    "category_id": 9,
+    "name": "Plain Naan",
+    "description": "",
+    "price": 82,
+    "image": "f2b7f424-f6ef-46c3-b476-5f4f514bf509.jpg",
+    "available": true
+  },
+  {
+    "_id": 74,
+    "restaurant_id": 2,
+    "category_id": 9,
+    "name": "Butter Naan",
+    "description": "",
+    "price": 62,
+    "image": "80770eec-0759-40f0-b34a-2da3dab2d482.jpg",
+    "available": true
+  },
+  {
+    "_id": 75,
+    "restaurant_id": 2,
+    "category_id": 9,
+    "name": "Cheese Naan",
+    "description": "",
+    "price": 72,
+    "image": "aca5b4ce-27ec-4931-b033-48d3c6bf53ad.jpg",
+    "available": true
+  },
+  {
+    "_id": 76,
+    "restaurant_id": 2,
+    "category_id": 9,
+    "name": "Garlic Naan",
+    "description": "",
+    "price": 69,
+    "image": "1c01584a-07a9-4fb9-9cd2-5164b2d2c5d2.jpg",
+    "available": true
+  },
+  {
+    "_id": 77,
+    "restaurant_id": 2,
+    "category_id": 9,
+    "name": "Paneer Naan",
+    "description": "",
+    "price": 85,
+    "image": "ec8eae86-c68c-4110-8061-c526d5716017.jpg",
+    "available": true
+  },
+  {
+    "_id": 78,
+    "restaurant_id": 2,
+    "category_id": 9,
+    "name": "Kashmiri Naan",
+    "description": "",
+    "price": 150,
+    "image": "a786cf14-d12e-4d96-a1e1-007659681af3.jpg",
+    "available": true
+  },
+  {
+    "_id": 79,
+    "restaurant_id": 2,
+    "category_id": 9,
+    "name": "Chilli Cheese Naan",
+    "description": "",
+    "price": 76,
+    "image": "e9c21283-d9f3-4b6b-9574-022340c690b9.jpg",
+    "available": true
+  },
+  {
+    "_id": 80,
+    "restaurant_id": 2,
+    "category_id": 9,
+    "name": "Cheese Garlic Naan",
+    "description": "",
+    "price": 76,
+    "image": "cf5e2128-ec0f-4788-8313-443281050081.jpg",
+    "available": true
+  },
+  {
+    "_id": 81,
+    "restaurant_id": 2,
+    "category_id": 9,
+    "name": "Chilly Mint Garlic Naan",
+    "description": "",
+    "price": 87,
+    "image": "13b13123-f480-4a3e-b480-a44542056801.jpg",
+    "available": true
+  },
+  {
+    "_id": 82,
+    "restaurant_id": 2,
+    "category_id": 9,
+    "name": "Kulcha",
+    "description": "",
+    "price": 61,
+    "image": "4739682a-326d-4f9b-9e60-4218c0d99ca8.jpg",
+    "available": true
+  },
+  {
+    "_id": 83,
+    "restaurant_id": 2,
+    "category_id": 9,
+    "name": "Stuffed Kulcha",
+    "description": "",
+    "price": 72,
+    "image": "ff15cf64-de62-4235-8332-b254f317f71a.jpg",
+    "available": true
+  },
+  {
+    "_id": 84,
+    "restaurant_id": 2,
+    "category_id": 9,
+    "name": "Onion Kulcha",
+    "description": "",
+    "price": 77,
+    "image": "1537477f-e445-4721-97d8-945b705ff211.jpg",
+    "available": true
+  },
+  {
+    "_id": 85,
+    "restaurant_id": 2,
+    "category_id": 9,
+    "name": "Phulka (2 Nos. Served)",
+    "description": "",
+    "price": 46,
+    "image": "352e5e71-b733-45d4-8aa6-299091eab93e.jpg",
+    "available": true
+  },
+  {
+    "_id": 86,
+    "restaurant_id": 2,
+    "category_id": 9,
+    "name": "Ghee Phulka (2 Nos. Served)",
+    "description": "",
+    "price": 55,
+    "image": "195cc61d-418a-4a84-8db4-09a80144dc42.jpg",
+    "available": true
+  },
+  {
+    "_id": 87,
+    "restaurant_id": 2,
+    "category_id": 9,
+    "name": "Butter Phulka (2 Nos. Served)",
+    "description": "",
+    "price": 57,
+    "image": "3269786d-0189-49b2-831e-788b55f05e35.jpg",
+    "available": true
+  },
+  {
+    "_id": 88,
+    "restaurant_id": 2,
+    "category_id": 9,
+    "name": "Plain Roti",
+    "description": "",
+    "price": 65,
+    "image": "ff75b0b0-d25e-4cb8-8f90-1fd14a5a66f3.jpg",
+    "available": true
+  },
+  {
+    "_id": 89,
+    "restaurant_id": 2,
+    "category_id": 9,
+    "name": "Butter Roti",
+    "description": "",
+    "price": 72,
+    "image": "950dbd87-88b4-4149-a04c-2d24d1616cf3.jpg",
+    "available": true
+  },
+  {
+    "_id": 90,
+    "restaurant_id": 2,
+    "category_id": 9,
+    "name": "Rumali Roti",
+    "description": "",
+    "price": 72,
+    "image": "af0e29d7-e444-4503-8576-aabfbe3e103d.jpg",
+    "available": true
+  },
+  {
+    "_id": 91,
+    "restaurant_id": 2,
+    "category_id": 10,
+    "name": "Steamed Rice",
+    "description": "",
+    "price": 143,
+    "image": "d78ac0c3-624e-4764-8a57-7fb88e5290fc.jpg",
+    "available": true
+  },
+  {
+    "_id": 92,
+    "restaurant_id": 2,
+    "category_id": 10,
+    "name": "Ghee Rice",
+    "description": "",
+    "price": 165,
+    "image": "3a4a9ff7-7f36-4701-938e-4a86c47ae2ef.jpg",
+    "available": true
+  },
+  {
+    "_id": 93,
+    "restaurant_id": 2,
+    "category_id": 10,
+    "name": "Jeera Rice",
+    "description": "",
+    "price": 197,
+    "image": "17afe2b7-cfeb-46bb-8e91-ea5e73ecf5af.jpg",
+    "available": true
+  },
+  {
+    "_id": 94,
+    "restaurant_id": 2,
+    "category_id": 10,
+    "name": "Veg Pulao",
+    "description": "",
+    "price": 208,
+    "image": "edd56eb4-e74d-416c-9945-24fd61067771.jpg",
+    "available": true
+  },
+  {
+    "_id": 95,
+    "restaurant_id": 2,
+    "category_id": 10,
+    "name": "Kashmiri Pulao",
+    "description": "",
+    "price": 331,
+    "image": "d0d862b5-d604-40e1-bb55-3cabbc2add97.jpg",
+    "available": true
+  },
+  {
+    "_id": 96,
+    "restaurant_id": 2,
+    "category_id": 10,
+    "name": "Paneer Pulao",
+    "description": "",
+    "price": 298,
+    "image": "4ff84c55-5be3-4f12-ab32-e3bff16211f8.jpg",
+    "available": true
+  },
+  {
+    "_id": 97,
+    "restaurant_id": 2,
+    "category_id": 10,
+    "name": "Corn and Capsicum Pulao",
+    "description": "",
+    "price": 228,
+    "image": "e8ce59b9-82e3-434a-af60-e433cf7e676a.jpg",
+    "available": true
+  },
+  {
+    "_id": 98,
+    "restaurant_id": 2,
+    "category_id": 10,
+    "name": "Paes Pulao",
+    "description": "",
+    "price": 227,
+    "image": "3a79dece-74fd-490e-8464-e474b4234ec5.jpg",
+    "available": true
+  },
+  {
+    "_id": 99,
+    "restaurant_id": 2,
+    "category_id": 11,
+    "name": "Veg Fried Rice",
+    "description": "",
+    "price": 184,
+    "image": "0d9290ff-9cc7-4317-82c4-c781c65c4336.jpg",
+    "available": true
+  },
+  {
+    "_id": 100,
+    "restaurant_id": 2,
+    "category_id": 11,
+    "name": "Chilly Garlic Fried Rice",
+    "description": "",
+    "price": 204,
+    "image": "bb94af5e-76a7-4863-ba6d-b6e099809601.jpg",
+    "available": true
+  },
+  {
+    "_id": 101,
+    "restaurant_id": 2,
+    "category_id": 11,
+    "name": "Gobi Fried Rice",
+    "description": "",
+    "price": 195,
+    "image": "e618e471-a7d1-41fa-b735-b60db1101270.jpg",
+    "available": true
+  },
+  {
+    "_id": 102,
+    "restaurant_id": 2,
+    "category_id": 11,
+    "name": "Paneer Fried Rice",
+    "description": "",
+    "price": 227,
+    "image": "c32a388f-1669-441d-93f6-75c5295bbc7c.jpg",
+    "available": true
+  },
+  {
+    "_id": 103,
+    "restaurant_id": 2,
+    "category_id": 11,
+    "name": "Babycorn Fried Rice",
+    "description": "",
+    "price": 227,
+    "image": "bdaceba7-7f5d-4259-90c0-b20860b40925.jpg",
+    "available": true
+  },
+  {
+    "_id": 104,
+    "restaurant_id": 2,
+    "category_id": 11,
+    "name": "Mushroom Fried Rice",
+    "description": "",
+    "price": 245,
+    "image": "140c4483-b5d2-45c8-bee0-0f7f512d313f.jpg",
+    "available": true
+  },
+  {
+    "_id": 105,
+    "restaurant_id": 2,
+    "category_id": 11,
+    "name": "Mixed Veg Fried Rice",
+    "description": "",
+    "price": 249,
+    "image": "52e3cda4-d8e8-4c1b-bce2-9add18c03523.jpg",
+    "available": true
+  },
+  {
+    "_id": 106,
+    "restaurant_id": 2,
+    "category_id": 11,
+    "name": "Szechuan Fried Rice",
+    "description": "",
+    "price": 190,
+    "image": "c1539536-8eef-4fa7-89a2-c0171d846164.jpg",
+    "available": true
+  },
+  {
+    "_id": 107,
+    "restaurant_id": 2,
+    "category_id": 11,
+    "name": "Szechuan Garlic Fried Rice",
+    "description": "",
+    "price": 206,
+    "image": "60f20af9-4b3c-431d-8faa-bbb23e2e8ebf.jpg",
+    "available": true
+  },
+  {
+    "_id": 108,
+    "restaurant_id": 2,
+    "category_id": 11,
+    "name": "Szechuan Babycorn Fried Rice",
+    "description": "",
+    "price": 235,
+    "image": "c9343501-e972-43f1-8959-e2608ff90b7a.jpg",
+    "available": true
+  },
+  {
+    "_id": 109,
+    "restaurant_id": 2,
+    "category_id": 11,
+    "name": "Szechuan Mushroom Fried Rice",
+    "description": "",
+    "price": 247,
+    "image": "fcc1b5ba-39ae-4b35-9fb7-f2bcc761c71e.jpg",
+    "available": true
+  },
+  {
+    "_id": 110,
+    "restaurant_id": 2,
+    "category_id": 11,
+    "name": "Szechuan Paneer Fried Rice",
+    "description": "",
+    "price": 235,
+    "image": "dfd1d2dd-4a91-462b-86ce-95b30ff296bf.jpg",
+    "available": true
+  },
+  {
+    "_id": 111,
+    "restaurant_id": 2,
+    "category_id": 11,
+    "name": "Szechuan Mixed Fried Rice",
+    "description": "",
+    "price": 254,
+    "image": "e6acc9fa-b40c-48a5-9b22-f4de8f45b28e.jpg",
+    "available": true
+  },
+  {
+    "_id": 112,
+    "restaurant_id": 2,
+    "category_id": 12,
+    "name": "Veg Noodles",
+    "description": "",
+    "price": 184,
+    "image": "addfc70d-76f1-4a12-b4e5-712ae4e76d9c.jpg",
+    "available": true
+  },
+  {
+    "_id": 113,
+    "restaurant_id": 2,
+    "category_id": 12,
+    "name": "Chilli Garlic Noodles",
+    "description": "",
+    "price": 204,
+    "image": "5ab4fc36-f4b5-4567-9c33-5b02a078ce21.jpg",
+    "available": true
+  },
+  {
+    "_id": 114,
+    "restaurant_id": 2,
+    "category_id": 12,
+    "name": "Szechuan Noodles",
+    "description": "",
+    "price": 190,
+    "image": "17f12afd-4e38-4c47-847a-c4764f09af4a.jpg",
+    "available": true
+  },
+  {
+    "_id": 115,
+    "restaurant_id": 2,
+    "category_id": 13,
+    "name": "Mix Veg Masala",
+    "description": "",
+    "price": 209,
+    "image": "195e07e6-ec21-4759-8929-02e5ff5e7baf.jpg",
+    "available": true
+  },
+  {
+    "_id": 116,
+    "restaurant_id": 2,
+    "category_id": 13,
+    "name": "Green Peas Masala",
+    "description": "",
+    "price": 209,
+    "image": "0d9349e6-143e-4757-b92c-46006b3e9e37.jpg",
+    "available": true
+  },
+  {
+    "_id": 117,
+    "restaurant_id": 2,
+    "category_id": 13,
+    "name": "Rajma Masala",
+    "description": "",
+    "price": 224,
+    "image": "4a6d9a51-3737-4aa7-baac-41a42f7bb371.jpg",
+    "available": true
+  },
+  {
+    "_id": 118,
+    "restaurant_id": 2,
+    "category_id": 13,
+    "name": "Aloo Mutter Masala",
+    "description": "",
+    "price": 209,
+    "image": "00317a5a-bca7-4001-9d17-6bf4a8262f2c.jpg",
+    "available": true
+  },
+  {
+    "_id": 119,
+    "restaurant_id": 2,
+    "category_id": 13,
+    "name": "Gobi Masala",
+    "description": "",
+    "price": 209,
+    "image": "023bcfc8-c3f4-44a5-8af5-857f0894a6b3.jpg",
+    "available": true
+  },
+  {
+    "_id": 120,
+    "restaurant_id": 2,
+    "category_id": 13,
+    "name": "Mushoor Mutter Masala",
+    "description": "",
+    "price": 258,
+    "image": "9ce16c0f-9d28-47d9-a8dc-e49f499902ec.jpg",
+    "available": true
+  },
+  {
+    "_id": 121,
+    "restaurant_id": 2,
+    "category_id": 13,
+    "name": "Chole Masala",
+    "description": "",
+    "price": 236,
+    "image": "82d88249-0eeb-475f-9058-1769018297d6.jpg",
+    "available": true
+  },
+  {
+    "_id": 122,
+    "restaurant_id": 2,
+    "category_id": 13,
+    "name": "Kaju Masala",
+    "description": "",
+    "price": 282,
+    "image": "285abf2f-173e-44fa-bc17-3a353b6f39fd.jpg",
+    "available": true
+  },
+  {
+    "_id": 123,
+    "restaurant_id": 2,
+    "category_id": 13,
+    "name": "Veg Makhamwala",
+    "description": "",
+    "price": 208,
+    "image": "230aedd3-1df5-438c-8fba-d4ccbe04e5b4.jpg",
+    "available": true
+  },
+  {
+    "_id": 124,
+    "restaurant_id": 2,
+    "category_id": 13,
+    "name": "Stuffed Capsicum",
+    "description": "",
+    "price": 208,
+    "image": "77dfa45d-7eb2-45f5-bbbe-74b8a8021ee3.jpg",
+    "available": true
+  },
+  {
+    "_id": 125,
+    "restaurant_id": 2,
+    "category_id": 13,
+    "name": "Bhendi Masala",
+    "description": "",
+    "price": 190,
+    "image": "5b62d88a-fd20-4e93-97ac-605f8dd36248.jpg",
+    "available": true
+  },
+  {
+    "_id": 126,
+    "restaurant_id": 2,
+    "category_id": 13,
+    "name": "Kadai Veg",
+    "description": "",
+    "price": 208,
+    "image": "27fa751b-332c-433e-8a01-26bf67a6b243.jpg",
+    "available": true
+  },
+  {
+    "_id": 127,
+    "restaurant_id": 2,
+    "category_id": 14,
+    "name": "Paneer Masala",
+    "description": "",
+    "price": 244,
+    "image": "63718e1f-f788-4e86-8ab8-b0266b3704d6.jpg",
+    "available": true
+  },
+  {
+    "_id": 128,
+    "restaurant_id": 2,
+    "category_id": 14,
+    "name": "Paneer Butter Masala",
+    "description": "",
+    "price": 263,
+    "image": "fc3128f1-653d-4a1a-89a6-6961518105d8.jpg",
+    "available": true
+  },
+  {
+    "_id": 129,
+    "restaurant_id": 2,
+    "category_id": 14,
+    "name": "Paneer Masaledar",
+    "description": "",
+    "price": 241,
+    "image": "5b299029-f1a3-46ff-8188-27a17aca4c1d.jpg",
+    "available": true
+  },
+  {
+    "_id": 130,
+    "restaurant_id": 2,
+    "category_id": 14,
+    "name": "Paneer Pasanda (White Gravy)",
+    "description": "",
+    "price": 258,
+    "image": "3c058a23-b39f-4174-91d8-6b9738f5d194.jpg",
+    "available": true
+  },
+  {
+    "_id": 131,
+    "restaurant_id": 2,
+    "category_id": 14,
+    "name": "Shahi Paneer (White Gravy)",
+    "description": "",
+    "price": 241,
+    "image": "45056c63-ceb4-4014-8ea5-1b9e65992b40.jpg",
+    "available": true
+  },
+  {
+    "_id": 132,
+    "restaurant_id": 2,
+    "category_id": 14,
+    "name": "Lasooni Methi Paneer",
+    "description": "",
+    "price": 224,
+    "image": "96a3c5c4-98c2-4350-b8af-a051a63c904a.jpg",
+    "available": true
+  },
+  {
+    "_id": 133,
+    "restaurant_id": 2,
+    "category_id": 14,
+    "name": "Kadai Paneer",
+    "description": "",
+    "price": 241,
+    "image": "f317b5f8-6594-4699-92a3-16e2693d47df.jpg",
+    "available": true
+  },
+  {
+    "_id": 134,
+    "restaurant_id": 2,
+    "category_id": 14,
+    "name": "Palak Paneer",
+    "description": "",
+    "price": 225,
+    "image": "a0f2bf4d-19aa-48a0-b70d-4389dbb4786e.jpg",
+    "available": true
+  },
+  {
+    "_id": 135,
+    "restaurant_id": 2,
+    "category_id": 15,
+    "name": "Dal Fry (Yellow Dal)",
+    "description": "",
+    "price": 209,
+    "image": "d5593389-7020-412c-9f43-a26336305cbf.jpg",
+    "available": true
+  },
+  {
+    "_id": 136,
+    "restaurant_id": 2,
+    "category_id": 15,
+    "name": "Dal Tadka (Yellow Dal)",
+    "description": "",
+    "price": 225,
+    "image": "a10ce45b-5eaa-4c9b-b53d-6ff95560391c.jpg",
+    "available": true
+  },
+  {
+    "_id": 137,
+    "restaurant_id": 2,
+    "category_id": 15,
+    "name": "Dal Makhani",
+    "description": "",
+    "price": 227,
+    "image": "967feccd-00d2-4034-bed1-8049eec40cef.jpg",
+    "available": true
+  },
+  {
+    "_id": 138,
+    "restaurant_id": 2,
+    "category_id": 16,
+    "name": "Veg Kofta",
+    "description": "",
+    "price": 211,
+    "image": "e65f1acf-06ce-4c93-b0c7-225eaa4812e0.jpg",
+    "available": true
+  },
+  {
+    "_id": 139,
+    "restaurant_id": 2,
+    "category_id": 16,
+    "name": "Malai Kofta",
+    "description": "",
+    "price": 254,
+    "image": "b0fa1272-1de8-4cae-b072-cfdba961a928.jpg",
+    "available": true
+  },
+  {
+    "_id": 140,
+    "restaurant_id": 2,
+    "category_id": 17,
+    "name": "Mushroom Tikka Masala",
+    "description": "",
+    "price": 227,
+    "image": "2f41fade-2765-4bc4-ab99-7dcfd8a02e93.jpg",
+    "available": true
+  },
+  {
+    "_id": 141,
+    "restaurant_id": 2,
+    "category_id": 17,
+    "name": "Paneer Tikka Masala",
+    "description": "",
+    "price": 214,
+    "image": "867c24e7-642e-4aaf-ab51-befa14553de6.jpg",
+    "available": true
+  },
+  {
+    "_id": 142,
+    "restaurant_id": 2,
+    "category_id": 17,
+    "name": "Aloo Tikka Masala",
+    "description": "",
+    "price": 204,
+    "image": "9186d1db-fafa-46b4-8f58-3441a31a68e7.jpg",
+    "available": true
+  },
+  {
+    "_id": 143,
+    "restaurant_id": 2,
+    "category_id": 17,
+    "name": "Gobi Tikka Masala",
+    "description": "",
+    "price": 214,
+    "image": "591175e1-dde0-4bc7-8b27-5ad6bdb49226.jpg",
+    "available": true
+  },
+  {
+    "_id": 144,
+    "restaurant_id": 2,
+    "category_id": 17,
+    "name": "Tawa Paneer",
+    "description": "",
+    "price": 214,
+    "image": "602b205c-a485-464e-a619-da0dc8fb4d54.jpg",
+    "available": true
+  },
+  {
+    "_id": 145,
+    "restaurant_id": 2,
+    "category_id": 18,
+    "name": "Mushroom",
+    "description": "",
+    "price": 236,
+    "image": "67f61369-7377-401e-ba58-5e204aa78ad2.jpg",
+    "available": true
+  },
+  {
+    "_id": 146,
+    "restaurant_id": 2,
+    "category_id": 18,
+    "name": "Babycorn",
+    "description": "",
+    "price": 225,
+    "image": "2deb19bd-2ac3-47c8-850f-9201851794e1.jpg",
+    "available": true
+  },
+  {
+    "_id": 147,
+    "restaurant_id": 2,
+    "category_id": 18,
+    "name": "Veg Ball",
+    "description": "",
+    "price": 212,
+    "image": "c6da53ea-4373-4895-a1d5-054a22a8e5a0.jpg",
+    "available": true
+  },
+  {
+    "_id": 148,
+    "restaurant_id": 2,
+    "category_id": 19,
+    "name": "Maharaja Thali (Limited)",
+    "description": "",
+    "price": 260,
+    "image": "fa60a58a-6953-403a-9078-609209391c1d.jpg",
+    "available": true
+  },
+  {
+    "_id": 149,
+    "restaurant_id": 2,
+    "category_id": 19,
+    "name": "Spl Maharaja Thali (Limited)",
+    "description": "",
+    "price": 301,
+    "image": "411490f7-5493-4b06-8a89-421f81af575d.jpg",
+    "available": true
+  },
+  {
+    "_id": 150,
+    "restaurant_id": 2,
+    "category_id": 19,
+    "name": "Tandoor Thali (Limited)",
+    "description": "",
+    "price": 279,
+    "image": "875825ad-1973-4525-b965-06bffe7643b3.jpg",
+    "available": true
+  },
+  {
+    "_id": 151,
+    "restaurant_id": 2,
+    "category_id": 19,
+    "name": "Jain Thali (Limited)",
+    "description": "",
+    "price": 279,
+    "image": "4ad1904b-0ac6-4b9a-a361-ae26695be828.jpg",
+    "available": true
+  },
+  {
+    "_id": 152,
+    "restaurant_id": 2,
+    "category_id": 20,
+    "name": "Chole and Kulcha",
+    "description": "",
+    "price": 199,
+    "image": "f52770f0-762a-4c0f-b0e7-56b7197d632b.jpg",
+    "available": true
+  },
+  {
+    "_id": 153,
+    "restaurant_id": 2,
+    "category_id": 20,
+    "name": "Malai Kofta",
+    "description": "",
+    "price": 201,
+    "image": "f4edf40a-f697-4872-9e0d-a63318b8744a.jpg",
+    "available": true
+  },
+  {
+    "_id": 154,
+    "restaurant_id": 2,
+    "category_id": 21,
+    "name": "Nutty Mania",
+    "description": "",
+    "price": 179,
+    "image": "d8d03171-cb39-452e-857e-ef3eb4b87ab9.jpg",
+    "available": true
+  },
+  {
+    "_id": 155,
+    "restaurant_id": 2,
+    "category_id": 21,
+    "name": "Blind Love",
+    "description": "",
+    "price": 146,
+    "image": "0e8d9a35-7d98-49fb-bd98-8fb74c7e1e4c.jpg",
+    "available": true
+  },
+  {
+    "_id": 156,
+    "restaurant_id": 2,
+    "category_id": 22,
+    "name": "Vanilla",
+    "description": "",
+    "price": 136,
+    "image": "adb3a136-ee6f-4249-a907-2381b1bab5bf.jpg",
+    "available": true
+  },
+  {
+    "_id": 157,
+    "restaurant_id": 2,
+    "category_id": 22,
+    "name": "Strawberry",
+    "description": "",
+    "price": 136,
+    "image": "32b01beb-f789-4934-b720-fcaa6d7d6446.jpg",
+    "available": true
+  },
+  {
+    "_id": 158,
+    "restaurant_id": 2,
+    "category_id": 22,
+    "name": "Chocolate",
+    "description": "",
+    "price": 136,
+    "image": "9a883957-2fd4-4760-b1db-0c94c112428a.jpg",
+    "available": true
+  },
+  {
+    "_id": 159,
+    "restaurant_id": 2,
+    "category_id": 22,
+    "name": "Butterscotch",
+    "description": "",
+    "price": 136,
+    "image": "143b7539-acbe-46d2-a759-15f4f42baa6a.jpg",
+    "available": true
+  },
+  {
+    "_id": 160,
+    "restaurant_id": 2,
+    "category_id": 22,
+    "name": "Mango",
+    "description": "",
+    "price": 136,
+    "image": "20bc97b3-8c81-4a5c-858c-7b2009728c42.jpg",
+    "available": true
+  },
+  {
+    "_id": 161,
+    "restaurant_id": 2,
+    "category_id": 22,
+    "name": "Kesar Badam",
+    "description": "",
+    "price": 136,
+    "image": "da93033f-450b-4a21-a92a-83fea4d486e4.jpg",
+    "available": true
+  },
+  {
+    "_id": 162,
+    "restaurant_id": 2,
+    "category_id": 22,
+    "name": "Oreo Milkshake",
+    "description": "",
+    "price": 147,
+    "image": "c54a332b-ce3f-4eee-a1ed-26e1b05b5744.jpg",
+    "available": true
+  },
+  {
+    "_id": 163,
+    "restaurant_id": 2,
+    "category_id": 23,
+    "name": "Rosemilk",
+    "description": "",
+    "price": 76,
+    "image": "23939da6-d813-497e-9e0e-ee81a86666f2.jpg",
+    "available": true
+  },
+  {
+    "_id": 164,
+    "restaurant_id": 2,
+    "category_id": 23,
+    "name": "Blue Curaco",
+    "description": "",
+    "price": 76,
+    "image": "6bf642b8-7bef-426f-be6e-284451c8a1a7.jpg",
+    "available": true
+  },
+  {
+    "_id": 165,
+    "restaurant_id": 2,
+    "category_id": 23,
+    "name": "Mint Cooler",
+    "description": "",
+    "price": 76,
+    "image": "7c0f6e60-222f-4adc-a211-88dbde47cd35.jpg",
+    "available": true
+  },
+  {
+    "_id": 166,
+    "restaurant_id": 2,
+    "category_id": 23,
+    "name": "Lemon Juice",
+    "description": "",
+    "price": 67,
+    "image": "7fae9128-a668-4eac-a01b-94ac2a070ba2.jpg",
+    "available": true
+  },
+  {
+    "_id": 167,
+    "restaurant_id": 2,
+    "category_id": 23,
+    "name": "Lemon Sharbat",
+    "description": "",
+    "price": 67,
+    "image": "0a0161a9-da10-4c1f-8392-4ea959294270.jpg",
+    "available": true
+  },
+  {
+    "_id": 168,
+    "restaurant_id": 2,
+    "category_id": 23,
+    "name": "Awesome Lassi",
+    "description": "",
+    "price": 86,
+    "image": "04cbea5e-04d7-49dd-a8be-6a33079812ff.jpg",
+    "available": true
+  },
+  {
+    "_id": 169,
+    "restaurant_id": 2,
+    "category_id": 23,
+    "name": "Mango Lassi",
+    "description": "",
+    "price": 76,
+    "image": "45dcef24-abbc-4c7f-b46a-6b1c0de60296.jpg",
+    "available": true
+  },
+  {
+    "_id": 170,
+    "restaurant_id": 2,
+    "category_id": 23,
+    "name": "Salt Lassi",
+    "description": "",
+    "price": 66,
+    "image": "5f3c701c-fed1-4595-9f68-d0b6922cbfcc.jpg",
+    "available": true
+  },
+  {
+    "_id": 171,
+    "restaurant_id": 2,
+    "category_id": 23,
+    "name": "Chaach",
+    "description": "",
+    "price": 56,
+    "image": "c2850e06-18a1-4d24-9fe2-26d56eb1d73f.jpg",
+    "available": true
+  },
+  {
+    "_id": 172,
+    "restaurant_id": 2,
+    "category_id": 23,
+    "name": "Masala Chaach",
+    "description": "",
+    "price": 59,
+    "image": "9fa06614-b952-49bf-aef1-23deccca71a3.jpg",
+    "available": true
+  },
+  {
+    "_id": 173,
+    "restaurant_id": 2,
+    "category_id": 23,
+    "name": "Jal Jeera",
+    "description": "",
+    "price": 42,
+    "image": "ef369415-6fea-47e3-8299-29c464342474.jpg",
+    "available": true
+  },
+  {
+    "_id": 174,
+    "restaurant_id": 2,
+    "category_id": 23,
+    "name": "Water Bottle (1 Litre)",
+    "description": "",
+    "price": 20,
+    "image": "948602c2-53a9-4ef5-97e3-6e5148320000.jpg",
+    "available": true
+  },
+  {
+    "_id": 175,
+    "restaurant_id": 2,
+    "category_id": 23,
+    "name": "Water Bottle (Small)",
+    "description": "",
+    "price": 12,
+    "image": "67fb1097-755e-4be1-9f42-0da93ce3453f.jpg",
+    "available": true
+  },
+  {
+    "_id": 176,
+    "restaurant_id": 2,
+    "category_id": 18,
+    "name": "Paneer",
+    "description": "",
+    "price": 2225,
+    "image": "aa314c19-f5ac-4f53-aba9-2bfcca588b03.jpg",
+    "available": true
+  }
+]

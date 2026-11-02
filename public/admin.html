@@ -845,11 +845,163 @@ Password: ${password}${r.menu_url ? `\nYour menu: ${r.menu_url}` : ''}`;
         'click',
         () => showTab('restaurants')
       );
+$('#menuHead').insertAdjacentHTML('beforeend', `
+    <div class="card" id="customMenuCard" style="margin-top:18px">
+        <h2>AI Custom Menu Design</h2>
 
-      $('#menuMount').innerHTML = `
-        <div class="stats">${skelStats(4)}</div>
-        <div class="items">${skelCards(4)}</div>
-    `;
+        <p class="muted">
+            Upload your AI-generated HTML menu.
+            Preview it and activate it for customers.
+        </p>
+
+        <input
+            type="file"
+            id="customMenuFile"
+            accept=".html,text/html"
+        >
+
+        <div class="actions" style="margin-top:15px">
+            <button id="uploadCustomMenu">Upload HTML</button>
+            <button id="previewCustomMenu" class="ghost">Preview</button>
+            <button id="activateCustomMenu" class="ghost">Activate</button>
+            <button id="restoreDefaultMenu" class="danger">
+                Restore Default
+            </button>
+        </div>
+
+        <p id="customMenuStatus" class="note"></p>
+    </div>
+`);
+
+$('#menuMount').innerHTML = `
+    <div class="stats">${skelStats(4)}</div>
+    <div class="items">${skelCards(4)}</div>
+`;
+
+// AI CUSTOM MENU CONTROLS
+
+let customMenuHTML = '';
+
+const customMenuStatus = $('#customMenuStatus');
+
+async function loadCustomMenuStatus() {
+    const status = await api(
+        `/api/v1/admin/restaurants/${r.id}/custom-menu`
+    );
+
+    customMenuStatus.textContent = status.enabled
+        ? 'Custom menu is currently ACTIVE.'
+        : status.exists
+            ? 'Custom menu uploaded but not activated.'
+            : 'Default menu is currently active.';
+}
+
+$('#uploadCustomMenu').addEventListener('click', async () => {
+    try {
+        const selected = $('#customMenuFile').files[0];
+
+        if (!selected) {
+            throw new Error('Select an HTML file first.');
+        }
+
+        if (!selected.name.toLowerCase().endsWith('.html')) {
+            throw new Error('Please select an HTML file.');
+        }
+
+        if (selected.size > 1024 * 1024) {
+            throw new Error('HTML file must be smaller than 1 MB.');
+        }
+
+        const html = await selected.text();
+
+        const result = await api(
+            `/api/v1/admin/restaurants/${r.id}/custom-menu`,
+            'PUT',
+            { html }
+        );
+
+        customMenuHTML = html;
+
+        toast(result.message);
+        await loadCustomMenuStatus();
+
+    } catch (error) {
+        toast(error.message);
+    }
+});
+
+$('#previewCustomMenu').addEventListener('click', async () => {
+    try {
+        if (!customMenuHTML) {
+            const selected = $('#customMenuFile').files[0];
+
+            if (selected) {
+                customMenuHTML = await selected.text();
+            } else {
+                throw new Error('Select an HTML file or upload it first.');
+            }
+        }
+
+        const preview = window.open('', '_blank');
+
+        if (!preview) {
+            throw new Error('Allow pop-ups to preview the menu.');
+        }
+
+        preview.document.open();
+        preview.document.write(customMenuHTML);
+        preview.document.close();
+
+    } catch (error) {
+        toast(error.message);
+    }
+});
+
+$('#activateCustomMenu').addEventListener('click', async () => {
+    try {
+        await api(
+            `/api/v1/admin/restaurants/${r.id}/custom-menu`,
+            'PATCH',
+            { enabled: true }
+        );
+
+        toast('AI custom menu activated.');
+        await loadCustomMenuStatus();
+
+    } catch (error) {
+        toast(error.message);
+    }
+});
+
+$('#restoreDefaultMenu').addEventListener('click', async () => {
+    try {
+        if (!await confirmDialog({
+            title: 'Restore default menu?',
+            message: 'The uploaded custom HTML will be deleted and the original menu will be displayed.',
+            confirmText: 'Restore default',
+            danger: true
+        })) return;
+
+        await api(
+            `/api/v1/admin/restaurants/${r.id}/custom-menu`,
+            'DELETE'
+        );
+
+        customMenuHTML = '';
+
+        $('#customMenuFile').value = '';
+
+        toast('Default menu restored.');
+        await loadCustomMenuStatus();
+
+    } catch (error) {
+        toast(error.message);
+    }
+});
+
+loadCustomMenuStatus().catch(error => {
+    customMenuStatus.textContent = error.message;
+});
 
       history.replaceState(null, '', '#menu-' + r.id);
 
