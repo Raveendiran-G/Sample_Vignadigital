@@ -7,7 +7,7 @@ const QRCode = require('qrcode');
 const crypto = require('crypto');
 
 const { BASE_URL, SESSION_SECRET } = require('../lib/config');
-const { upload } = require('../lib/uploads');
+const { upload, saveUploadedFile } = require('../lib/uploads');
 const { sign, verify } = require('../lib/token');
 const { cols } = require('../lib/db');
 const svc = require('../lib/service');
@@ -136,15 +136,20 @@ const auth = role => async (req, res, next) => {
 const rid = req => req.user.restaurant_id;
 
 const id = req => Number(req.params.id);
+const photo = async req => {
+    if (req.file) {
+        return await saveUploadedFile(req.file);
+    }
 
-const photo = req =>
-    req.file?.filename ||
-    (
+    if (
         typeof req.body.image === 'string' &&
         req.body.image.startsWith('data:')
-            ? svc.saveImageData(req.body.image)
-            : null
-    );
+    ) {
+        return await svc.saveImageData(req.body.image);
+    }
+
+    return null;
+};
 
 const cleanText = (value, max = 200) =>
     String(value ?? '').trim().slice(0, max);
@@ -191,7 +196,11 @@ router.get('/public/menu/:slug', async (req, res) => {
             address: restaurant.address,
             phone: restaurant.contact_phone,
             logo: restaurant.logo
-                ? `/uploads/${restaurant.logo}`
+                ? (
+                    restaurant.logo.startsWith('https://')
+                        ? restaurant.logo
+                        : `/uploads/${restaurant.logo}`
+                )
                 : null,
             order_enabled: restaurant.order_enabled !== false
         },
@@ -372,11 +381,10 @@ router.post(
         const total = roundMoney(subtotal + tax);
 
         const orderNo =
-            `${
-                String(restaurant.name || 'ORD')
-                    .replace(/[^A-Za-z]/g, '')
-                    .slice(0, 3)
-                    .toUpperCase() || 'ORD'
+            `${String(restaurant.name || 'ORD')
+                .replace(/[^A-Za-z]/g, '')
+                .slice(0, 3)
+                .toUpperCase() || 'ORD'
             }-${crypto.randomInt(10000000, 99999999)}`;
 
         const createdAt = new Date();
@@ -591,7 +599,7 @@ function menuRoutes(route, restaurantOf) {
                     await svc.saveItem(
                         restaurantOf(req),
                         req.body,
-                        photo(req)
+                        await photo(req)
                     )
                 )
             );
@@ -622,7 +630,7 @@ function menuRoutes(route, restaurantOf) {
                             ...req.body,
                             id: ref(req)
                         },
-                        photo(req)
+                        await photo(req)
                     )
                 )
             );
