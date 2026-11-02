@@ -175,7 +175,6 @@ router.get('/openapi.json', (req, res) => {
 // ======================================================
 
 router.get('/public/menu/:slug', async (req, res) => {
-
     const menu = await svc.getMenu(req.params.slug);
 
     if (!menu) {
@@ -184,7 +183,17 @@ router.get('/public/menu/:slug', async (req, res) => {
 
     const restaurant = menu.restaurant;
 
-    res.set('Cache-Control', 'public, max-age=30');
+    const imageUrl = image => {
+        if (!image) return null;
+
+        if (/^https?:\/\//i.test(image)) {
+            return image;
+        }
+
+        return `/uploads/${encodeURIComponent(image)}`;
+    };
+
+    res.set('Cache-Control', 'no-store');
 
     res.json({
         restaurant: {
@@ -195,24 +204,21 @@ router.get('/public/menu/:slug', async (req, res) => {
             city: restaurant.city,
             address: restaurant.address,
             phone: restaurant.contact_phone,
-            logo: restaurant.logo
-                ? (
-                    restaurant.logo.startsWith('https://')
-                        ? restaurant.logo
-                        : `/uploads/${restaurant.logo}`
-                )
-                : null,
+            logo: imageUrl(restaurant.logo),
             order_enabled: restaurant.order_enabled !== false
         },
 
         categories: menu.sections.map(section => ({
             id: section.id,
             name: section.name,
-            items: section.items.map(svc.itemOut)
+            items: section.items.map(item => ({
+                ...svc.itemOut(item),
+                image: imageUrl(item.image),
+                image_url: imageUrl(item.image)
+            }))
         }))
     });
 });
-
 // ======================================================
 // CUSTOMER PLACES NEW ORDER
 // ======================================================
