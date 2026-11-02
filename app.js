@@ -32,12 +32,13 @@ app.use(helmet({
         directives: {
             defaultSrc: ["'self'"],
 
-            // Allow local images, previews and Vercel Blob images
+            // Allow local images, previews, Vercel Blob and Unsplash images
             imgSrc: [
                 "'self'",
                 'data:',
                 'blob:',
-                'https://*.public.blob.vercel-storage.com'
+                'https://*.public.blob.vercel-storage.com',
+                'https://images.unsplash.com'
             ],
 
             scriptSrc: [

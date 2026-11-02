@@ -847,11 +847,13 @@ Password: ${password}${r.menu_url ? `\nYour menu: ${r.menu_url}` : ''}`;
       );
 $('#menuHead').insertAdjacentHTML('beforeend', `
     <div class="card" id="customMenuCard" style="margin-top:18px">
-        <h2>AI Custom Menu Design</h2>
+        <h2>Custom HTML Menu</h2>
 
         <p class="muted">
-            Upload your AI-generated HTML menu.
-            Preview it and activate it for customers.
+            Upload a restaurant-specific HTML menu. Its item data is synchronized with this restaurant's menu in the database.
+            Include a <code>vigna-menu-data</code> JSON script, or mark up categories and item cards with
+            <code>data-vigna-category</code> and <code>data-vigna-item</code> attributes. Add
+            <code>&lt;main id="vigna-menu-root"&gt;&lt;/main&gt;</code> where live menu items should appear.
         </p>
 
         <input
@@ -864,6 +866,7 @@ $('#menuHead').insertAdjacentHTML('beforeend', `
             <button id="uploadCustomMenu">Upload HTML</button>
             <button id="previewCustomMenu" class="ghost">Preview</button>
             <button id="activateCustomMenu" class="ghost">Activate</button>
+            <button id="disableCustomMenu" class="ghost">Disable</button>
             <button id="restoreDefaultMenu" class="danger">
                 Restore Default
             </button>
@@ -881,6 +884,7 @@ $('#menuMount').innerHTML = `
 // AI CUSTOM MENU CONTROLS
 
 let customMenuHTML = '';
+let menuManagerReady = null;
 
 const customMenuStatus = $('#customMenuStatus');
 
@@ -888,12 +892,17 @@ async function loadCustomMenuStatus() {
     const status = await api(
         `/api/v1/admin/restaurants/${r.id}/custom-menu`
     );
+    customMenuHTML = status.html || '';
 
     customMenuStatus.textContent = status.enabled
         ? 'Custom menu is currently ACTIVE.'
         : status.exists
-            ? 'Custom menu uploaded but not activated.'
+            ? 'Custom menu is uploaded and disabled. The default menu is being shown.'
             : 'Default menu is currently active.';
+
+    $('#activateCustomMenu').disabled = !status.exists || status.enabled;
+    $('#disableCustomMenu').disabled = !status.enabled;
+    $('#restoreDefaultMenu').disabled = !status.exists && !status.enabled;
 }
 
 $('#uploadCustomMenu').addEventListener('click', async () => {
@@ -921,9 +930,28 @@ $('#uploadCustomMenu').addEventListener('click', async () => {
         );
 
         customMenuHTML = html;
+        let dashboardWarning = '';
+        try {
+            const menuManager = await menuManagerReady;
+            await menuManager?.reload?.();
+        } catch (refreshError) {
+            dashboardWarning = ` Dashboard refresh failed: ${refreshError.message}`;
+        }
+        try {
+            await loadCustomMenuStatus();
+        } catch (statusError) {
+            customMenuStatus.textContent = `Upload succeeded, but menu status could not refresh: ${statusError.message}`;
+            dashboardWarning += ` Menu status refresh failed: ${statusError.message}`;
+        }
 
-        toast(result.message);
-        await loadCustomMenuStatus();
+        const sync = result.synchronization || {};
+        const processed = Number(sync.processed ?? (Number(sync.added || 0) + Number(sync.updated || 0)));
+        const inserted = Number(sync.inserted ?? sync.added ?? 0);
+        const updated = Number(sync.updated || 0);
+        const summary = processed
+            ? ` ${processed} items processed (${inserted} new, ${updated} updated).`
+            : '';
+        toast(`${result.message}${summary}${dashboardWarning}`);
 
     } catch (error) {
         toast(error.message);
@@ -932,25 +960,57 @@ $('#uploadCustomMenu').addEventListener('click', async () => {
 
 $('#previewCustomMenu').addEventListener('click', async () => {
     try {
+        const selected = $('#customMenuFile').files[0];
+        if (selected) {
+            customMenuHTML = await selected.text();
+        }
         if (!customMenuHTML) {
-            const selected = $('#customMenuFile').files[0];
-
-            if (selected) {
-                customMenuHTML = await selected.text();
-            } else {
-                throw new Error('Select an HTML file or upload it first.');
-            }
+            throw new Error('Select an HTML file or upload it first.');
         }
 
-        const preview = window.open('', '_blank');
+        const previewData = await api(
+            `/api/v1/public/menu/${encodeURIComponent(r.slug)}?include_unavailable=1`
+        );
+        const json = JSON.stringify(previewData)
+            .replace(/</g, '\\u003c')
+            .replace(/\u2028/g, '\\u2028')
+            .replace(/\u2029/g, '\\u2029');
+        const hasRuntime = /<script\b[^>]*\bsrc\s*=\s*["'][^"']*\/js\/vigna-custom-menu\.js(?:\?[^"']*)?["'][^>]*>/i.test(customMenuHTML);
+        const scriptEnd = '</scr' + 'ipt>';
+        const runtimeScript = hasRuntime
+            ? ''
+            : `<script defer src="${location.origin}/js/vigna-custom-menu.js">${scriptEnd}`;
+        const bootstrap = `
+            <base href="${location.origin}/">
+            <script>
+                window.VIGNA_SLUG = ${JSON.stringify(r.slug)};
+                window.VIGNA_PREVIEW_MODE = true;
+                window.VIGNA_PREVIEW_DATA = ${json};
+            ${scriptEnd}
+            ${runtimeScript}
+        `;
+        const html = /<head\b[^>]*>/i.test(customMenuHTML)
+            ? customMenuHTML.replace(/<head\b[^>]*>/i, match => `${match}${bootstrap}`)
+            : `${bootstrap}${customMenuHTML}`;
 
-        if (!preview) {
-            throw new Error('Allow pop-ups to preview the menu.');
-        }
-
-        preview.document.open();
-        preview.document.write(customMenuHTML);
-        preview.document.close();
+        const preview = document.createElement('div');
+        preview.id = 'customMenuPreview';
+        preview.style.cssText = 'position:fixed;inset:0;z-index:99999;background:#111a;display:grid;place-items:center;padding:2vh 2vw';
+        preview.innerHTML = `
+            <section style="width:min(1200px,96vw);height:96vh;background:#fff;border-radius:12px;overflow:hidden;display:flex;flex-direction:column">
+                <header style="padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #ddd">
+                    <strong>Custom menu preview · ${esc(r.name)}</strong>
+                    <button type="button" id="closeCustomMenuPreview">Close preview</button>
+                </header>
+                <iframe title="Custom menu preview" sandbox="allow-scripts" style="border:0;width:100%;height:100%"></iframe>
+            </section>
+        `;
+        document.body.appendChild(preview);
+        preview.querySelector('iframe').srcdoc = html;
+        preview.querySelector('#closeCustomMenuPreview').addEventListener(
+            'click',
+            () => preview.remove()
+        );
 
     } catch (error) {
         toast(error.message);
@@ -965,7 +1025,23 @@ $('#activateCustomMenu').addEventListener('click', async () => {
             { enabled: true }
         );
 
-        toast('AI custom menu activated.');
+        toast('Custom HTML menu activated.');
+        await loadCustomMenuStatus();
+
+    } catch (error) {
+        toast(error.message);
+    }
+});
+
+$('#disableCustomMenu').addEventListener('click', async () => {
+    try {
+        await api(
+            `/api/v1/admin/restaurants/${r.id}/custom-menu`,
+            'PATCH',
+            { enabled: false }
+        );
+
+        toast('Custom menu disabled. The uploaded HTML and menu data are kept.');
         await loadCustomMenuStatus();
 
     } catch (error) {
@@ -977,7 +1053,7 @@ $('#restoreDefaultMenu').addEventListener('click', async () => {
     try {
         if (!await confirmDialog({
             title: 'Restore default menu?',
-            message: 'The uploaded custom HTML will be deleted and the original menu will be displayed.',
+            message: 'The uploaded HTML configuration will be removed and the original menu will be displayed. Synchronized menu items, images and order history will be kept.',
             confirmText: 'Restore default',
             danger: true
         })) return;
@@ -991,7 +1067,7 @@ $('#restoreDefaultMenu').addEventListener('click', async () => {
 
         $('#customMenuFile').value = '';
 
-        toast('Default menu restored.');
+        toast('Default menu restored. Menu data and order history were kept.');
         await loadCustomMenuStatus();
 
     } catch (error) {
@@ -1007,14 +1083,16 @@ loadCustomMenuStatus().catch(error => {
 
       scrollTo(0, 0);
 
-      MenuManager.mount(
+      menuManagerReady = MenuManager.mount(
         $('#menuMount'),
         {
           base: `/api/v1/admin/restaurants/${r.id}`,
           themeColor: r.theme_color,
           onChange: load
         }
-      ).catch(er => {
+      );
+
+      menuManagerReady.catch(er => {
 
         $('#menuMount').innerHTML =
           `<p class="err">${esc(er.message)}</p>`;

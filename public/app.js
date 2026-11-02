@@ -21,7 +21,7 @@ const skelStats = (n = 4) => Array.from({ length: n }, () => '<div class="skel s
 
 function api(path, method = 'GET', body) { loadStart(); return rawApi(path, method, body).finally(loadEnd); }
 async function rawApi(path, method = 'GET', body) {
-  const res = await fetch(path, { method, credentials: 'same-origin', headers: body ? { 'Content-Type': 'application/json' } : {}, body: body ? JSON.stringify(body) : undefined });
+  const res = await fetch(path, { method, credentials: 'same-origin', cache: 'no-store', headers: body ? { 'Content-Type': 'application/json' } : {}, body: body ? JSON.stringify(body) : undefined });
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
     // session ended (logged out elsewhere, or the restaurant was deactivated): go back to the login page

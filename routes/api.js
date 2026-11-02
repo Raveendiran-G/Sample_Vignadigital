@@ -1,15 +1,28 @@
 // JSON API used by dashboards (login cookie) and external clients (bearer token).
-// Handlers are async (MongoDB); Express 5 forwards thrown errors to app.js error handler.
+// Express 5 forwards async errors to the app.js error handler.
 
 const express = require('express');
 const rateLimit = require('express-rate-limit');
 const QRCode = require('qrcode');
-const crypto = require('crypto');
+const { ObjectId } = require('mongodb');
+
+const {
+    extractMenuData,
+    injectMenuRuntime,
+    synchronizeMenu
+} = require('../lib/custom-menu');
 
 const { BASE_URL, SESSION_SECRET } = require('../lib/config');
 const { upload, saveUploadedFile } = require('../lib/uploads');
 const { sign, verify } = require('../lib/token');
-const { cols } = require('../lib/db');
+const { cols, nextDailyOrderNo } = require('../lib/db');
+const {
+    subscribeRestaurant,
+    subscribeOrder,
+    publishNewOrder,
+    publishOrderStatus
+} = require('../lib/order-events');
+
 const svc = require('../lib/service');
 const { HttpError } = svc;
 
@@ -18,33 +31,39 @@ const router = express.Router();
 router.use(express.json({ limit: '3mb' }));
 
 // ======================================================
-// LIVE ORDER NOTIFICATIONS (SERVER-SENT EVENTS)
+// LIVE ORDER NOTIFICATIONS
 // ======================================================
 
-const orderEventClients = new Map();
-
-function publishNewOrder(restaurantId, order) {
-    const clients = orderEventClients.get(String(restaurantId));
-
-    if (!clients || clients.size === 0) return;
-
-    const payload = JSON.stringify({
-        id: String(order._id || order.id || ''),
-        order_no: order.order_no,
-        customer: order.customer,
-        total: order.total,
-        created_at: order.created_at
+function streamEvents(req, res, subscribe, eventName) {
+    res.status(200).set({
+        'Content-Type': 'text/event-stream; charset=utf-8',
+        'Cache-Control': 'no-cache, no-transform',
+        Connection: 'keep-alive',
+        'X-Accel-Buffering': 'no'
     });
+    res.flushHeaders?.();
+    res.write(': connected\n\n');
+    res.flush?.();
 
-    for (const client of clients) {
-        try {
-            if (!client.destroyed && !client.writableEnded) {
-                client.write(`event: new-order\ndata: ${payload}\n\n`);
-            }
-        } catch (error) {
-            clients.delete(client);
+    const unsubscribe = subscribe(payload => {
+        if (!res.destroyed && !res.writableEnded) {
+            res.write(`event: ${eventName}\ndata: ${JSON.stringify(payload)}\n\n`);
+            res.flush?.();
         }
-    }
+    });
+    const heartbeat = setInterval(() => {
+        if (!res.destroyed && !res.writableEnded) {
+            res.write(': keep-alive\n\n');
+            res.flush?.();
+        }
+    }, 15000);
+    const cleanup = () => {
+        clearInterval(heartbeat);
+        unsubscribe();
+    };
+
+    req.on('close', cleanup);
+    res.on('error', cleanup);
 }
 
 // ======================================================
@@ -129,13 +148,13 @@ const auth = role => async (req, res, next) => {
     }
 
     req.user = user;
-
     next();
 };
 
 const rid = req => req.user.restaurant_id;
 
 const id = req => Number(req.params.id);
+
 const photo = async req => {
     if (req.file) {
         return await saveUploadedFile(req.file);
@@ -175,7 +194,10 @@ router.get('/openapi.json', (req, res) => {
 // ======================================================
 
 router.get('/public/menu/:slug', async (req, res) => {
-    const menu = await svc.getMenu(req.params.slug);
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+    const menu = await svc.getMenu(req.params.slug, {
+        includeUnavailable: req.query.include_unavailable === '1'
+    });
 
     if (!menu) {
         throw new HttpError(404, 'Menu not available');
@@ -192,11 +214,24 @@ router.get('/public/menu/:slug', async (req, res) => {
             return value;
         }
 
-        const filename = value
-            .replace(/^\/+/, '')
-            .replace(/^uploads\//i, '');
+        if (value.startsWith('/') && !value.startsWith('//')) {
+            return value.split('/').map((part, index) => {
+                if (index === 0 || !part) return part;
+                try {
+                    return encodeURIComponent(decodeURIComponent(part));
+                } catch {
+                    return encodeURIComponent(part);
+                }
+            }).join('/');
+        }
+
+        const filename = value.replace(/^\/+/, '');
 
         if (!filename) return null;
+
+        if (/^uploads\//i.test(filename)) {
+            return '/' + filename.split('/').map(encodeURIComponent).join('/');
+        }
 
         return '/uploads/' + filename
             .split('/')
@@ -222,6 +257,7 @@ router.get('/public/menu/:slug', async (req, res) => {
         categories: menu.sections.map(section => ({
             id: section.id,
             name: section.name,
+
             items: section.items.map(item => ({
                 ...svc.itemOut(item),
                 image: imageUrl(item.image),
@@ -230,6 +266,77 @@ router.get('/public/menu/:slug', async (req, res) => {
         }))
     });
 });
+
+// ======================================================
+// PUBLIC CUSTOM HTML MENU
+// ======================================================
+
+router.get('/public/custom-menu/:slug', async (req, res) => {
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+    const menu = await svc.getMenu(req.params.slug);
+
+    if (!menu) {
+        throw new HttpError(404, 'Restaurant menu not found');
+    }
+
+    const restaurant = menu.restaurant;
+
+    if (
+        restaurant.custom_menu_enabled !== true ||
+        !restaurant.custom_menu_html
+    ) {
+        throw new HttpError(404, 'Custom menu is not enabled');
+    }
+
+    res.set({
+        'Content-Type': 'text/html; charset=utf-8',
+        'Cache-Control': 'no-store, no-cache, must-revalidate',
+        'X-Content-Type-Options': 'nosniff'
+    });
+
+    res.send(injectMenuRuntime(
+        restaurant.custom_menu_html,
+        restaurant.slug
+    ));
+});
+
+function parsePublicOrderId(value) {
+    if (!/^[a-f\d]{24}$/i.test(String(value || ''))) {
+        throw new HttpError(400, 'Invalid order ID');
+    }
+    return new ObjectId(value);
+}
+
+router.get('/public/orders/:orderId', async (req, res) => {
+    const orderId = parsePublicOrderId(req.params.orderId);
+    const order = await cols.orders.findOne(
+        { _id: orderId },
+        { projection: { order_no: 1, status: 1, updated_at: 1 } }
+    );
+
+    if (!order) throw new HttpError(404, 'Order not found');
+    res.set('Cache-Control', 'no-store').json({
+        id: String(order._id),
+        order_no: order.order_no,
+        status: order.status,
+        updated_at: order.updated_at
+    });
+});
+
+router.get('/public/orders/:orderId/events', async (req, res) => {
+    const orderId = parsePublicOrderId(req.params.orderId);
+    if (!await cols.orders.findOne({ _id: orderId }, { projection: { _id: 1 } })) {
+        throw new HttpError(404, 'Order not found');
+    }
+
+    streamEvents(
+        req,
+        res,
+        listener => subscribeOrder(orderId, listener),
+        'order-status'
+    );
+});
+
 // ======================================================
 // CUSTOMER PLACES NEW ORDER
 // ======================================================
@@ -238,7 +345,6 @@ router.post(
     '/public/orders',
     orderLimiter,
     async (req, res) => {
-
         const body = req.body || {};
 
         const slug = cleanText(
@@ -345,7 +451,6 @@ router.post(
         const lines = [];
 
         for (const requested of body.items) {
-
             const itemId = Number(
                 requested?.id ?? requested?.item_id
             );
@@ -394,17 +499,13 @@ router.post(
         );
 
         const tax = roundMoney(subtotal * 0.05);
-
         const total = roundMoney(subtotal + tax);
 
-        const orderNo =
-            `${String(restaurant.name || 'ORD')
-                .replace(/[^A-Za-z]/g, '')
-                .slice(0, 3)
-                .toUpperCase() || 'ORD'
-            }-${crypto.randomInt(10000000, 99999999)}`;
-
         const createdAt = new Date();
+        const orderNo = await nextDailyOrderNo(
+            restaurant.name,
+            createdAt
+        );
 
         const order = {
             order_no: orderNo,
@@ -430,20 +531,17 @@ router.post(
         };
 
         try {
-
-            // Save order first.
             const result = await cols.orders.insertOne(order);
 
-            // Immediately notify the correct restaurant dashboard.
             publishNewOrder(
                 restaurant._id,
                 {
                     ...order,
-                    _id: result.insertedId
+                _id: result.insertedId,
+                id: String(result.insertedId)
                 }
             );
 
-            // Respond to customer.
             res.status(201).json({
                 success: true,
                 message: 'Order placed successfully',
@@ -460,7 +558,6 @@ router.post(
             });
 
         } catch (error) {
-
             if (error?.code === 11000) {
                 throw new HttpError(
                     503,
@@ -478,7 +575,6 @@ router.post(
 // ======================================================
 
 router.post('/auth/login', loginLimiter, async (req, res) => {
-
     const user = await svc.authenticate(
         req.body.identifier ?? req.body.email,
         req.body.password
@@ -498,14 +594,12 @@ router.post(
     '/auth/session',
     loginLimiter,
     async (req, res, next) => {
-
         const user = await svc.authenticate(
             req.body.identifier ?? req.body.email,
             req.body.password
         );
 
         req.session.regenerate(error => {
-
             if (error) return next(error);
 
             req.session.user = {
@@ -521,7 +615,6 @@ router.post(
 );
 
 router.delete('/auth/session', (req, res) => {
-
     const done = () => {
         res.clearCookie('sid');
         res.status(204).end();
@@ -539,7 +632,6 @@ router.get('/auth/me', auth(), (req, res) => {
 });
 
 router.post('/auth/password', auth(), async (req, res) => {
-
     await svc.changePassword(
         req.user.id,
         req.body.current_password,
@@ -554,10 +646,10 @@ router.post('/auth/password', auth(), async (req, res) => {
 // ======================================================
 
 function menuRoutes(route, restaurantOf) {
-
     const ref = req => Number(req.params.ref);
 
     route.get('/categories', async (req, res) => {
+        res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
         res.json({
             categories: await svc.listCategories(
                 restaurantOf(req)
@@ -585,7 +677,6 @@ function menuRoutes(route, restaurantOf) {
     });
 
     route.delete('/categories/:ref', async (req, res) => {
-
         await svc.deleteCategory(
             restaurantOf(req),
             ref(req)
@@ -595,14 +686,17 @@ function menuRoutes(route, restaurantOf) {
     });
 
     route.get('/items', async (req, res) => {
-
+        res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
         const items = await svc.listItems(
             restaurantOf(req),
             Number(req.query.category_id) || null
         );
 
         res.json({
-            items: items.map(svc.itemOut)
+            items: items.map(item => ({
+                ...svc.itemOut(item),
+                category: item.category
+            }))
         });
     });
 
@@ -610,7 +704,6 @@ function menuRoutes(route, restaurantOf) {
         '/items',
         upload.single('image'),
         async (req, res) => {
-
             res.status(201).json(
                 svc.itemOut(
                     await svc.saveItem(
@@ -638,7 +731,6 @@ function menuRoutes(route, restaurantOf) {
         '/items/:ref',
         upload.single('image'),
         async (req, res) => {
-
             res.json(
                 svc.itemOut(
                     await svc.saveItem(
@@ -655,7 +747,6 @@ function menuRoutes(route, restaurantOf) {
     );
 
     route.patch('/items/:ref/availability', async (req, res) => {
-
         const available = req.body.available;
 
         res.json(
@@ -677,7 +768,6 @@ function menuRoutes(route, restaurantOf) {
     });
 
     route.delete('/items/:ref', async (req, res) => {
-
         await svc.deleteItem(
             restaurantOf(req),
             ref(req)
@@ -687,11 +777,11 @@ function menuRoutes(route, restaurantOf) {
     });
 
     route.get('/library/categories', async (req, res) => {
-        res.json(
-            await svc.libraryCategories(
+        res.json({
+            categories: await svc.libraryCategories(
                 restaurantOf(req)
             )
-        );
+        });
     });
 
     route.get('/library/items', async (req, res) => {
@@ -726,7 +816,6 @@ admin.get('/summary', async (req, res) => {
 });
 
 admin.get('/restaurants', async (req, res) => {
-
     const restaurants = await svc.listRestaurants();
 
     res.json({
@@ -735,7 +824,6 @@ admin.get('/restaurants', async (req, res) => {
 });
 
 admin.post('/restaurants', async (req, res) => {
-
     res.status(201).json(
         svc.restaurantOut(
             await svc.createRestaurant(req.body)
@@ -763,7 +851,6 @@ admin.patch('/restaurants/:id', async (req, res) => {
 });
 
 admin.post('/restaurants/:id/password', async (req, res) => {
-
     await svc.resetOwnerPassword(
         id(req),
         req.body.password
@@ -773,9 +860,7 @@ admin.post('/restaurants/:id/password', async (req, res) => {
 });
 
 admin.post('/restaurants/:id/reset-password', async (req, res) => {
-
     const restaurant = await svc.getRestaurant(id(req));
-
     const password = svc.generatePassword();
 
     await svc.resetOwnerPassword(
@@ -791,7 +876,6 @@ admin.post('/restaurants/:id/reset-password', async (req, res) => {
 });
 
 admin.post('/restaurants/:id/reveal-password', async (req, res) => {
-
     res.set('Cache-Control', 'no-store');
 
     res.json({
@@ -800,44 +884,77 @@ admin.post('/restaurants/:id/reveal-password', async (req, res) => {
 });
 
 admin.delete('/restaurants/:id', async (req, res) => {
-
     await svc.deleteRestaurant(id(req));
 
     res.status(204).end();
 });
+
 // ======================================================
-// AI CUSTOM MENU HTML
+// VIGNADIGITAL CUSTOM MENU SYSTEM
 // ======================================================
 
-const CUSTOM_MENU_MAX_SIZE = 1024 * 1024; // 1 MB
+const CUSTOM_MENU_MAX_SIZE = 1024 * 1024;
+
+// GET CUSTOM MENU STATUS
 
 admin.get('/restaurants/:id/custom-menu', async (req, res) => {
     const restaurant = await svc.getRestaurant(id(req));
 
-    res.set('Cache-Control', 'no-store');
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
 
     res.json({
         exists: !!restaurant.custom_menu_html,
         enabled: restaurant.custom_menu_enabled === true,
-        updated_at: restaurant.custom_menu_updated_at || null
+        updated_at: restaurant.custom_menu_updated_at || null,
+        html: restaurant.custom_menu_html || ''
     });
 });
 
+// UPLOAD HTML AND SYNCHRONIZE DATABASE
+
 admin.put('/restaurants/:id/custom-menu', async (req, res) => {
     const restaurant = await svc.getRestaurant(id(req));
-
     const html = req.body?.html;
 
     if (typeof html !== 'string' || !html.trim()) {
-        throw new HttpError(400, 'HTML file content is required');
+        throw new HttpError(400, 'HTML file is required.');
     }
 
     if (Buffer.byteLength(html, 'utf8') > CUSTOM_MENU_MAX_SIZE) {
-        throw new HttpError(413, 'HTML file must be smaller than 1 MB');
+        throw new HttpError(
+            413,
+            'HTML file must be smaller than 1 MB.'
+        );
     }
 
-    if (!/<html[\s>]/i.test(html) || !/<\/html>/i.test(html)) {
-        throw new HttpError(400, 'Please upload a complete HTML document');
+    if (
+        !/<html[\s>]/i.test(html) ||
+        !/<\/html>/i.test(html)
+    ) {
+        throw new HttpError(400, 'Invalid HTML document.');
+    }
+
+    let menuData;
+
+    try {
+        menuData = extractMenuData(html);
+    } catch (error) {
+        throw new HttpError(400, error.message);
+    }
+
+    let sync;
+
+    try {
+        sync = await synchronizeMenu(
+            restaurant.id,
+            menuData
+        );
+    } catch (error) {
+        console.error('Custom menu synchronization:', error);
+        if (error.status && error.status < 500) {
+            throw new HttpError(error.status, error.message);
+        }
+        throw error;
     }
 
     await cols.restaurants.updateOne(
@@ -851,20 +968,26 @@ admin.put('/restaurants/:id/custom-menu', async (req, res) => {
         }
     );
 
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
     res.json({
         success: true,
-        message: 'Custom menu uploaded. Activate it to display it.',
+        message: 'Custom menu uploaded and database synchronized.',
+        synchronization: sync,
         enabled: false
     });
 });
 
+// ACTIVATE OR DEACTIVATE CUSTOM MENU
+
 admin.patch('/restaurants/:id/custom-menu', async (req, res) => {
     const restaurant = await svc.getRestaurant(id(req));
-
     const enabled = req.body?.enabled === true;
 
     if (enabled && !restaurant.custom_menu_html) {
-        throw new HttpError(400, 'Upload a custom HTML menu first');
+        throw new HttpError(
+            400,
+            'Upload a custom menu first.'
+        );
     }
 
     await cols.restaurants.updateOne(
@@ -883,6 +1006,8 @@ admin.patch('/restaurants/:id/custom-menu', async (req, res) => {
     });
 });
 
+// RESTORE DEFAULT MENU
+
 admin.delete('/restaurants/:id/custom-menu', async (req, res) => {
     const restaurant = await svc.getRestaurant(id(req));
 
@@ -899,21 +1024,15 @@ admin.delete('/restaurants/:id/custom-menu', async (req, res) => {
 
     res.json({
         success: true,
-        message: 'Default menu restored'
+        message: 'Default menu restored.'
     });
 });
 
 admin.get('/restaurants/:id/orders', async (req, res) => {
-
     const restaurant = await svc.getRestaurant(id(req));
-
     const orders = await cols.orders
-        .find({
-            restaurant_id: restaurant.id
-        })
-        .sort({
-            created_at: -1
-        })
+        .find({ restaurant_id: restaurant.id })
+        .sort({ created_at: -1 })
         .limit(500)
         .toArray();
 
@@ -926,28 +1045,15 @@ admin.get('/restaurants/:id/orders', async (req, res) => {
     });
 });
 
-const adminMenu = express.Router({
-    mergeParams: true
-});
-
+const adminMenu = express.Router({ mergeParams: true });
 adminMenu.use(async (req, res, next) => {
-
-    await svc.getRestaurant(
-        Number(req.params.id)
-    );
-
+    await svc.getRestaurant(Number(req.params.id));
     next();
 });
+menuRoutes(adminMenu, req => Number(req.params.id));
+admin.use('/restaurants/:id', adminMenu);
 
-menuRoutes(
-    adminMenu,
-    req => Number(req.params.id)
-);
-
-admin.use(
-    '/restaurants/:id',
-    adminMenu
-);
+// IMPORTANT: MOUNT ADMIN ROUTER
 
 router.use('/admin', admin);
 
@@ -959,51 +1065,24 @@ const owner = express.Router();
 
 owner.use(auth('owner'));
 
-// Live notifications for new orders
-owner.get('/orders/events', (req, res) => {
-    res.status(200);
-    res.set({
-        'Content-Type': 'text/event-stream',
-        'Cache-Control': 'no-cache, no-transform',
-        'Connection': 'keep-alive',
-        'X-Accel-Buffering': 'no'
-    });
+// ======================================================
+// LIVE ORDER EVENT CONNECTION
+// ======================================================
 
-    res.flushHeaders?.();
-    res.write(': connected\n\n');
+owner.get('/orders/events', (req, res) =>
+    streamEvents(
+        req,
+        res,
+        listener => subscribeRestaurant(rid(req), listener),
+        'new-order'
+    )
+);
 
-    const restaurantId = String(rid(req));
-
-    let clients = orderEventClients.get(restaurantId);
-
-    if (!clients) {
-        clients = new Set();
-        orderEventClients.set(restaurantId, clients);
-    }
-
-    clients.add(res);
-
-    const heartbeat = setInterval(() => {
-        if (!res.destroyed && !res.writableEnded) {
-            res.write(': keep-alive\n\n');
-        }
-    }, 15000);
-
-    const cleanup = () => {
-        clearInterval(heartbeat);
-        clients.delete(res);
-
-        if (clients.size === 0) {
-            orderEventClients.delete(restaurantId);
-        }
-    };
-
-    res.on('close', cleanup);
-    res.on('error', cleanup);
-});
+// ======================================================
+// RESTAURANT PROFILE
+// ======================================================
 
 owner.get('/restaurant', async (req, res) => {
-
     res.json(
         svc.restaurantOut(
             await svc.getRestaurant(rid(req))
@@ -1012,7 +1091,6 @@ owner.get('/restaurant', async (req, res) => {
 });
 
 owner.patch('/restaurant', async (req, res) => {
-
     res.json(
         svc.restaurantOut(
             await svc.updateProfile(
@@ -1023,68 +1101,17 @@ owner.patch('/restaurant', async (req, res) => {
     );
 });
 
+// ======================================================
+// OWNER CATEGORY AND ITEM ROUTES
+// ======================================================
+
 menuRoutes(owner, rid);
-
-// ======================================================
-// LIVE ORDER EVENT CONNECTION
-// ======================================================
-
-owner.get('/orders/events', (req, res) => {
-
-    res.status(200);
-
-    res.set({
-        'Content-Type': 'text/event-stream; charset=utf-8',
-        'Cache-Control': 'no-cache, no-transform',
-        'Connection': 'keep-alive',
-        'X-Accel-Buffering': 'no'
-    });
-
-    res.flushHeaders?.();
-
-    res.write(': connected\n\n');
-
-    const restaurantId = String(rid(req));
-
-    let clients = orderEventClients.get(restaurantId);
-
-    if (!clients) {
-        clients = new Set();
-        orderEventClients.set(restaurantId, clients);
-    }
-
-    clients.add(res);
-
-    // Keep the connection alive.
-    const heartbeat = setInterval(() => {
-
-        if (!res.destroyed && !res.writableEnded) {
-            res.write(': keep-alive\n\n');
-        }
-
-    }, 15000);
-
-    const cleanup = () => {
-
-        clearInterval(heartbeat);
-
-        clients.delete(res);
-
-        if (clients.size === 0) {
-            orderEventClients.delete(restaurantId);
-        }
-    };
-
-    res.on('close', cleanup);
-    res.on('error', cleanup);
-});
 
 // ======================================================
 // GET ORDERS
 // ======================================================
 
 owner.get('/orders', async (req, res) => {
-
     const orders = await cols.orders
         .find({
             restaurant_id: rid(req)
@@ -1109,7 +1136,6 @@ owner.get('/orders', async (req, res) => {
 // ======================================================
 
 owner.patch('/orders/:orderId/status', async (req, res) => {
-
     const allowed = new Set([
         'Pending',
         'Accepted',
@@ -1126,10 +1152,7 @@ owner.patch('/orders/:orderId/status', async (req, res) => {
     );
 
     if (!allowed.has(status)) {
-        throw new HttpError(
-            400,
-            'Invalid order status'
-        );
+        throw new HttpError(400, 'Invalid order status');
     }
 
     const { ObjectId } = require('mongodb');
@@ -1139,10 +1162,7 @@ owner.patch('/orders/:orderId/status', async (req, res) => {
     try {
         orderId = new ObjectId(req.params.orderId);
     } catch {
-        throw new HttpError(
-            400,
-            'Invalid order ID'
-        );
+        throw new HttpError(400, 'Invalid order ID');
     }
 
     const result = await cols.orders.updateOne(
@@ -1159,11 +1179,14 @@ owner.patch('/orders/:orderId/status', async (req, res) => {
     );
 
     if (!result.matchedCount) {
-        throw new HttpError(
-            404,
-            'Order not found'
-        );
+        throw new HttpError(404, 'Order not found');
     }
+
+    publishOrderStatus(orderId, {
+        id: String(orderId),
+        status,
+        updated_at: new Date()
+    });
 
     res.json({
         success: true,
@@ -1176,10 +1199,7 @@ owner.patch('/orders/:orderId/status', async (req, res) => {
 // ======================================================
 
 owner.get('/qr.png', async (req, res) => {
-
-    const restaurant = await svc.getRestaurant(
-        rid(req)
-    );
+    const restaurant = await svc.getRestaurant(rid(req));
 
     res.type('png').set(
         'Content-Disposition',
@@ -1188,10 +1208,12 @@ owner.get('/qr.png', async (req, res) => {
             : 'inline'
     );
 
-    const level = ['L', 'M', 'Q', 'H'].includes(
-        String(req.query.level).toUpperCase()
-    )
-        ? String(req.query.level).toUpperCase()
+    const requestedLevel = String(
+        req.query.level || 'M'
+    ).toUpperCase();
+
+    const level = ['L', 'M', 'Q', 'H'].includes(requestedLevel)
+        ? requestedLevel
         : 'M';
 
     res.send(
@@ -1213,6 +1235,9 @@ owner.get('/qr.png', async (req, res) => {
 // REGISTER OWNER ROUTES
 // ======================================================
 
+// Keep owner routes at the existing root API paths.
+// Example: /api/v1/orders and /api/v1/items
+
 router.use('/', owner);
 
 // ======================================================
@@ -1220,11 +1245,9 @@ router.use('/', owner);
 // ======================================================
 
 router.use((req, res) => {
-
     res.status(404).json({
         error: 'Not found'
     });
-
 });
 
 module.exports = router;

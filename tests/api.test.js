@@ -63,6 +63,70 @@ test('pages are served', async () => {
   assert.equal(h.body.status, 'ok');
 });
 
+test('custom menu extraction reads marked HTML menu cards and availability', () => {
+  const { extractMenuData } = require('../lib/custom-menu');
+  const data = extractMenuData(`
+    <!doctype html><html><body>
+      <template id="vigna-item-template">
+        <article class="menu-item"><h3 data-vigna-field="name">Template name</h3></article>
+      </template>
+      <main id="vigna-menu-root">
+        <section data-vigna-category="Mains">
+          <article data-vigna-item data-name="Dragon Chicken" data-price="₹260"
+            data-description="Spicy sauce" data-image="/uploads/dragon.jpg"
+            data-available="false">
+            <h3>Dragon Chicken</h3><p>₹260</p>
+          </article>
+        </section>
+      </main>
+    </body></html>
+  `);
+
+  assert.deepEqual(data.categories[0].name, 'Mains');
+  assert.deepEqual(data.categories[0].items[0], {
+    name: 'Dragon Chicken',
+    price: 260,
+    description: 'Spicy sauce',
+    image: '/uploads/dragon.jpg',
+    available: false
+  });
+});
+
+test('custom menu JSON manifest is primary when marked HTML cards are also present', () => {
+  const { extractMenuData } = require('../lib/custom-menu');
+  const data = extractMenuData(`
+    <!doctype html><html><body>
+      <main id="vigna-menu-root">
+        <section data-vigna-category="Markup category">
+          <article data-vigna-item data-name="Markup-only dish" data-price="999"></article>
+        </section>
+      </main>
+      <script id="vigna-menu-data" type="application/json">
+        {"categories":[{"name":"JSON category","items":[{"name":"Manifest dish","price":100}]}]}
+      </script>
+    </body></html>
+  `);
+
+  assert.deepEqual(data.categories, [{
+    name: 'JSON category',
+    items: [{
+      name: 'Manifest dish',
+      price: 100,
+      description: '',
+      image: '',
+      available: true
+    }]
+  }]);
+});
+
+test('admin dashboard inline script remains valid after adding the preview integration', () => {
+  const html = fs.readFileSync(path.join(__dirname, '..', 'public', 'admin.html'), 'utf8');
+  const start = html.indexOf('<script>', html.indexOf('</head>'));
+  const end = html.indexOf('</script>', start);
+  assert.ok(start >= 0 && end > start, 'admin inline script is present');
+  assert.doesNotThrow(() => new Function(html.slice(start + '<script>'.length, end)));
+});
+
 test('cookie login, token login, logout and the cross-site check', async () => {
   assert.equal((await call('POST', '/api/v1/auth/login', { json: { identifier: 'admin@test.com', password: 'wrong' } })).status, 401);
   assert.equal((await call('GET', '/api/v1/admin/summary')).status, 401);
@@ -434,4 +498,355 @@ test('QR code: error-correction level can be raised for a logo', async () => {
   assert.equal(plain[1], 0x50);                         // a PNG
   assert.notDeepEqual(plain, high);                     // level H draws a denser code
   assert.deepEqual(bogus, plain);                       // unknown levels fall back to the default
+});
+
+test('custom HTML menus stay restaurant-specific, sync idempotently, and use the existing ordering flow', async () => {
+  const admin = await login('admin@test.com', 'AdminPass123');
+  const makeRestaurant = (name, mobile) => call(
+    'POST',
+    '/api/v1/admin/restaurants',
+    { token: admin, json: { name, mobile, password: 'secret12' } }
+  );
+  const a = (await makeRestaurant('Custom Menu A', '9666600101')).body;
+  const b = (await makeRestaurant('Custom Menu B', '9666600102')).body;
+
+  const categoryA = await db.nextId('categories');
+  const categoryB = await db.nextId('categories');
+  const chickenA = await db.nextId('items');
+  const chickenB = await db.nextId('items');
+  const existingImage = 'https://images.example.test/chicken-briyani.jpg';
+  await db.cols.categories.insertMany([
+    { _id: categoryA, restaurant_id: a.id, name: 'Mains', sort: 1 },
+    { _id: categoryB, restaurant_id: b.id, name: 'Mains', sort: 1 }
+  ]);
+  await db.cols.items.insertMany([
+    {
+      _id: chickenA, restaurant_id: a.id, category_id: categoryA,
+      name: 'Chicken Briyani', description: 'Existing recipe', price: 220,
+      image: existingImage, available: true
+    },
+    {
+      _id: chickenB, restaurant_id: b.id, category_id: categoryB,
+      name: 'Chicken Briyani', description: 'Restaurant B recipe', price: 190,
+      image: existingImage, available: true
+    }
+  ]);
+
+  const html = `<!doctype html><html><head><title>Custom layout marker</title><style>.custom-theme{color:#135724}</style></head><body><header class="custom-theme">Restaurant A custom layout</header><main id="vigna-menu-root"></main><script id="vigna-menu-data" type="application/json">${JSON.stringify({
+    categories: [{
+      name: 'Mains',
+      items: [
+        {
+          name: '  chicken   briyani ',
+          price: 250,
+          description: 'Updated price',
+          image: 'https://images.example.test/new-chicken-image.jpg',
+          available: true
+        },
+        {
+          name: 'Dragon Chicken',
+          price: 50,
+          description: 'New menu item',
+          image: null,
+          available: true
+        }
+      ]
+    }]
+  })}</script></body></html>`;
+  const upload = () => call(
+    'PUT',
+    `/api/v1/admin/restaurants/${a.id}/custom-menu`,
+    { token: admin, json: { html } }
+  );
+
+  assert.equal((await call(
+    'PUT',
+    `/api/v1/admin/restaurants/${a.id}/custom-menu`,
+    { token: await login('9666600101', 'secret12'), json: { html } }
+  )).status, 403);
+
+  const uploaded = await upload();
+  assert.equal(uploaded.status, 200);
+  assert.deepEqual(uploaded.body.synchronization, {
+    processed: 2,
+    inserted: 1,
+    added: 1,
+    updated: 1,
+    unchanged: 0,
+    created_categories: 0,
+    reused_images: 1
+  });
+  assert.equal((await call('GET', `/m/${a.slug}`)).body.toString().includes('Restaurant A custom layout'), false);
+
+  const aItems = (await call('GET', `/api/v1/admin/restaurants/${a.id}/items`, { token: admin })).body.items;
+  const chicken = aItems.find(item => item.name.toLowerCase() === 'chicken briyani');
+  const dragon = aItems.find(item => item.name === 'Dragon Chicken');
+  assert.equal(aItems.length, 2);
+  assert.equal(chicken.id, chickenA);
+  assert.equal(chicken.price, 250);
+  assert.equal(chicken.image, existingImage);
+  assert.ok(dragon.id && dragon.id !== chicken.id);
+  assert.equal(dragon.price, 50);
+
+  const restaurantBMenu = (await call('GET', `/api/v1/public/menu/${b.slug}`)).body;
+  assert.equal(restaurantBMenu.categories[0].items[0].price, 190);
+  assert.equal((await call('GET', `/m/${b.slug}`)).body.toString().includes('Restaurant A custom layout'), false);
+
+  const repeated = await upload();
+  assert.equal(repeated.status, 200);
+  assert.equal(repeated.body.synchronization.added, 0);
+  assert.equal(await db.cols.items.countDocuments({ restaurant_id: a.id }), 2);
+
+  assert.equal((await call(
+    'PATCH',
+    `/api/v1/admin/restaurants/${a.id}/custom-menu`,
+    { token: admin, json: { enabled: true } }
+  )).body.enabled, true);
+  const customPage = (await call('GET', `/m/${a.slug}`)).body.toString();
+  assert.match(customPage, /Restaurant A custom layout/);
+  assert.match(customPage, /window\.VIGNA_SLUG/);
+  assert.match(customPage, /vigna-custom-menu\.js/);
+  assert.equal((await call('GET', `/api/v1/public/menu/${a.slug}`)).body.categories[0].items.length, 2);
+
+  const disabledItem = await call(
+    'PATCH',
+    `/api/v1/admin/restaurants/${a.id}/items/${dragon.id}/availability`,
+    { token: admin, json: { available: false } }
+  );
+  assert.equal(disabledItem.body.available, false);
+  assert.equal((await call('GET', `/api/v1/public/menu/${a.slug}`)).body.categories[0].items.length, 1);
+  assert.equal((await call('GET', `/api/v1/public/menu/${a.slug}?include_unavailable=1`)).body.categories[0].items.length, 2);
+  await call(
+    'PATCH',
+    `/api/v1/admin/restaurants/${a.id}/items/${dragon.id}/availability`,
+    { token: admin, json: { available: true } }
+  );
+
+  const ownerSession = await sessionLogin('9666600101', 'secret12');
+  const eventResponse = await fetch(`${base}/api/v1/orders/events`, {
+    headers: { cookie: ownerSession.cookie }
+  });
+  assert.equal(eventResponse.status, 200);
+  const reader = eventResponse.body.getReader();
+  const decoder = new TextDecoder();
+  try {
+    const connected = await reader.read();
+    assert.match(decoder.decode(connected.value), /connected/);
+
+    const orderCall = async () => call('POST', '/api/v1/public/orders', {
+      json: {
+        slug: a.slug,
+        customer: 'Menu Customer',
+        phone: '9000001234',
+        order_type: 'Dine In',
+        table_no: '7',
+        items: [{ id: dragon.id, qty: 2, price: 0 }]
+      }
+    });
+
+    const firstOrder = await orderCall();
+    assert.equal(firstOrder.status, 201);
+    assert.deepEqual(
+      [firstOrder.body.order.items[0].price, firstOrder.body.subtotal, firstOrder.body.tax, firstOrder.body.total],
+      [50, 100, 5, 105]
+    );
+    assert.equal((await call('GET', `/api/v1/public/orders/${firstOrder.body.id}`)).body.status, 'Pending');
+
+    let orderEvent = '';
+    const eventRead = (async () => {
+      while (!orderEvent.includes('event: new-order')) {
+        const next = await reader.read();
+        if (next.done) break;
+        orderEvent += decoder.decode(next.value, { stream: true });
+      }
+    })();
+    let timeout;
+    try {
+      await Promise.race([
+        eventRead,
+        new Promise((_, reject) => {
+          timeout = setTimeout(() => reject(new Error('Timed out waiting for the order notification')), 3000);
+        })
+      ]);
+    } finally {
+      clearTimeout(timeout);
+    }
+    assert.match(orderEvent, /event: new-order/);
+    assert.match(orderEvent, /Dragon Chicken/);
+    assert.match(orderEvent, new RegExp(firstOrder.body.order_no));
+
+    const secondOrder = await orderCall();
+    assert.equal(secondOrder.status, 201);
+    assert.notEqual(secondOrder.body.order_no, firstOrder.body.order_no);
+    assert.notEqual(secondOrder.body.id, firstOrder.body.id);
+
+    const ownerToken = await login('9666600101', 'secret12');
+    const statusUpdate = await call(
+      'PATCH',
+      `/api/v1/orders/${firstOrder.body.id}/status`,
+      { token: ownerToken, json: { status: 'Accepted' } }
+    );
+    assert.equal(statusUpdate.status, 200);
+    assert.equal((await call('GET', `/api/v1/public/orders/${firstOrder.body.id}`)).body.status, 'Accepted');
+
+    const adminOrders = await call('GET', `/api/v1/admin/restaurants/${a.id}/orders`, { token: admin });
+    assert.ok(adminOrders.body.orders.some(order => order.order_no === firstOrder.body.order_no));
+  } finally {
+    await reader.cancel();
+  }
+
+  const turnedOff = await call(
+    'PATCH',
+    `/api/v1/admin/restaurants/${a.id}`,
+    { token: admin, json: { order_enabled: false } }
+  );
+  assert.equal(turnedOff.body.order_enabled, false);
+  assert.equal((await call('POST', '/api/v1/public/orders', {
+    json: {
+      slug: a.slug,
+      customer: 'Menu Customer',
+      phone: '9000001234',
+      order_type: 'Dine In',
+      table_no: '7',
+      items: [{ id: dragon.id, qty: 1 }]
+    }
+  })).status, 403);
+
+  await call(
+    'PATCH',
+    `/api/v1/admin/restaurants/${a.id}/custom-menu`,
+    { token: admin, json: { enabled: false } }
+  );
+  assert.equal((await call('GET', `/api/v1/admin/restaurants/${a.id}/custom-menu`, { token: admin })).body.exists, true);
+  assert.equal((await call('GET', `/m/${a.slug}`)).body.toString().includes('Restaurant A custom layout'), false);
+  await call('PATCH', `/api/v1/admin/restaurants/${a.id}`, { token: admin, json: { order_enabled: true } });
+
+  const orderCount = await db.cols.orders.countDocuments({ restaurant_id: a.id });
+  const restored = await call('DELETE', `/api/v1/admin/restaurants/${a.id}/custom-menu`, { token: admin });
+  assert.equal(restored.status, 200);
+  assert.equal((await call('GET', `/api/v1/admin/restaurants/${a.id}/custom-menu`, { token: admin })).body.exists, false);
+  assert.equal(await db.cols.items.countDocuments({ restaurant_id: a.id }), 2);
+  assert.equal(await db.cols.orders.countDocuments({ restaurant_id: a.id }), orderCount);
+  assert.equal((await call('GET', `/m/${a.slug}`)).body.toString().includes('Restaurant A custom layout'), false);
+});
+
+test('20-item custom HTML upload refreshes dashboard data and serves the uploaded design only after activation', async () => {
+  const admin = await login('admin@test.com', 'AdminPass123');
+  const restaurant = (await call('POST', '/api/v1/admin/restaurants', {
+    token: admin,
+    json: { name: 'Twenty Dish Cafe', mobile: '9666600110', password: 'secret12' }
+  })).body;
+
+  const categoryNames = ['Biriyani', 'Starters', 'Main Course', 'Tandoor'];
+  const menuData = {
+    categories: categoryNames.map((name, categoryIndex) => ({
+      name,
+      items: Array.from({ length: 5 }, (_, itemIndex) => {
+        const number = categoryIndex * 5 + itemIndex + 1;
+        return {
+          name: `Dish ${number}`,
+          price: 100 + number,
+          description: `Description ${number}`,
+          image: '',
+          available: true
+        };
+      })
+    }))
+  };
+
+  const categoryIds = [];
+  for (let i = 0; i < categoryNames.length; i++) {
+    categoryIds.push(await db.nextId('categories'));
+  }
+  await db.cols.categories.insertMany(categoryNames.map((name, index) => ({
+    _id: categoryIds[index],
+    restaurant_id: restaurant.id,
+    name,
+    sort: index + 1
+  })));
+
+  const originalIds = [];
+  const oldItems = menuData.categories.flatMap((category, categoryIndex) =>
+    category.items.map((item, itemIndex) => ({ category, categoryIndex, item, itemIndex }))
+  ).slice(0, 15);
+  for (const entry of oldItems) {
+    const itemId = await db.nextId('items');
+    originalIds.push(itemId);
+    await db.cols.items.insertOne({
+      _id: itemId,
+      restaurant_id: restaurant.id,
+      category_id: categoryIds[entry.categoryIndex],
+      name: entry.item.name,
+      description: 'Old description',
+      price: 1,
+      image: itemId === originalIds[0] ? '/uploads/keep-this-image.png' : null,
+      available: false
+    });
+  }
+
+  const designedSections = menuData.categories.map(category => `
+    <section class="upload-category" data-vigna-category="${category.name}">
+      <h2>${category.name} (5)</h2><div class="grid">
+        ${category.items.map(item => `
+          <article class="uploaded-card" data-vigna-item data-name="${item.name}" data-price="${item.price}" data-description="${item.description}">
+            <div class="body"><h3>${item.name}</h3><p>${item.description}</p><strong>₹${item.price}</strong></div>
+          </article>`).join('')}
+      </div>
+    </section>`).join('');
+  const html = `<!doctype html><html><head><title>Uploaded design marker</title><style>.uploaded-card{border-radius:18px;background:#24140d}</style></head><body><header>Custom layout marker</header><main id="vigna-menu-root">${designedSections}</main><script id="vigna-menu-data" type="application/json">${JSON.stringify(menuData)}</script></body></html>`;
+  const upload = () => call('PUT', `/api/v1/admin/restaurants/${restaurant.id}/custom-menu`, {
+    token: admin,
+    json: { html }
+  });
+
+  const firstUpload = await upload();
+  assert.equal(firstUpload.status, 200);
+  assert.deepEqual(firstUpload.body.synchronization, {
+    processed: 20,
+    inserted: 5,
+    added: 5,
+    updated: 15,
+    unchanged: 0,
+    created_categories: 0,
+    reused_images: 1
+  });
+
+  const dashboardItems = await call('GET', `/api/v1/admin/restaurants/${restaurant.id}/items`, { token: admin });
+  const dashboardCategories = await call('GET', `/api/v1/admin/restaurants/${restaurant.id}/categories`, { token: admin });
+  assert.equal(dashboardItems.body.items.length, 20);
+  assert.equal(dashboardItems.body.items.filter(item => item.available).length, 20);
+  assert.equal(dashboardItems.body.items.filter(item => !item.available).length, 0);
+  assert.equal(dashboardCategories.body.categories.length, 4);
+  assert.equal(dashboardItems.headers.get('cache-control'), 'no-store, no-cache, must-revalidate');
+  const preserved = dashboardItems.body.items.find(item => item.name === 'Dish 1');
+  assert.equal(preserved.id, originalIds[0]);
+  assert.equal(preserved.image, '/uploads/keep-this-image.png');
+  assert.equal(preserved.price, 101);
+  assert.equal(await db.cols.items.countDocuments({ restaurant_id: restaurant.id }), 20);
+
+  const repeat = await upload();
+  assert.equal(repeat.status, 200);
+  assert.equal(repeat.body.synchronization.inserted, 0);
+  assert.equal(repeat.body.synchronization.updated, 0);
+  assert.equal(repeat.body.synchronization.unchanged, 20);
+  assert.equal(await db.cols.items.countDocuments({ restaurant_id: restaurant.id }), 20);
+
+  const defaultPage = await call('GET', `/m/${restaurant.slug}`);
+  assert.equal(defaultPage.headers.get('cache-control'), 'no-store, no-cache, must-revalidate');
+  assert.doesNotMatch(defaultPage.body.toString(), /Uploaded design marker/);
+
+  const activated = await call('PATCH', `/api/v1/admin/restaurants/${restaurant.id}/custom-menu`, {
+    token: admin,
+    json: { enabled: true }
+  });
+  assert.equal(activated.body.enabled, true);
+  const customPage = await call('GET', `/m/${restaurant.slug}`);
+  const customHTML = customPage.body.toString();
+  assert.equal(customPage.headers.get('cache-control'), 'no-store, no-cache, must-revalidate');
+  assert.match(customHTML, /Uploaded design marker/);
+  assert.match(customHTML, /\.uploaded-card\{border-radius:18px;background:#24140d\}/);
+  assert.match(customHTML, /data-vigna-item/);
+  assert.match(customHTML, /<script defer src="\/js\/vigna-custom-menu\.js"/);
+  assert.match(customHTML, /window\.VIGNA_SLUG/);
+  assert.equal((await call('GET', `/api/v1/public/menu/${restaurant.slug}`)).body.categories.reduce((sum, category) => sum + category.items.length, 0), 20);
 });
