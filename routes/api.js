@@ -16,6 +16,7 @@ const { BASE_URL, SESSION_SECRET } = require('../lib/config');
 const { upload, saveUploadedFile } = require('../lib/uploads');
 const { sign, verify } = require('../lib/token');
 const { cols, nextDailyOrderNo } = require('../lib/db');
+
 const {
     subscribeRestaurant,
     subscribeOrder,
@@ -31,6 +32,100 @@ const router = express.Router();
 router.use(express.json({ limit: '3mb' }));
 
 // ======================================================
+// COMMON HELPERS
+// ======================================================
+
+const SAFE = new Set(['GET', 'HEAD', 'OPTIONS']);
+
+const cleanText = (value, max = 200) =>
+    String(value ?? '').trim().slice(0, max);
+
+const cleanPhone = value =>
+    String(value ?? '')
+        .replace(/[\s()-]/g, '')
+        .slice(0, 20);
+
+const roundMoney = number =>
+    Math.round((number + Number.EPSILON) * 100) / 100;
+
+const rid = req => req.user.restaurant_id;
+
+const id = req => Number(req.params.id);
+
+const sameOrigin = req => {
+    const origin = req.get('origin');
+
+    if (!origin) return true;
+
+    try {
+        return new URL(origin).host === req.get('host');
+    } catch {
+        return false;
+    }
+};
+
+const photo = async req => {
+    if (req.file) {
+        return await saveUploadedFile(req.file);
+    }
+
+    if (
+        typeof req.body.image === 'string' &&
+        req.body.image.startsWith('data:')
+    ) {
+        return await svc.saveImageData(req.body.image);
+    }
+
+    return null;
+};
+
+function parsePublicOrderId(value) {
+    if (!/^[a-f\d]{24}$/i.test(String(value || ''))) {
+        throw new HttpError(400, 'Invalid order ID');
+    }
+
+    return new ObjectId(value);
+}
+
+function imageUrl(image) {
+    if (!image) return null;
+
+    const value = String(image).trim();
+
+    if (/^https?:\/\//i.test(value)) {
+        return value;
+    }
+
+    if (value.startsWith('/') && !value.startsWith('//')) {
+        return value.split('/').map((part, index) => {
+            if (index === 0 || !part) return part;
+
+            try {
+                return encodeURIComponent(decodeURIComponent(part));
+            } catch {
+                return encodeURIComponent(part);
+            }
+        }).join('/');
+    }
+
+    const filename = value.replace(/^\/+/, '');
+
+    if (!filename) return null;
+
+    if (/^uploads\//i.test(filename)) {
+        return '/' + filename
+            .split('/')
+            .map(part => encodeURIComponent(part))
+            .join('/');
+    }
+
+    return '/uploads/' + filename
+        .split('/')
+        .map(part => encodeURIComponent(part))
+        .join('/');
+}
+
+// ======================================================
 // LIVE ORDER NOTIFICATIONS
 // ======================================================
 
@@ -41,22 +136,27 @@ function streamEvents(req, res, subscribe, eventName) {
         Connection: 'keep-alive',
         'X-Accel-Buffering': 'no'
     });
+
     res.flushHeaders?.();
     res.write(': connected\n\n');
     res.flush?.();
 
     const unsubscribe = subscribe(payload => {
         if (!res.destroyed && !res.writableEnded) {
-            res.write(`event: ${eventName}\ndata: ${JSON.stringify(payload)}\n\n`);
+            res.write(
+                `event: ${eventName}\ndata: ${JSON.stringify(payload)}\n\n`
+            );
             res.flush?.();
         }
     });
+
     const heartbeat = setInterval(() => {
         if (!res.destroyed && !res.writableEnded) {
             res.write(': keep-alive\n\n');
             res.flush?.();
         }
     }, 15000);
+
     const cleanup = () => {
         clearInterval(heartbeat);
         unsubscribe();
@@ -94,20 +194,6 @@ const orderLimiter = rateLimit({
 // AUTHENTICATION
 // ======================================================
 
-const SAFE = new Set(['GET', 'HEAD', 'OPTIONS']);
-
-const sameOrigin = req => {
-    const origin = req.get('origin');
-
-    if (!origin) return true;
-
-    try {
-        return new URL(origin).host === req.get('host');
-    } catch {
-        return false;
-    }
-};
-
 const auth = role => async (req, res, next) => {
     let user = null;
     let viaCookie = false;
@@ -119,7 +205,6 @@ const auth = role => async (req, res, next) => {
     if (match) {
         const payload = verify(match[1], SESSION_SECRET);
         user = payload && await svc.userIsActive(payload.uid);
-
     } else if (req.session?.user) {
         user = await svc.userIsActive(req.session.user.id);
         viaCookie = !!user;
@@ -151,36 +236,6 @@ const auth = role => async (req, res, next) => {
     next();
 };
 
-const rid = req => req.user.restaurant_id;
-
-const id = req => Number(req.params.id);
-
-const photo = async req => {
-    if (req.file) {
-        return await saveUploadedFile(req.file);
-    }
-
-    if (
-        typeof req.body.image === 'string' &&
-        req.body.image.startsWith('data:')
-    ) {
-        return await svc.saveImageData(req.body.image);
-    }
-
-    return null;
-};
-
-const cleanText = (value, max = 200) =>
-    String(value ?? '').trim().slice(0, max);
-
-const cleanPhone = value =>
-    String(value ?? '')
-        .replace(/[\s()-]/g, '')
-        .slice(0, 20);
-
-const roundMoney = number =>
-    Math.round((number + Number.EPSILON) * 100) / 100;
-
 // ======================================================
 // API DOCUMENTATION
 // ======================================================
@@ -190,11 +245,16 @@ router.get('/openapi.json', (req, res) => {
 });
 
 // ======================================================
-// PUBLIC MENU
+// PUBLIC MENU API
 // ======================================================
 
 router.get('/public/menu/:slug', async (req, res) => {
-    res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+    res.set({
+        'Cache-Control': 'private, no-store, no-cache, must-revalidate',
+        Pragma: 'no-cache',
+        Expires: '0'
+    });
+
     const menu = await svc.getMenu(req.params.slug, {
         includeUnavailable: req.query.include_unavailable === '1'
     });
@@ -204,42 +264,6 @@ router.get('/public/menu/:slug', async (req, res) => {
     }
 
     const restaurant = menu.restaurant;
-
-    const imageUrl = image => {
-        if (!image) return null;
-
-        const value = String(image).trim();
-
-        if (/^https?:\/\//i.test(value)) {
-            return value;
-        }
-
-        if (value.startsWith('/') && !value.startsWith('//')) {
-            return value.split('/').map((part, index) => {
-                if (index === 0 || !part) return part;
-                try {
-                    return encodeURIComponent(decodeURIComponent(part));
-                } catch {
-                    return encodeURIComponent(part);
-                }
-            }).join('/');
-        }
-
-        const filename = value.replace(/^\/+/, '');
-
-        if (!filename) return null;
-
-        if (/^uploads\//i.test(filename)) {
-            return '/' + filename.split('/').map(encodeURIComponent).join('/');
-        }
-
-        return '/uploads/' + filename
-            .split('/')
-            .map(part => encodeURIComponent(part))
-            .join('/');
-    };
-
-    res.set('Cache-Control', 'no-store');
 
     res.json({
         restaurant: {
@@ -251,7 +275,21 @@ router.get('/public/menu/:slug', async (req, res) => {
             address: restaurant.address,
             phone: restaurant.contact_phone,
             logo: imageUrl(restaurant.logo),
-            order_enabled: restaurant.order_enabled !== false
+
+            // Canonical ordering status.
+            order_enabled: restaurant.order_enabled !== false,
+
+            // Compatibility aliases for older frontend versions.
+            ordering_enabled: restaurant.order_enabled !== false,
+            orderingEnabled: restaurant.order_enabled !== false,
+
+            // Custom HTML menu status.
+            custom_menu_enabled:
+                restaurant.custom_menu_enabled === true,
+
+            // Payment details.
+            upi_id: restaurant.upi_id || '',
+            upi_qr_image: imageUrl(restaurant.upi_qr_image)
         },
 
         categories: menu.sections.map(section => ({
@@ -272,7 +310,12 @@ router.get('/public/menu/:slug', async (req, res) => {
 // ======================================================
 
 router.get('/public/custom-menu/:slug', async (req, res) => {
-    res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+    res.set({
+        'Cache-Control': 'private, no-store, no-cache, must-revalidate',
+        Pragma: 'no-cache',
+        Expires: '0'
+    });
+
     const menu = await svc.getMenu(req.params.slug);
 
     if (!menu) {
@@ -290,31 +333,40 @@ router.get('/public/custom-menu/:slug', async (req, res) => {
 
     res.set({
         'Content-Type': 'text/html; charset=utf-8',
-        'Cache-Control': 'no-store, no-cache, must-revalidate',
+        'Cache-Control': 'private, no-store, no-cache, must-revalidate',
         'X-Content-Type-Options': 'nosniff'
     });
 
-    res.send(injectMenuRuntime(
-        restaurant.custom_menu_html,
-        restaurant.slug
-    ));
+    res.send(
+        injectMenuRuntime(
+            restaurant.custom_menu_html,
+            restaurant.slug
+        )
+    );
 });
 
-function parsePublicOrderId(value) {
-    if (!/^[a-f\d]{24}$/i.test(String(value || ''))) {
-        throw new HttpError(400, 'Invalid order ID');
-    }
-    return new ObjectId(value);
-}
+// ======================================================
+// PUBLIC ORDER STATUS
+// ======================================================
 
 router.get('/public/orders/:orderId', async (req, res) => {
     const orderId = parsePublicOrderId(req.params.orderId);
+
     const order = await cols.orders.findOne(
         { _id: orderId },
-        { projection: { order_no: 1, status: 1, updated_at: 1 } }
+        {
+            projection: {
+                order_no: 1,
+                status: 1,
+                updated_at: 1
+            }
+        }
     );
 
-    if (!order) throw new HttpError(404, 'Order not found');
+    if (!order) {
+        throw new HttpError(404, 'Order not found');
+    }
+
     res.set('Cache-Control', 'no-store').json({
         id: String(order._id),
         order_no: order.order_no,
@@ -325,7 +377,13 @@ router.get('/public/orders/:orderId', async (req, res) => {
 
 router.get('/public/orders/:orderId/events', async (req, res) => {
     const orderId = parsePublicOrderId(req.params.orderId);
-    if (!await cols.orders.findOne({ _id: orderId }, { projection: { _id: 1 } })) {
+
+    const exists = await cols.orders.findOne(
+        { _id: orderId },
+        { projection: { _id: 1 } }
+    );
+
+    if (!exists) {
         throw new HttpError(404, 'Order not found');
     }
 
@@ -347,16 +405,10 @@ router.post(
     async (req, res) => {
         const body = req.body || {};
 
-        const slug = cleanText(
-            body.slug,
-            100
-        ).toLowerCase();
+        const slug = cleanText(body.slug, 100).toLowerCase();
 
         if (!slug) {
-            throw new HttpError(
-                400,
-                'Restaurant slug is required'
-            );
+            throw new HttpError(400, 'Restaurant slug is required');
         }
 
         const menu = await svc.getMenu(slug);
@@ -387,10 +439,7 @@ router.post(
         );
 
         if (customer.length < 2) {
-            throw new HttpError(
-                400,
-                'Please enter your name'
-            );
+            throw new HttpError(400, 'Please enter your name');
         }
 
         if (!/^\+?\d{7,15}$/.test(phone)) {
@@ -413,21 +462,45 @@ router.post(
         ]);
 
         if (!allowedTypes.has(orderType)) {
+            throw new HttpError(400, 'Invalid order type');
+        }
+
+        const locationValue = cleanText(
+            body.delivery_address ??
+            body.room_no ??
+            body.location ??
+            body.table_no ??
+            body.table_number,
+            200
+        );
+
+        let tableNo = '';
+
+        if (orderType === 'Dine In') {
+            tableNo = cleanText(
+                body.table_no ?? body.table_number,
+                30
+            );
+
+            if (!tableNo) {
+                throw new HttpError(
+                    400,
+                    'Table number is required for Dine In orders'
+                );
+            }
+        }
+
+        if (orderType === 'Delivery' && !locationValue) {
             throw new HttpError(
                 400,
-                'Invalid order type'
+                'Delivery address is required'
             );
         }
 
-        const tableNo = cleanText(
-            body.table_no ?? body.table_number,
-            30
-        );
-
-        if (orderType === 'Dine In' && !tableNo) {
+        if (orderType === 'Room Service' && !locationValue) {
             throw new HttpError(
                 400,
-                'Table number is required for Dine In orders'
+                'Room number is required'
             );
         }
 
@@ -502,6 +575,7 @@ router.post(
         const total = roundMoney(subtotal + tax);
 
         const createdAt = new Date();
+
         const orderNo = await nextDailyOrderNo(
             restaurant.name,
             createdAt
@@ -512,19 +586,34 @@ router.post(
             restaurant_id: restaurant._id,
             restaurant_slug: restaurant.slug,
             restaurant_name: restaurant.name,
+
             customer,
             phone,
+
             order_type: orderType,
+
             table_no: tableNo,
+
+            // Keep dedicated location fields for dashboard/receipt.
+            delivery_address:
+                orderType === 'Delivery' ? locationValue : '',
+
+            room_no:
+                orderType === 'Room Service' ? locationValue : '',
+
+            location: locationValue,
+
             note: cleanText(
                 body.note ?? body.instructions,
                 500
             ),
+
             items: lines,
             subtotal,
             tax_percent: 5,
             tax,
             total,
+
             status: 'Pending',
             created_at: createdAt,
             updated_at: createdAt
@@ -533,13 +622,15 @@ router.post(
         try {
             const result = await cols.orders.insertOne(order);
 
-            publishNewOrder(
-                restaurant._id,
-                {
-                    ...order,
+            const savedOrder = {
+                ...order,
                 _id: result.insertedId,
                 id: String(result.insertedId)
-                }
+            };
+
+            publishNewOrder(
+                restaurant._id,
+                savedOrder
             );
 
             res.status(201).json({
@@ -549,8 +640,7 @@ router.post(
                 order_no: orderNo,
                 order: {
                     ...order,
-                    id: result.insertedId,
-                    _id: undefined
+                    id: result.insertedId
                 },
                 subtotal,
                 tax,
@@ -650,6 +740,7 @@ function menuRoutes(route, restaurantOf) {
 
     route.get('/categories', async (req, res) => {
         res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+
         res.json({
             categories: await svc.listCategories(
                 restaurantOf(req)
@@ -687,6 +778,7 @@ function menuRoutes(route, restaurantOf) {
 
     route.get('/items', async (req, res) => {
         res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+
         const items = await svc.listItems(
             restaurantOf(req),
             Number(req.query.category_id) || null
@@ -890,7 +982,7 @@ admin.delete('/restaurants/:id', async (req, res) => {
 });
 
 // ======================================================
-// VIGNADIGITAL CUSTOM MENU SYSTEM
+// CUSTOM HTML MENU SYSTEM
 // ======================================================
 
 const CUSTOM_MENU_MAX_SIZE = 1024 * 1024;
@@ -939,7 +1031,34 @@ admin.put('/restaurants/:id/custom-menu', async (req, res) => {
     try {
         menuData = extractMenuData(html);
     } catch (error) {
-        throw new HttpError(400, error.message);
+        throw new HttpError(
+            400,
+            error.message || 'Could not read menu data from HTML.'
+        );
+    }
+
+    if (
+        !menuData ||
+        !Array.isArray(menuData.categories) ||
+        menuData.categories.length === 0
+    ) {
+        throw new HttpError(
+            400,
+            'No menu categories or items were found in the uploaded HTML.'
+        );
+    }
+
+    const totalItems = menuData.categories.reduce(
+        (total, category) =>
+            total + (Array.isArray(category.items) ? category.items.length : 0),
+        0
+    );
+
+    if (totalItems === 0) {
+        throw new HttpError(
+            400,
+            'The uploaded HTML does not contain any menu items.'
+        );
     }
 
     let sync;
@@ -950,30 +1069,42 @@ admin.put('/restaurants/:id/custom-menu', async (req, res) => {
             menuData
         );
     } catch (error) {
-        console.error('Custom menu synchronization:', error);
+        console.error(
+            'Custom menu synchronization failed:',
+            error
+        );
+
         if (error.status && error.status < 500) {
             throw new HttpError(error.status, error.message);
         }
+
         throw error;
     }
 
+    // Activate the uploaded custom design immediately.
+    // This makes the uploaded HTML replace the default menu page.
     await cols.restaurants.updateOne(
         { _id: restaurant.id },
         {
             $set: {
                 custom_menu_html: html,
-                custom_menu_enabled: false,
+                custom_menu_enabled: true,
                 custom_menu_updated_at: new Date()
             }
         }
     );
 
     res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+
     res.json({
         success: true,
-        message: 'Custom menu uploaded and database synchronized.',
-        synchronization: sync,
-        enabled: false
+        message: 'Custom menu uploaded, activated and database synchronized.',
+        enabled: true,
+        synchronization: {
+            ...sync,
+            uploaded_categories: menuData.categories.length,
+            uploaded_items: totalItems
+        }
     });
 });
 
@@ -981,7 +1112,11 @@ admin.put('/restaurants/:id/custom-menu', async (req, res) => {
 
 admin.patch('/restaurants/:id/custom-menu', async (req, res) => {
     const restaurant = await svc.getRestaurant(id(req));
-    const enabled = req.body?.enabled === true;
+
+    const enabled =
+        req.body?.enabled === true ||
+        req.body?.enabled === 'true' ||
+        req.body?.enabled === 1;
 
     if (enabled && !restaurant.custom_menu_html) {
         throw new HttpError(
@@ -999,6 +1134,8 @@ admin.patch('/restaurants/:id/custom-menu', async (req, res) => {
             }
         }
     );
+
+    res.set('Cache-Control', 'no-store');
 
     res.json({
         success: true,
@@ -1024,12 +1161,18 @@ admin.delete('/restaurants/:id/custom-menu', async (req, res) => {
 
     res.json({
         success: true,
-        message: 'Default menu restored.'
+        message: 'Default menu restored.',
+        enabled: false
     });
 });
 
+// ======================================================
+// ADMIN ORDERS
+// ======================================================
+
 admin.get('/restaurants/:id/orders', async (req, res) => {
     const restaurant = await svc.getRestaurant(id(req));
+
     const orders = await cols.orders
         .find({ restaurant_id: restaurant.id })
         .sort({ created_at: -1 })
@@ -1045,15 +1188,20 @@ admin.get('/restaurants/:id/orders', async (req, res) => {
     });
 });
 
+// ADMIN RESTAURANT MENU ROUTES
+
 const adminMenu = express.Router({ mergeParams: true });
+
 adminMenu.use(async (req, res, next) => {
     await svc.getRestaurant(Number(req.params.id));
     next();
 });
+
 menuRoutes(adminMenu, req => Number(req.params.id));
+
 admin.use('/restaurants/:id', adminMenu);
 
-// IMPORTANT: MOUNT ADMIN ROUTER
+// MOUNT ADMIN ROUTER
 
 router.use('/admin', admin);
 
@@ -1066,7 +1214,7 @@ const owner = express.Router();
 owner.use(auth('owner'));
 
 // ======================================================
-// LIVE ORDER EVENT CONNECTION
+// LIVE ORDER EVENTS
 // ======================================================
 
 owner.get('/orders/events', (req, res) =>
@@ -1146,16 +1294,11 @@ owner.patch('/orders/:orderId/status', async (req, res) => {
         'Cancelled'
     ]);
 
-    const status = cleanText(
-        req.body.status,
-        30
-    );
+    const status = cleanText(req.body.status, 30);
 
     if (!allowed.has(status)) {
         throw new HttpError(400, 'Invalid order status');
     }
-
-    const { ObjectId } = require('mongodb');
 
     let orderId;
 
@@ -1165,6 +1308,8 @@ owner.patch('/orders/:orderId/status', async (req, res) => {
         throw new HttpError(400, 'Invalid order ID');
     }
 
+    const updatedAt = new Date();
+
     const result = await cols.orders.updateOne(
         {
             _id: orderId,
@@ -1173,7 +1318,7 @@ owner.patch('/orders/:orderId/status', async (req, res) => {
         {
             $set: {
                 status,
-                updated_at: new Date()
+                updated_at: updatedAt
             }
         }
     );
@@ -1185,12 +1330,13 @@ owner.patch('/orders/:orderId/status', async (req, res) => {
     publishOrderStatus(orderId, {
         id: String(orderId),
         status,
-        updated_at: new Date()
+        updated_at: updatedAt
     });
 
     res.json({
         success: true,
-        status
+        status,
+        updated_at: updatedAt
     });
 });
 
@@ -1234,9 +1380,6 @@ owner.get('/qr.png', async (req, res) => {
 // ======================================================
 // REGISTER OWNER ROUTES
 // ======================================================
-
-// Keep owner routes at the existing root API paths.
-// Example: /api/v1/orders and /api/v1/items
 
 router.use('/', owner);
 

@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const { PORT, BASE_URL } = require('./lib/config');
+
 const db = require('./lib/db');
 const app = require('./app');
 
@@ -14,13 +15,17 @@ const app = require('./app');
             console.log(`Website: ${BASE_URL}`);
         });
 
-        server.on('error', (error) => {
+        server.on('error', error => {
             console.error('Server error:', error);
             process.exit(1);
         });
 
     } catch (error) {
-        console.error('Failed to start VignaDigital:', error);
+        console.error(
+            'Failed to start VignaDigital:',
+            error
+        );
+
         process.exit(1);
     }
 })();

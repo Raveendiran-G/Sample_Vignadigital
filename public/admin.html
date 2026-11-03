@@ -121,6 +121,75 @@
       justify-content: center;
       align-items: center;
     }
+
+    body.owner-dashboard {
+
+      --brand: var(--theme);
+      --brand-600: var(--theme-dark);
+      --brand-50: var(--theme-light);
+      --brand-ink: var(--theme-text);
+
+    }
+
+    /* Sidebar active item */
+
+    body.owner-dashboard .tabs button.on {
+
+      background: var(--theme-light) !important;
+      color: var(--theme-dark) !important;
+
+    }
+
+    /* Main buttons */
+
+    body.owner-dashboard button:not(.ghost):not(.danger),
+    body.owner-dashboard .btn:not(.ghost) {
+
+      background: var(--theme) !important;
+      color: var(--theme-text) !important;
+
+    }
+
+    /* Hover */
+
+    body.owner-dashboard button:not(.ghost):hover,
+    body.owner-dashboard .btn:not(.ghost):hover {
+
+      background: var(--theme-dark) !important;
+
+    }
+
+    /* Selected tabs */
+
+    body.owner-dashboard .subtabs button.on {
+
+      background: var(--theme) !important;
+      color: var(--theme-text) !important;
+
+    }
+
+    /* Highlighted cards */
+
+    body.owner-dashboard .stat.hl {
+
+      background: var(--theme-light) !important;
+      border-color: var(--theme-border) !important;
+
+    }
+
+    body.owner-dashboard .stat.hl b {
+
+      color: var(--theme-dark) !important;
+
+    }
+
+    /* Item prices */
+
+    body.owner-dashboard .item-body .price {
+
+      color: var(--theme) !important;
+
+    }
   </style>
 </head>
 
@@ -845,7 +914,7 @@ Password: ${password}${r.menu_url ? `\nYour menu: ${r.menu_url}` : ''}`;
         'click',
         () => showTab('restaurants')
       );
-$('#menuHead').insertAdjacentHTML('beforeend', `
+      $('#menuHead').insertAdjacentHTML('beforeend', `
     <div class="card" id="customMenuCard" style="margin-top:18px">
         <h2>Custom HTML Menu</h2>
 
@@ -876,111 +945,111 @@ $('#menuHead').insertAdjacentHTML('beforeend', `
     </div>
 `);
 
-$('#menuMount').innerHTML = `
+      $('#menuMount').innerHTML = `
     <div class="stats">${skelStats(4)}</div>
     <div class="items">${skelCards(4)}</div>
 `;
 
-// AI CUSTOM MENU CONTROLS
+      // AI CUSTOM MENU CONTROLS
 
-let customMenuHTML = '';
-let menuManagerReady = null;
+      let customMenuHTML = '';
+      let menuManagerReady = null;
 
-const customMenuStatus = $('#customMenuStatus');
+      const customMenuStatus = $('#customMenuStatus');
 
-async function loadCustomMenuStatus() {
-    const status = await api(
-        `/api/v1/admin/restaurants/${r.id}/custom-menu`
-    );
-    customMenuHTML = status.html || '';
+      async function loadCustomMenuStatus() {
+        const status = await api(
+          `/api/v1/admin/restaurants/${r.id}/custom-menu`
+        );
+        customMenuHTML = status.html || '';
 
-    customMenuStatus.textContent = status.enabled
-        ? 'Custom menu is currently ACTIVE.'
-        : status.exists
+        customMenuStatus.textContent = status.enabled
+          ? 'Custom menu is currently ACTIVE.'
+          : status.exists
             ? 'Custom menu is uploaded and disabled. The default menu is being shown.'
             : 'Default menu is currently active.';
 
-    $('#activateCustomMenu').disabled = !status.exists || status.enabled;
-    $('#disableCustomMenu').disabled = !status.enabled;
-    $('#restoreDefaultMenu').disabled = !status.exists && !status.enabled;
-}
+        $('#activateCustomMenu').disabled = !status.exists || status.enabled;
+        $('#disableCustomMenu').disabled = !status.enabled;
+        $('#restoreDefaultMenu').disabled = !status.exists && !status.enabled;
+      }
 
-$('#uploadCustomMenu').addEventListener('click', async () => {
-    try {
-        const selected = $('#customMenuFile').files[0];
+      $('#uploadCustomMenu').addEventListener('click', async () => {
+        try {
+          const selected = $('#customMenuFile').files[0];
 
-        if (!selected) {
+          if (!selected) {
             throw new Error('Select an HTML file first.');
-        }
+          }
 
-        if (!selected.name.toLowerCase().endsWith('.html')) {
+          if (!selected.name.toLowerCase().endsWith('.html')) {
             throw new Error('Please select an HTML file.');
-        }
+          }
 
-        if (selected.size > 1024 * 1024) {
+          if (selected.size > 1024 * 1024) {
             throw new Error('HTML file must be smaller than 1 MB.');
-        }
+          }
 
-        const html = await selected.text();
+          const html = await selected.text();
 
-        const result = await api(
+          const result = await api(
             `/api/v1/admin/restaurants/${r.id}/custom-menu`,
             'PUT',
             { html }
-        );
+          );
 
-        customMenuHTML = html;
-        let dashboardWarning = '';
-        try {
+          customMenuHTML = html;
+          let dashboardWarning = '';
+          try {
             const menuManager = await menuManagerReady;
             await menuManager?.reload?.();
-        } catch (refreshError) {
+          } catch (refreshError) {
             dashboardWarning = ` Dashboard refresh failed: ${refreshError.message}`;
-        }
-        try {
+          }
+          try {
             await loadCustomMenuStatus();
-        } catch (statusError) {
+          } catch (statusError) {
             customMenuStatus.textContent = `Upload succeeded, but menu status could not refresh: ${statusError.message}`;
             dashboardWarning += ` Menu status refresh failed: ${statusError.message}`;
-        }
+          }
 
-        const sync = result.synchronization || {};
-        const processed = Number(sync.processed ?? (Number(sync.added || 0) + Number(sync.updated || 0)));
-        const inserted = Number(sync.inserted ?? sync.added ?? 0);
-        const updated = Number(sync.updated || 0);
-        const summary = processed
+          const sync = result.synchronization || {};
+          const processed = Number(sync.processed ?? (Number(sync.added || 0) + Number(sync.updated || 0)));
+          const inserted = Number(sync.inserted ?? sync.added ?? 0);
+          const updated = Number(sync.updated || 0);
+          const summary = processed
             ? ` ${processed} items processed (${inserted} new, ${updated} updated).`
             : '';
-        toast(`${result.message}${summary}${dashboardWarning}`);
+          toast(`${result.message}${summary}${dashboardWarning}`);
 
-    } catch (error) {
-        toast(error.message);
-    }
-});
+        } catch (error) {
+          toast(error.message);
+        }
+      });
 
-$('#previewCustomMenu').addEventListener('click', async () => {
-    try {
-        const selected = $('#customMenuFile').files[0];
-        if (selected) {
+      $('#previewCustomMenu').addEventListener('click', async () => {
+        try {
+          const selected = $('#customMenuFile').files[0];
+          if (selected) {
             customMenuHTML = await selected.text();
-        }
-        if (!customMenuHTML) {
+          }
+          if (!customMenuHTML) {
             throw new Error('Select an HTML file or upload it first.');
-        }
+          }
 
-        const previewData = await api(
+          const previewData = await api(
             `/api/v1/public/menu/${encodeURIComponent(r.slug)}?include_unavailable=1`
-        );
-        const json = JSON.stringify(previewData)
+          );
+          const json = JSON.stringify(previewData)
             .replace(/</g, '\\u003c')
             .replace(/\u2028/g, '\\u2028')
             .replace(/\u2029/g, '\\u2029');
-        const hasRuntime = /<script\b[^>]*\bsrc\s*=\s*["'][^"']*\/js\/vigna-custom-menu\.js(?:\?[^"']*)?["'][^>]*>/i.test(customMenuHTML);
-        const scriptEnd = '</scr' + 'ipt>';
-        const runtimeScript = hasRuntime
+          const hasRuntime = /<script\b[^>]*\bsrc\s*=\s*["'][^"']*\/js\/vigna-custom-menu\.js(?:\?[^"']*)?["'][^>]*>/i.test(customMenuHTML);
+          const scriptEnd = '</scr' + 'ipt>';
+          const runtimeScript = hasRuntime
             ? ''
             : `<script defer src="${location.origin}/js/vigna-custom-menu.js">${scriptEnd}`;
-        const bootstrap = `
+          const bootstrap = `
             <base href="${location.origin}/">
             <script>
                 window.VIGNA_SLUG = ${JSON.stringify(r.slug)};
@@ -989,14 +1058,14 @@ $('#previewCustomMenu').addEventListener('click', async () => {
             ${scriptEnd}
             ${runtimeScript}
         `;
-        const html = /<head\b[^>]*>/i.test(customMenuHTML)
+          const html = /<head\b[^>]*>/i.test(customMenuHTML)
             ? customMenuHTML.replace(/<head\b[^>]*>/i, match => `${match}${bootstrap}`)
             : `${bootstrap}${customMenuHTML}`;
 
-        const preview = document.createElement('div');
-        preview.id = 'customMenuPreview';
-        preview.style.cssText = 'position:fixed;inset:0;z-index:99999;background:#111a;display:grid;place-items:center;padding:2vh 2vw';
-        preview.innerHTML = `
+          const preview = document.createElement('div');
+          preview.id = 'customMenuPreview';
+          preview.style.cssText = 'position:fixed;inset:0;z-index:99999;background:#111a;display:grid;place-items:center;padding:2vh 2vw';
+          preview.innerHTML = `
             <section style="width:min(1200px,96vw);height:96vh;background:#fff;border-radius:12px;overflow:hidden;display:flex;flex-direction:column">
                 <header style="padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #ddd">
                     <strong>Custom menu preview · ${esc(r.name)}</strong>
@@ -1005,79 +1074,79 @@ $('#previewCustomMenu').addEventListener('click', async () => {
                 <iframe title="Custom menu preview" sandbox="allow-scripts" style="border:0;width:100%;height:100%"></iframe>
             </section>
         `;
-        document.body.appendChild(preview);
-        preview.querySelector('iframe').srcdoc = html;
-        preview.querySelector('#closeCustomMenuPreview').addEventListener(
+          document.body.appendChild(preview);
+          preview.querySelector('iframe').srcdoc = html;
+          preview.querySelector('#closeCustomMenuPreview').addEventListener(
             'click',
             () => preview.remove()
-        );
+          );
 
-    } catch (error) {
-        toast(error.message);
-    }
-});
+        } catch (error) {
+          toast(error.message);
+        }
+      });
 
-$('#activateCustomMenu').addEventListener('click', async () => {
-    try {
-        await api(
+      $('#activateCustomMenu').addEventListener('click', async () => {
+        try {
+          await api(
             `/api/v1/admin/restaurants/${r.id}/custom-menu`,
             'PATCH',
             { enabled: true }
-        );
+          );
 
-        toast('Custom HTML menu activated.');
-        await loadCustomMenuStatus();
+          toast('Custom HTML menu activated.');
+          await loadCustomMenuStatus();
 
-    } catch (error) {
-        toast(error.message);
-    }
-});
+        } catch (error) {
+          toast(error.message);
+        }
+      });
 
-$('#disableCustomMenu').addEventListener('click', async () => {
-    try {
-        await api(
+      $('#disableCustomMenu').addEventListener('click', async () => {
+        try {
+          await api(
             `/api/v1/admin/restaurants/${r.id}/custom-menu`,
             'PATCH',
             { enabled: false }
-        );
+          );
 
-        toast('Custom menu disabled. The uploaded HTML and menu data are kept.');
-        await loadCustomMenuStatus();
+          toast('Custom menu disabled. The uploaded HTML and menu data are kept.');
+          await loadCustomMenuStatus();
 
-    } catch (error) {
-        toast(error.message);
-    }
-});
+        } catch (error) {
+          toast(error.message);
+        }
+      });
 
-$('#restoreDefaultMenu').addEventListener('click', async () => {
-    try {
-        if (!await confirmDialog({
+      $('#restoreDefaultMenu').addEventListener('click', async () => {
+        try {
+          if (!await confirmDialog({
             title: 'Restore default menu?',
             message: 'The uploaded HTML configuration will be removed and the original menu will be displayed. Synchronized menu items, images and order history will be kept.',
             confirmText: 'Restore default',
             danger: true
-        })) return;
+          })) return;
 
-        await api(
+          await api(
             `/api/v1/admin/restaurants/${r.id}/custom-menu`,
             'DELETE'
-        );
+          );
 
-        customMenuHTML = '';
+          customMenuHTML = '';
 
-        $('#customMenuFile').value = '';
+          $('#customMenuFile').value = '';
 
-        toast('Default menu restored. Menu data and order history were kept.');
-        await loadCustomMenuStatus();
+          toast('Default menu restored. Menu data and order history were kept.');
+          await loadCustomMenuStatus();
 
-    } catch (error) {
-        toast(error.message);
-    }
-});
+        } catch (error) {
+          toast(error.message);
+        }
+      });
 
-loadCustomMenuStatus().catch(error => {
-    customMenuStatus.textContent = error.message;
-});
+      loadCustomMenuStatus().catch(error => {
+        customMenuStatus.textContent = error.message;
+      });
 
       history.replaceState(null, '', '#menu-' + r.id);
 
@@ -1168,12 +1237,10 @@ loadCustomMenuStatus().catch(error => {
             }
 
             t.textContent = password;
-
             t.classList.add('on');
 
             b.setAttribute('aria-pressed', 'true');
             b.setAttribute('aria-label', 'Hide password');
-
             b.innerHTML = ico('eyeoff');
 
             b._t = setTimeout(
@@ -1182,7 +1249,6 @@ loadCustomMenuStatus().catch(error => {
             );
 
           } finally {
-
             b.disabled = false;
           }
 
@@ -1199,12 +1265,10 @@ loadCustomMenuStatus().catch(error => {
                     <div class="kv-grid">
 
                         ${kv('Owner', esc(r.owner) || '—')}
-
-                        ${kv('Mobile (login)', esc(r.owner_mobile) || '—')}
-
+                        ${kv('Mobile', esc(r.owner_mobile) || '—')}
                         ${kv('Email', esc(r.owner_email) || '—')}
-
                         ${kv('City', esc(r.city) || '—')}
+                        ${kv('UPI ID', esc(r.upi_id) || '—')}
 
                         ${kv('Plan', r.plan_expires
               ? `Limited · until ${esc(r.plan_expires)}${expired(r) ? ' (expired)' : ''}`
@@ -1212,9 +1276,7 @@ loadCustomMenuStatus().catch(error => {
             )}
 
                         ${kv('Onboarding price', money(r.price_paid))}
-
                         ${kv('Payment', r.paid ? 'Paid' : 'Pending')}
-
                         ${kv('Status', r.active ? 'Active' : 'Inactive')}
 
                         ${kv('Order Option',
@@ -1228,6 +1290,17 @@ loadCustomMenuStatus().catch(error => {
             )}
 
                     </div>
+
+                    ${r.upi_qr_image ? `
+                        <div style="text-align:center;margin-top:20px">
+                            <strong>UPI QR Code</strong><br>
+                            <img
+                                src="${esc(r.upi_qr_image)}"
+                                alt="UPI QR"
+                                style="width:150px;height:150px;object-fit:contain;margin-top:10px"
+                            >
+                        </div>
+                    ` : ''}
                 `
           });
 
@@ -1245,13 +1318,15 @@ loadCustomMenuStatus().catch(error => {
                         <div class="row">
 
                             <div>
-                                <label style="margin-top:0">Restaurant name</label>
-                                <input name="name" value="${esc(r.name)}" required>
+                                <label>Restaurant name</label>
+                                <input name="name"
+                                    value="${esc(r.name)}" required>
                             </div>
 
                             <div>
-                                <label style="margin-top:0">Owner</label>
-                                <input name="owner" value="${esc(r.owner)}" required>
+                                <label>Owner</label>
+                                <input name="owner"
+                                    value="${esc(r.owner)}" required>
                             </div>
 
                             <div>
@@ -1261,21 +1336,64 @@ loadCustomMenuStatus().catch(error => {
                             </div>
 
                             <div>
-                                <label>Email <span class="muted small">· optional</span></label>
+                                <label>Email</label>
                                 <input name="email" type="email"
                                     value="${esc(r.owner_email)}">
                             </div>
 
                             <div>
                                 <label>City</label>
-                                <input name="city" value="${esc(r.city)}">
+                                <input name="city"
+                                    value="${esc(r.city)}">
+                            </div>
+
+                           <input
+    type="text"
+    name="upi_id"
+    id="editUpiId"
+    maxlength="100"
+    value="${esc(r.upi_id || '')}"
+    placeholder="restaurant@okaxis"
+>
+
+                            <div>
+                                <label>UPI QR Image</label>
+
+                                <input
+                                    type="file"
+                                    name="upi_qr_file"
+                                    id="editUpiQrFile"
+                                    accept="image/png,image/jpeg,image/webp"
+                                >
+
+                                <div id="editUpiQrPreviewWrap"
+                                    style="margin-top:10px;${r.upi_qr_image ? '' : 'display:none'}">
+
+                                    <img
+    id="editUpiQrPreview"
+    src="${esc(r.upi_qr_image || '')}"
+    alt="UPI QR Preview"
+    style="max-width:140px;max-height:140px;object-fit:contain"
+>
+                                </div>
+
+                                <label style="display:block;margin-top:10px">
+                                    <input
+                                        type="checkbox"
+                                        id="removeEditUpiQr"
+                                    >
+                                    Remove existing QR image
+                                </label>
                             </div>
 
                             <div>
                                 <label>Onboarding price (₹)</label>
-                                <input name="price_paid" type="number"
-                                    min="0" step="1"
-                                    value="${r.price_paid}" required>
+                                <input name="price_paid"
+                                    type="number"
+                                    min="0"
+                                    step="1"
+                                    value="${r.price_paid}"
+                                    required>
                             </div>
 
                             <div>
@@ -1298,7 +1416,7 @@ loadCustomMenuStatus().catch(error => {
                                 <label>Valid until</label>
                                 <input name="plan_expires"
                                     type="date"
-                                    value="${esc(r.plan_expires)}">
+                                    value="${esc(r.plan_expires || '')}">
                             </div>
 
                         </div>
@@ -1340,7 +1458,9 @@ loadCustomMenuStatus().catch(error => {
                                 Cancel
                             </button>
 
-                            <button>Save changes</button>
+                            <button type="submit">
+                                Save changes
+                            </button>
 
                         </div>
 
@@ -1353,19 +1473,93 @@ loadCustomMenuStatus().catch(error => {
           planToggle(form);
           wireGenerate(form);
 
+          // QR image preview
+          $('#editUpiQrFile', m).addEventListener('change', ev => {
+
+            const file = ev.target.files[0];
+
+            if (!file) return;
+
+            if (
+              !['image/png', 'image/jpeg', 'image/webp']
+                .includes(file.type)
+            ) {
+              ev.target.value = '';
+              toast('Choose a PNG, JPG or WebP image.');
+              return;
+            }
+
+            if (file.size > 1_500_000) {
+              ev.target.value = '';
+              toast('UPI QR image must be 1.5 MB or smaller.');
+              return;
+            }
+
+            $('#editUpiQrPreview', m).src =
+              URL.createObjectURL(file);
+
+            $('#editUpiQrPreviewWrap', m).style.display = 'block';
+
+            $('#removeEditUpiQr', m).checked = false;
+          });
+
+          // Save edited restaurant
           form.addEventListener('submit', async ev => {
 
             ev.preventDefault();
 
             const f = Object.fromEntries(
-              new FormData(ev.target)
+              new FormData(form)
             );
 
-            f.paid = ev.target.elements.paid.checked;
+            f.paid = form.elements.paid.checked;
 
-            if (!f.password) delete f.password;
+            if (!f.password) {
+              delete f.password;
+            }
 
             try {
+
+              const qrFile =
+                form.elements.upi_qr_file.files[0];
+
+              if (qrFile) {
+
+                if (
+                  !['image/png', 'image/jpeg', 'image/webp']
+                    .includes(qrFile.type)
+                ) {
+                  throw new Error(
+                    'UPI QR must be PNG, JPG or WebP.'
+                  );
+                }
+
+                if (qrFile.size > 1_500_000) {
+                  throw new Error(
+                    'UPI QR image must be 1.5 MB or smaller.'
+                  );
+                }
+
+                f.upi_qr_image = await new Promise((resolve, reject) => {
+
+                  const reader = new FileReader();
+
+                  reader.onload = () => resolve(reader.result);
+
+                  reader.onerror = () => reject(
+                    new Error('Unable to read QR image.')
+                  );
+
+                  reader.readAsDataURL(qrFile);
+
+                });
+              }
+
+              if ($('#removeEditUpiQr', m).checked) {
+                f.remove_upi_qr = true;
+              }
+
+              delete f.upi_qr_file;
 
               const out = await api(
                 `/api/v1/admin/restaurants/${r.id}`,
@@ -1390,7 +1584,9 @@ loadCustomMenuStatus().catch(error => {
             } catch (er) {
 
               $('#editErr', m).textContent = er.message;
+
             }
+
           });
 
         } else if (id('reset')) {
@@ -1418,7 +1614,7 @@ loadCustomMenuStatus().catch(error => {
               out.password
             );
 
-            load();
+            await load();
           }
 
         } else if (id('toggle')) {
@@ -1453,7 +1649,7 @@ loadCustomMenuStatus().catch(error => {
                 : 'Restaurant activated'
             );
 
-            load();
+            await load();
           }
 
         } else if (id('del')) {
@@ -1474,7 +1670,7 @@ loadCustomMenuStatus().catch(error => {
 
             toast('Restaurant deleted');
 
-            load();
+            await load();
           }
         }
 
@@ -1482,8 +1678,178 @@ loadCustomMenuStatus().catch(error => {
 
         toast(er.message);
       }
+
     });
 
+
+    // --------------------------------------------------
+    // CREATE RESTAURANT
+    // --------------------------------------------------
+
+    $('#obForm').addEventListener('submit', async e => {
+
+      e.preventDefault();
+
+      $('#obErr').textContent = '';
+
+      const f = Object.fromEntries(
+        new FormData(e.target)
+      );
+
+      f.paid = e.target.elements.paid.checked;
+
+      if (!f.password) {
+        delete f.password;
+      }
+
+      try {
+
+        const qrFile = e.target.elements.upi_qr_file.files[0];
+
+        if (qrFile) {
+
+          if (
+            !['image/png', 'image/jpeg', 'image/webp']
+              .includes(qrFile.type)
+          ) {
+            throw new Error(
+              'UPI QR must be PNG, JPG or WebP.'
+            );
+          }
+
+          if (qrFile.size > 1_500_000) {
+            throw new Error(
+              'UPI QR image must be 1.5 MB or smaller.'
+            );
+          }
+
+          f.upi_qr_image = await new Promise((resolve, reject) => {
+
+            const reader = new FileReader();
+
+            reader.onload = () => resolve(reader.result);
+
+            reader.onerror = () => reject(
+              new Error('Could not read the UPI QR image.')
+            );
+
+            reader.readAsDataURL(qrFile);
+
+          });
+        }
+
+        delete f.upi_qr_file;
+
+        const out = await api(
+          '/api/v1/admin/restaurants',
+          'POST',
+          f
+        );
+
+        e.target.reset();
+
+        $('#upiQrPreviewWrap').classList.add('hidden');
+        $('#upiQrPreview').removeAttribute('src');
+
+        e.target.elements.plan_type.dispatchEvent(
+          new Event('change')
+        );
+
+        await load();
+
+        showTab('restaurants');
+
+        credentialsModal(
+          'Restaurant created',
+          out,
+          out.generated_password || f.password
+        );
+
+      } catch (er) {
+
+        $('#obErr').textContent = er.message;
+      }
+
+    });
+
+
+    // --------------------------------------------------
+    // CHANGE ADMIN PASSWORD
+    // --------------------------------------------------
+
+    $('#pwf').addEventListener('submit', async e => {
+
+      e.preventDefault();
+
+      $('#pwErr').textContent = '';
+
+      const f = Object.fromEntries(
+        new FormData(e.target)
+      );
+
+      if (f.new_password !== f.confirm_password) {
+
+        $('#pwErr').textContent = 'New passwords do not match';
+
+        return;
+      }
+
+      try {
+
+        await api(
+          '/api/v1/auth/password',
+          'POST',
+          f
+        );
+
+        e.target.reset();
+
+        toast('Password updated');
+
+      } catch (er) {
+
+        $('#pwErr').textContent = er.message;
+      }
+
+    });
+
+
+    // --------------------------------------------------
+    // INITIALIZE
+    // --------------------------------------------------
+
+    (async () => {
+
+      await requireRole('admin');
+
+      await load();
+
+      const deep = /^#menu-(\d+)$/.exec(location.hash);
+
+      showTab = tabs(
+        $('#tabs'),
+        () => {
+
+          if (location.hash.startsWith('#menu-')) {
+
+            history.replaceState(
+              null,
+              '',
+              location.pathname
+            );
+          }
+        }
+      );
+
+      const r = deep && restaurants.find(
+        x => x.id == deep[1]
+      );
+
+      if (r) {
+        openMenu(r);
+      }
+
+    })();
     // --------------------------------------------------
     // CREATE RESTAURANT
     // --------------------------------------------------

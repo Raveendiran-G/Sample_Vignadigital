@@ -7,27 +7,54 @@
   <link rel="stylesheet" href="/style.css">
   <title>Dashboard · Digital Menu Card</title>
   <style>
+    /* =====================================================
+   VIGNADIGITAL DASHBOARD - FINAL THEME CSS
+===================================================== */
+
+    :root {
+      --status-green: #16a34a;
+      --status-green-hover: #15803d;
+
+      --status-blue: #2563eb;
+      --status-blue-hover: #1d4ed8;
+
+      --status-red: #dc2626;
+      --status-red-hover: #b91c1c;
+
+      --logout-green: #15803d;
+      --logout-green-hover: #166534;
+    }
+
+    /* =====================================================
+   PAGE HEADER
+===================================================== */
+
     .page-head {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 16px;
-      flex-wrap: wrap
+      flex-wrap: wrap;
     }
 
-    .orders-print-btn {
-      position: relative;
-      background: var(--brand);
-      color: var(--brand-ink);
-      border: 1px solid transparent;
+    /* =====================================================
+   ORDERS HEADER BUTTON
+===================================================== */
+
+    html body .orders-print-btn {
+      background: var(--brand, #d9480f) !important;
+      color: var(--brand-ink, #fff) !important;
+      border: 1px solid var(--brand, #d9480f) !important;
       border-radius: 10px;
       padding: 10px 18px;
       font: inherit;
-      font-weight: 600;
-      white-space: nowrap;
+      font-weight: 700;
       cursor: pointer;
-      transition: background .15s;
-      position: relative
+      transition: .2s ease;
+    }
+
+    html body .orders-print-btn:hover {
+      background: var(--brand-600, #b9380c) !important;
     }
 
     .orders-new-dot {
@@ -39,10 +66,9 @@
       border: 2px solid #fff;
       border-radius: 50%;
       background: #ef2020;
-      box-shadow: 0 0 0 2px rgba(239, 32, 32, .18);
       display: none;
       z-index: 5;
-      animation: ordersDotPulse 1.2s ease-in-out infinite;
+      animation: ordersDotPulse 1.2s infinite;
     }
 
     .orders-new-dot.is-visible {
@@ -61,88 +87,153 @@
       }
     }
 
-    .orders-print-btn:hover {
-      background: var(--brand-600)
+    /* =====================================================
+   SIDEBAR
+===================================================== */
+
+    html body .shell aside.side {
+      background: #0e0f11 !important;
+      color: #c4c6ce;
     }
 
-    .orders-modal .modal-box {
-      background: #fff;
-      color: #172033;
+    /* Sidebar navigation */
+
+    html body .shell aside.side nav#tabs {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 4px !important;
+    }
+
+    /* All unselected navigation buttons */
+
+    html body .shell aside.side nav#tabs>button {
+      width: 100%;
+      background: transparent !important;
+      background-color: transparent !important;
+      border: 1px solid transparent !important;
+      box-shadow: none !important;
+      border-radius: 11px !important;
+      color: #c4c6ce !important;
+      text-align: left;
+      transition: background .2s ease, color .2s ease;
+    }
+
+    /* Selected navigation button only */
+
+    html body .shell aside.side nav#tabs>button.on {
+      background: #382018 !important;
+      background-color: #382018 !important;
+      border: 1px solid #382018 !important;
+      color: #ffffff !important;
+      font-weight: 700 !important;
+    }
+
+    /* Unselected hover */
+
+    html body .shell aside.side nav#tabs>button:not(.on):hover {
+      background: #191a1d !important;
+      border-color: transparent !important;
+      color: #ffffff !important;
+    }
+
+    /* =====================================================
+   LOGOUT BUTTON - GREEN
+===================================================== */
+
+    html body .shell aside.side button.logout {
+      background: var(--logout-green) !important;
+      background-color: var(--logout-green) !important;
+      color: #ffffff !important;
+      border: 1px solid var(--logout-green) !important;
+      border-radius: 10px !important;
+      font-weight: 700 !important;
+      box-shadow: none !important;
+      transition: background .2s ease, transform .15s ease;
+    }
+
+    html body .shell aside.side button.logout:hover {
+      background: var(--logout-green-hover) !important;
+      background-color: var(--logout-green-hover) !important;
+      border-color: var(--logout-green-hover) !important;
+    }
+
+    /* =====================================================
+   ORDERS MODAL
+===================================================== */
+
+    html body .orders-modal .modal-box {
+      background: #ffffff !important;
+      color: #172033 !important;
       border-radius: 16px;
-      max-width: 900px
+      max-width: 900px;
     }
 
-    .orders-modal .modal-head {
+    html body .orders-modal .modal-head {
       position: sticky;
       top: -22px;
-      background: #fff;
+      background: #ffffff !important;
       z-index: 2;
-      padding: 6px 0 12px
+      padding: 6px 0 12px;
     }
+
+    /* =====================================================
+   ORDER TOOLBAR
+===================================================== */
 
     .orders-tools {
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
-      margin: 12px 0
+      margin: 12px 0;
     }
 
-    .orders-tools button {
+    html body .orders-modal .orders-tools button {
       border-radius: 9px;
       padding: 10px 13px;
-      transition: background .15s ease, border-color .15s ease, transform .15s ease
+      font-weight: 700;
+      transition: .2s ease;
     }
 
-    /* Keep the Orders / Print Bills palette aligned with the site's orange and deep-brown theme. */
-    .orders-modal .orders-tools button:not(.ghost):not(.danger) {
-      background: #f58220;
-      color: #fff;
-      border: 1px solid #f58220
+    /* Refresh */
+
+    html body .orders-modal .orders-tools button:not(.ghost):not(.danger) {
+      background: var(--brand, #d9480f) !important;
+      color: var(--brand-ink, #fff) !important;
+      border: 1px solid var(--brand, #d9480f) !important;
     }
 
-    .orders-modal .orders-tools button:not(.ghost):not(.danger):hover {
-      background: #df6b12;
-      border-color: #df6b12
+    html body .orders-modal .orders-tools button:not(.ghost):not(.danger):hover {
+      background: var(--brand-600, #b9380c) !important;
     }
 
-    .orders-modal .orders-tools button.ghost {
-      background: #f8eee7;
-      color: #63351f;
-      border: 1px solid #e8c9b5
+    /* Download PDF */
+
+    html body .orders-modal .orders-tools button.ghost {
+      background: var(--brand-50, #fff1e8) !important;
+      color: var(--brand-600, #b9380c) !important;
+      border: 1px solid var(--theme-border, #e8c9b5) !important;
     }
 
-    .orders-modal .orders-tools button.ghost:hover {
-      background: #f1dfd2;
-      border-color: #d9a98a
+    /* Delete */
+
+    html body .orders-modal .orders-tools button.danger {
+      background: #dc2626 !important;
+      color: #ffffff !important;
+      border: 1px solid #dc2626 !important;
     }
 
-    .orders-modal .orders-tools button.danger {
-      background: #6f2c1d;
-      color: #fff;
-      border: 1px solid #6f2c1d
+    html body .orders-modal .orders-tools button.danger:hover {
+      background: #b91c1c !important;
     }
 
-    .orders-modal .orders-tools button.danger:hover {
-      background: #8a3822;
-      border-color: #8a3822
-    }
-
-    .orders-modal .orders-tools button:active,
-    .orders-modal .order-actions button:active {
-      transform: translateY(1px);
-      filter: brightness(.92)
-    }
-
-    .orders-modal .orders-tools button:focus-visible,
-    .orders-modal .order-actions button:focus-visible {
-      outline: 2px solid #f58220;
-      outline-offset: 2px
-    }
+    /* =====================================================
+   ORDER LIST
+===================================================== */
 
     .orders-list {
       display: grid;
       gap: 10px;
-      margin-top: 14px
+      margin-top: 14px;
     }
 
     .order-row {
@@ -152,8 +243,112 @@
       border: 1px solid #e5e7eb;
       border-radius: 12px;
       padding: 12px;
-      background: #fff
+      background: #ffffff;
     }
+
+    .order-meta {
+      font-size: 13px;
+      line-height: 1.65;
+      color: #334155;
+    }
+
+    .order-title {
+      font-weight: 800;
+      color: #111827;
+    }
+
+    /* =====================================================
+   ACTIVE AND PREPARED BUTTONS
+   HIGH SPECIFICITY TO OVERRIDE style.css
+===================================================== */
+
+    html body .orders-modal .order-actions>button.order-active,
+    html body .orders-modal button.order-active,
+    html body .orders-modal button[data-order-status="active"] {
+      background: #16a34a !important;
+      background-color: #16a34a !important;
+      color: #ffffff !important;
+      border: 1px solid #16a34a !important;
+      opacity: 1;
+    }
+
+    html body .orders-modal .order-actions>button.order-active:hover:not(:disabled),
+    html body .orders-modal button.order-active:hover:not(:disabled) {
+      background: #15803d !important;
+      background-color: #15803d !important;
+      border-color: #15803d !important;
+    }
+
+    /* Prepared - BLUE */
+
+    html body .orders-modal .order-actions>button.order-prepared,
+    html body .orders-modal button.order-prepared,
+    html body .orders-modal button[data-order-status="prepared"] {
+      background: #2563eb !important;
+      background-color: #2563eb !important;
+      color: #ffffff !important;
+      border: 1px solid #2563eb !important;
+      opacity: 1;
+    }
+
+    html body .orders-modal .order-actions>button.order-prepared:hover:not(:disabled),
+    html body .orders-modal button.order-prepared:hover:not(:disabled) {
+      background: #1d4ed8 !important;
+      background-color: #1d4ed8 !important;
+      border-color: #1d4ed8 !important;
+    }
+
+    /* Disabled buttons */
+
+    html body .orders-modal button.order-active:disabled,
+    html body .orders-modal button.order-prepared:disabled {
+      opacity: .45 !important;
+      cursor: not-allowed !important;
+      filter: grayscale(.3);
+    }
+
+    /* =====================================================
+   PRINT BILL BUTTON
+===================================================== */
+
+    html body .orders-modal .order-actions>button.order-print,
+    html body .orders-modal button.order-print {
+      grid-column: 1 / -1;
+      background: var(--brand, #d9480f) !important;
+      background-color: var(--brand, #d9480f) !important;
+      color: var(--brand-ink, #ffffff) !important;
+      border: 1px solid var(--brand, #d9480f) !important;
+    }
+
+    html body .orders-modal button.order-print:hover {
+      background: var(--brand-600, #b9380c) !important;
+    }
+
+    /* Common action button styling */
+
+    html body .orders-modal .order-actions>button {
+      padding: 10px 8px;
+      border-radius: 9px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: .2s ease;
+    }
+
+    /* Button interactions */
+
+    html body .orders-modal button:active:not(:disabled) {
+      transform: translateY(1px);
+    }
+
+    html body .orders-modal button:focus-visible {
+      outline: 2px solid var(--brand, #d9480f);
+      outline-offset: 2px;
+    }
+
+    /* =====================================================
+   ORDER NOTIFICATIONS
+===================================================== */
 
     #orderNotifications {
       position: fixed;
@@ -164,7 +359,7 @@
       flex-direction: column;
       gap: 10px;
       width: min(360px, calc(100vw - 36px));
-      pointer-events: none
+      pointer-events: none;
     }
 
     .order-notification {
@@ -180,14 +375,14 @@
       box-shadow: 0 10px 24px #0002;
       font: 600 14px/1.35 system-ui, sans-serif;
       animation: orderNotificationIn .2s ease-out;
-      pointer-events: auto
+      pointer-events: auto;
     }
 
     .order-notification.prepared {
       border-color: #bfdbfe;
       border-left-color: #2563eb;
       background: #eff6ff;
-      color: #1e3a8a
+      color: #1e3a8a;
     }
 
     .order-notification-close {
@@ -197,111 +392,207 @@
       width: 28px;
       height: 28px;
       border: 0;
-      background: transparent;
+      background: transparent !important;
       color: inherit;
       font-size: 20px;
       line-height: 1;
-      cursor: pointer
+      cursor: pointer;
     }
 
     @keyframes orderNotificationIn {
       from {
         opacity: 0;
-        transform: translateX(18px)
+        transform: translateX(18px);
       }
 
       to {
         opacity: 1;
-        transform: translateX(0)
+        transform: translateX(0);
       }
     }
 
-    .order-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      align-content: start
-    }
+    /* =====================================================
+   RESPONSIVE
+===================================================== */
 
-    .order-actions button {
-      padding: 10px 8px;
-      border-radius: 10px;
-      font-size: 12px;
-      border: 1px solid transparent;
-      transition: background .15s ease, transform .15s ease
-    }
-
-    .order-active {
-      background: #f58220;
-      color: #fff;
-      border-color: #f58220
-    }
-
-    .order-active:hover {
-      background: #df6b12
-    }
-
-    .order-prepared {
-      background: #b85c2a;
-      color: #fff;
-      border-color: #b85c2a
-    }
-
-    .order-prepared:hover {
-      background: #99471f
-    }
-
-    .order-print {
-      grid-column: 1/-1;
-      background: #4b2b20;
-      color: #fff;
-      border-color: #4b2b20
-    }
-
-    .order-print:hover {
-      background: #63351f
-    }
-
-    .order-meta {
-      font-size: 13px;
-      line-height: 1.65;
-      color: #334155
-    }
-
-    .order-title {
-      font-weight: 800;
-      color: #111827
-    }
-
-    @media(max-width:600px) {
+    @media (max-width: 600px) {
       .order-row {
-        grid-template-columns: 1fr
+        grid-template-columns: 1fr;
       }
 
       .order-actions {
-        grid-template-columns: 1fr 1fr
+        grid-template-columns: 1fr 1fr;
       }
 
-      .order-print {
-        grid-column: 1/-1
+      .order-actions button.order-print {
+        grid-column: 1 / -1;
+      }
+
+      .orders-tools {
+        gap: 7px;
       }
     }
 
+    /* =====================================================
+   PRINT
+===================================================== */
+
     @media print {
       body * {
-        visibility: hidden
+        visibility: hidden;
       }
 
       .receipt-print,
       .receipt-print * {
-        visibility: visible
+        visibility: visible;
       }
 
       .receipt-print {
         position: absolute;
         inset: 0;
-        background: white
+        background: #ffffff;
       }
+    }
+
+    /* =========================================
+   ORDER BUTTON ALIGNMENT
+========================================= */
+
+    html body .orders-modal .order-actions {
+      display: grid !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      grid-template-rows: auto auto !important;
+      gap: 8px !important;
+      width: 100%;
+      align-items: stretch;
+    }
+
+    /* Active - first column */
+    html body .orders-modal .order-actions button.order-active {
+      grid-column: 1 !important;
+      grid-row: 1 !important;
+      width: 100% !important;
+    }
+
+    /* Prepared - second column */
+    html body .orders-modal .order-actions button.order-prepared {
+      grid-column: 2 !important;
+      grid-row: 1 !important;
+      width: 100% !important;
+    }
+
+    /* Print Bill - full width below */
+    html body .orders-modal .order-actions button.order-print {
+      grid-column: 1 / -1 !important;
+      grid-row: 2 !important;
+      width: 100% !important;
+      margin: 0 !important;
+    }
+
+    /* =========================================
+   COMPACT ORDER ACTION BUTTONS
+========================================= */
+
+    html body .orders-modal .order-actions {
+      display: grid !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: 5px !important;
+      width: 118px !important;
+      align-content: start;
+    }
+
+    /* Active and Prepared */
+    html body .orders-modal .order-actions button.order-active,
+    html body .orders-modal .order-actions button.order-prepared {
+      width: 100% !important;
+      height: 27px !important;
+      min-height: 27px !important;
+      padding: 4px 5px !important;
+      margin: 0 !important;
+      font-size: 10px !important;
+      line-height: 1 !important;
+      border-radius: 7px !important;
+    }
+
+    /* Print Bill */
+    html body .orders-modal .order-actions button.order-print {
+      grid-column: 1 / -1 !important;
+      width: 100% !important;
+      height: 27px !important;
+      min-height: 27px !important;
+      padding: 4px 5px !important;
+      margin: 0 !important;
+      font-size: 10px !important;
+      line-height: 1 !important;
+      border-radius: 7px !important;
+    }
+
+    /* COMPACT ORDER BUTTONS - MEDIUM SIZE */
+
+    html body .orders-modal .order-actions {
+      display: grid !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: 6px !important;
+      width: 132px !important;
+      align-content: start;
+    }
+
+    html body .orders-modal .order-actions button.order-active,
+    html body .orders-modal .order-actions button.order-prepared {
+      width: 100% !important;
+      height: 31px !important;
+      min-height: 31px !important;
+      padding: 5px 6px !important;
+      margin: 0 !important;
+      font-size: 11px !important;
+      line-height: 1.2 !important;
+      border-radius: 7px !important;
+    }
+
+    html body .orders-modal .order-actions button.order-print {
+      grid-column: 1 / -1 !important;
+      width: 100% !important;
+      height: 31px !important;
+      min-height: 31px !important;
+      padding: 5px 6px !important;
+      margin: 0 !important;
+      font-size: 11px !important;
+      line-height: 1.2 !important;
+      border-radius: 7px !important;
+    }
+
+    /* EXTRA-MEDIUM ORDER BUTTONS */
+
+    html body .orders-modal .order-actions {
+      display: grid !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: 7px !important;
+      width: 145px !important;
+      align-content: start;
+    }
+
+    html body .orders-modal .order-actions button.order-active,
+    html body .orders-modal .order-actions button.order-prepared {
+      width: 100% !important;
+      height: 35px !important;
+      min-height: 35px !important;
+      padding: 6px 7px !important;
+      margin: 0 !important;
+      font-size: 11px !important;
+      font-weight: 700 !important;
+      border-radius: 8px !important;
+    }
+
+    html body .orders-modal .order-actions button.order-print {
+      grid-column: 1 / -1 !important;
+      width: 100% !important;
+      height: 35px !important;
+      min-height: 35px !important;
+      padding: 6px 7px !important;
+      margin: 0 !important;
+      font-size: 11px !important;
+      font-weight: 700 !important;
+      border-radius: 8px !important;
     }
   </style>
 </head>
@@ -325,7 +616,18 @@
         <button type="button" id="ordersPrintBillsSidebar" data-ico="list"><span>Orders / Print Bills</span></button>
       </nav>
       <div class="spacer"></div>
-      <button class="logout" onclick="logout()" data-ico="logout"><span>Log out</span></button>
+      <button class="logout" onclick="logout()" data-ico="logout" style="
+        background: #15803d !important;
+        background-color: #15803d !important;
+        color: #ffffff !important;
+        border: 1px solid #15803d !important;
+        border-radius: 10px !important;
+        width: 100%;
+        font-weight: 700;
+        box-shadow: none !important;
+    ">
+        <span>Log out</span>
+      </button>
     </aside>
     <main class="main">
       <div class="page-head">
@@ -619,12 +921,124 @@
       const a = document.createElement('a'); a.href = c.toDataURL('image/png'); a.download = `${profile.slug}-table-poster.png`; a.click();
     });
 
+    // ==========================================================
+    // DYNAMIC RESTAURANT THEME
+    // ==========================================================
+
+    function hexToRgb(hex) {
+      const value = String(hex || '').replace('#', '').trim();
+
+      if (!/^[0-9a-fA-F]{6}$/.test(value)) {
+        return { r: 217, g: 72, b: 15 };
+      }
+
+      return {
+        r: parseInt(value.slice(0, 2), 16),
+        g: parseInt(value.slice(2, 4), 16),
+        b: parseInt(value.slice(4, 6), 16)
+      };
+    }
+
+    function rgbToHex(r, g, b) {
+      return '#' + [r, g, b]
+        .map(value =>
+          Math.max(0, Math.min(255, Math.round(value)))
+            .toString(16)
+            .padStart(2, '0')
+        )
+        .join('');
+    }
+
+    function mixColor(color, target, amount) {
+      const a = hexToRgb(color);
+      const b = hexToRgb(target);
+
+      return rgbToHex(
+        a.r + (b.r - a.r) * amount,
+        a.g + (b.g - a.g) * amount,
+        a.b + (b.b - a.b) * amount
+      );
+    }
+
+    function getContrastColor(hex) {
+      const { r, g, b } = hexToRgb(hex);
+
+      const luminance =
+        (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+
+      return luminance > 0.60 ? '#171717' : '#ffffff';
+    }
+
+    function applyRestaurantTheme(color) {
+      const theme = /^#[0-9a-fA-F]{6}$/.test(String(color || ''))
+        ? color
+        : '#d9480f';
+
+      const rgb = hexToRgb(theme);
+
+      const dark = mixColor(theme, '#000000', 0.28);
+      const light = mixColor(theme, '#ffffff', 0.88);
+      const soft = mixColor(theme, '#000000', 0.78);
+      const border = mixColor(theme, '#ffffff', 0.38);
+      const text = getContrastColor(theme);
+
+      const root = document.documentElement;
+
+      root.style.setProperty('--theme', theme);
+      root.style.setProperty('--theme-dark', dark);
+      root.style.setProperty('--theme-light', light);
+      root.style.setProperty('--theme-soft', soft);
+      root.style.setProperty('--theme-border', border);
+      root.style.setProperty('--theme-ink', text);
+
+      root.style.setProperty(
+        '--theme-rgb',
+        `${rgb.r}, ${rgb.g}, ${rgb.b}`
+      );
+
+      root.style.setProperty('--brand', theme);
+      root.style.setProperty('--brand-600', dark);
+      root.style.setProperty('--brand-50', light);
+      root.style.setProperty('--brand-ink', text);
+      root.style.setProperty(
+        '--ring',
+        `0 0 0 3px rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, .25)`
+      );
+    }
+
     // ---------- details ----------
     function fillProfile() {
-      $('#brandName').textContent = profile.name.length > 18 ? profile.name.slice(0, 17) + '…' : profile.name;
-      const f = $('#pf').elements; for (const k of ['name', 'owner', 'contact_phone', 'city', 'address', 'tagline', 'theme_color']) f[k].value = profile[k] || '';
-      $('#mobileRO').value = profile.owner_mobile || ''; $('#emailRO').value = profile.owner_email || ''; logoData = null; logoRemoved = false; showLogo(profile.logo);
+      $('#brandName').textContent =
+        profile.name.length > 18
+          ? profile.name.slice(0, 17) + '…'
+          : profile.name;
+
+      const f = $('#pf').elements;
+
+      for (const k of [
+        'name',
+        'owner',
+        'contact_phone',
+        'city',
+        'address',
+        'tagline',
+        'theme_color'
+      ]) {
+        f[k].value = profile[k] || '';
+      }
+
+      // Apply the restaurant's saved colour to its dashboard.
+      applyRestaurantTheme(profile.theme_color);
+
+      $('#mobileRO').value = profile.owner_mobile || '';
+      $('#emailRO').value = profile.owner_email || '';
+
+      logoData = null;
+      logoRemoved = false;
+
+      showLogo(profile.logo);
     }
+
     function showLogo(src) { const p = $('#logoPrev'); p.style.setProperty('--tc', profile.theme_color); p.innerHTML = src ? `<img src="${esc(src)}" alt="" style="object-fit:contain;background:#fff">` : esc(profile.name.charAt(0).toUpperCase()); }
     $('#logoFile').addEventListener('change', async (e) => {
       const f = e.target.files[0]; if (!f) return;
@@ -632,16 +1046,105 @@
     });
     $('#logoRemove').addEventListener('click', () => { logoData = null; logoRemoved = true; $('#logoFile').value = ''; showLogo(null); });
     $('#pf').addEventListener('submit', async (e) => {
-      e.preventDefault(); document.querySelectorAll('.pfErr').forEach((x) => (x.textContent = ''));
+      e.preventDefault();
+
+      document.querySelectorAll('.pfErr').forEach(x => {
+        x.textContent = '';
+      });
+
       try {
-        const body = { ...Object.fromEntries(new FormData(e.target)), logo: logoData || undefined, remove_logo: logoRemoved };
-        profile = await api('/api/v1/restaurant', 'PATCH', body); fillProfile(); toast('Details saved'); renderItems();
-      } catch (er) { document.querySelectorAll('.pfErr').forEach((x) => (x.textContent = er.message)); }
+        const formData = Object.fromEntries(
+          new FormData(e.target)
+        );
+
+        const selectedColor = formData.theme_color;
+
+        if (!/^#[0-9a-fA-F]{6}$/.test(selectedColor || '')) {
+          throw new Error('Please select a valid theme color.');
+        }
+
+        const body = {
+          ...formData,
+          theme_color: selectedColor,
+          logo: logoData || undefined,
+          remove_logo: logoRemoved
+        };
+
+        // Save the restaurant profile through the existing API.
+        const updatedProfile = await api(
+          '/api/v1/restaurant',
+          'PATCH',
+          body
+        );
+
+        profile = updatedProfile;
+
+        // Apply the saved colour immediately.
+        applyRestaurantTheme(profile.theme_color);
+
+        fillProfile();
+
+        // Refresh item accents without refreshing the page.
+        renderItems();
+
+        toast('Restaurant details and theme color saved successfully.');
+
+      } catch (er) {
+        document.querySelectorAll('.pfErr').forEach(x => {
+          x.textContent = er.message;
+        });
+      }
     });
     $('#pwf').addEventListener('submit', async (e) => {
       e.preventDefault(); $('#pwErr').textContent = ''; const f = Object.fromEntries(new FormData(e.target));
+      // Explicitly capture UPI ID.
+      f.upi_id = form.elements.upi_id.value.trim();
+
+      // Read selected QR image.
+      const qrFile = form.elements.upi_qr_file.files[0];
+
+      if (qrFile) {
+
+        if (!['image/png', 'image/jpeg', 'image/webp'].includes(qrFile.type)) {
+          throw new Error('UPI QR must be PNG, JPG or WebP.');
+        }
+
+        if (qrFile.size > 1500000) {
+          throw new Error('UPI QR image must be 1.5 MB or smaller.');
+        }
+
+        f.upi_qr_image = await new Promise((resolve, reject) => {
+
+          const reader = new FileReader();
+
+          reader.onload = () => resolve(reader.result);
+
+          reader.onerror = () => reject(
+            new Error('Unable to read QR image.')
+          );
+
+          reader.readAsDataURL(qrFile);
+        });
+      }
+
+      delete f.upi_qr_file;
+
+      if ($('#removeEditUpiQr', m).checked) {
+        f.remove_upi_qr = true;
+      }
       if (f.new_password !== f.confirm_password) { $('#pwErr').textContent = 'New passwords do not match'; return; }
       try { await api('/api/v1/auth/password', 'POST', f); e.target.reset(); toast('Password updated'); } catch (er) { $('#pwErr').textContent = er.message; }
+    });
+
+
+    // Preview the selected theme before saving.
+    $('#pf').elements.theme_color.addEventListener('input', e => {
+      applyRestaurantTheme(e.target.value);
+    });
+
+    // Restore the saved theme if the owner leaves without saving.
+    $('#pf').elements.theme_color.addEventListener('change', e => {
+      e.target.dataset.preview = 'true';
     });
 
     // ---------- Orders / Print Bills ----------
