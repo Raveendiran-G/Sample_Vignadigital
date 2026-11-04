@@ -1051,7 +1051,7 @@
         `).join('');
     }
 
-    
+
     function receiptHTML(order) {
         const restaurantName =
             state.restaurant?.name || 'Restaurant';
@@ -1497,51 +1497,185 @@
        INITIAL MENU LOAD
        ========================================================= */
 
-    async function loadMenu() {
-        const data = await apiRequest(
-            `${API}/public/menu/${encodeURIComponent(slug)}?include_unavailable=1&_=${Date.now()}`
+    /* =====================================================
+   INITIAL MENU LOAD – CUSTOM HTML MENU
+   ===================================================== */
+
+    let menuRefreshRunning = false;
+
+    function getRestaurantOrderingStatus(restaurant) {
+        const value =
+            restaurant?.order_enabled ??
+            restaurant?.ordering_enabled ??
+            restaurant?.orderingEnabled ??
+            restaurant?.orderEnabled ??
+            false;
+
+        return !(
+            value === false ||
+            value === 0 ||
+            value === '0' ||
+            value === 'false' ||
+            value === 'off' ||
+            value === 'disabled' ||
+            value === 'no'
         );
-
-        if (!data.restaurant || !Array.isArray(data.categories)) {
-            throw new Error('Invalid menu response from server.');
-        }
-
-        menuData = data;
-
-        const restaurant = getRestaurant();
-
-        document.title = `${restaurant.name || 'Menu'} · Menu`;
-
-        // Get the restaurant's saved theme color.
-        const themeColor = /^#[0-9a-fA-F]{6}$/.test(
-            String(restaurant.theme_color || '')
-        )
-            ? restaurant.theme_color
-            : '#d9480f';
-
-        // Apply the theme to the customer menu.
-        applyRestaurantTheme(themeColor);
-
-        // Make the theme available to custom menu integrations.
-        window.VIGNA_THEME = themeColor;
-        window.theme = themeColor;
-
-        // Update the browser theme color.
-        const themeMeta = $('#themeMeta');
-
-        if (themeMeta) {
-            themeMeta.content = themeColor;
-        }
-
-        // Render the menu.
-        renderMenu();
-
-        // Remember the current ordering availability.
-        lastOrderingState = orderingEnabled();
     }
-    // =====================================================
-    // EVENT HANDLING
-    // =====================================================
+
+    function getDatabaseItems(categories) {
+        const result = [];
+
+        categories.forEach(category => {
+            const items = Array.isArray(category.items)
+                ? category.items
+                : [];
+
+            items.forEach(item => {
+                result.push({
+                    id: Number(
+                        item.id ??
+                        item.item_id ??
+                        item._id
+                    ),
+                    name: String(
+                        item.name ??
+                        item.item_name ??
+                        item.title ??
+                        ''
+                    ).trim(),
+                    price: Number(
+                        item.price ??
+                        item.selling_price ??
+                        item.amount ??
+                        0
+                    ),
+                    available: !(
+                        item.available === false ||
+                        item.is_available === false ||
+                        item.status === 'unavailable' ||
+                        item.status === 'out_of_stock'
+                    )
+                });
+            });
+        });
+
+        return result.filter(item =>
+            Number.isFinite(item.id) &&
+            item.id > 0 &&
+            item.name
+        );
+    }
+
+    /* =====================================================
+       MATCH CUSTOM HTML CARDS WITH DATABASE ITEMS
+       ===================================================== */
+
+    function matchCards() {
+        const cards = findCards();
+
+        cards.forEach(card => {
+            const cardName = normalizeName(getCardName(card));
+
+            if (!cardName) return;
+
+            const item = state.items.find(entry =>
+                normalizeName(entry.name) === cardName
+            );
+
+            if (!item) {
+                console.warn(
+                    '[Vigna] Database item not matched:',
+                    cardName
+                );
+
+                card.querySelector('.vigna-order-control')?.remove();
+                return;
+            }
+
+            card.dataset.vignaItemId = String(item.id);
+
+            renderCartButton(card, item);
+        });
+    }
+
+    /* =====================================================
+       LOAD RESTAURANT MENU FROM PUBLIC API
+       ===================================================== */
+
+    async function loadMenu() {
+        if (menuRefreshRunning) return;
+
+        menuRefreshRunning = true;
+
+        try {
+            const data = await api(
+                `/public/menu/${encodeURIComponent(SLUG)}?include_unavailable=1&_=${Date.now()}`
+            );
+
+            if (
+                !data ||
+                !data.restaurant ||
+                !Array.isArray(data.categories)
+            ) {
+                throw new Error('Invalid restaurant menu API response.');
+            }
+
+            const previousOrderingState = state.orderingEnabled;
+
+            state.restaurant = data.restaurant;
+
+            state.items = getDatabaseItems(data.categories);
+
+            state.orderingEnabled =
+                getRestaurantOrderingStatus(data.restaurant);
+
+            /* Clear cart when restaurant disables ordering */
+            if (previousOrderingState && !state.orderingEnabled) {
+                state.cart.clear();
+
+                document.getElementById('vigna-cart-modal')
+                    ?.classList.remove('open');
+
+                document.body.style.overflow = '';
+            }
+
+            /* Update restaurant title */
+            if (data.restaurant.name) {
+                document.title = `${data.restaurant.name} | Menu`;
+            }
+
+            /* Apply saved restaurant theme without replacing custom design */
+            if (
+                /^#[0-9a-fA-F]{6}$/.test(
+                    String(data.restaurant.theme_color || '')
+                )
+            ) {
+                window.VIGNA_THEME = data.restaurant.theme_color;
+            }
+
+            /* Render Add to Cart buttons */
+            matchCards();
+
+            /* Update floating cart */
+            renderCart();
+
+            console.log('[Vigna] Custom menu integration loaded.', {
+                restaurant: data.restaurant.name,
+                items: state.items.length,
+                orderingEnabled: state.orderingEnabled
+            });
+
+        } catch (error) {
+            console.error('[Vigna] Custom menu loading failed:', error);
+
+        } finally {
+            menuRefreshRunning = false;
+        }
+    }
+
+    /* =====================================================
+       CUSTOM MENU EVENT HANDLING
+       ===================================================== */
 
     document.addEventListener('click', event => {
         const target = event.target instanceof Element
@@ -1553,11 +1687,11 @@
         const add = target.closest('[data-vigna-add]');
         const plus = target.closest('[data-vigna-plus]');
         const minus = target.closest('[data-vigna-minus]');
-        const cart = target.closest('#vigna-cart-button');
+        const cartButton = target.closest('#vigna-cart-button');
 
         if (add) {
             event.preventDefault();
-            event.stopImmediatePropagation();
+            event.stopPropagation();
 
             addItem(add.dataset.vignaAdd);
             return;
@@ -1565,7 +1699,7 @@
 
         if (plus) {
             event.preventDefault();
-            event.stopImmediatePropagation();
+            event.stopPropagation();
 
             addItem(plus.dataset.vignaPlus);
             return;
@@ -1573,51 +1707,41 @@
 
         if (minus) {
             event.preventDefault();
-            event.stopImmediatePropagation();
+            event.stopPropagation();
 
             removeItem(minus.dataset.vignaMinus);
             return;
         }
 
-        if (cart) {
+        if (cartButton) {
             event.preventDefault();
-            event.stopImmediatePropagation();
+            event.stopPropagation();
 
             openCart();
         }
+
     }, true);
 
-    // =====================================================
-    // INITIALIZATION
-    // =====================================================
+    /* =====================================================
+       INITIALIZATION
+       ===================================================== */
 
     async function initialize() {
         addStyles();
 
         createModal();
 
-        try {
-            await loadMenu();
-        } catch (error) {
-            console.error(
-                '[Vigna] Menu loading failed:',
-                error
-            );
-        }
+        await loadMenu();
 
-        setInterval(async () => {
-            try {
-                await loadMenu();
-            } catch (error) {
-                console.warn(
-                    '[Vigna] Menu refresh failed:',
-                    error.message
-                );
+        /* Refresh ordering availability without page reload */
+        setInterval(() => {
+            if (document.visibilityState === 'visible') {
+                loadMenu();
             }
-        }, 10000);
+        }, 2000);
 
-        const root =
-            document.getElementById('vigna-menu-root');
+        /* Detect changes to custom HTML menu cards */
+        const root = document.getElementById('vigna-menu-root');
 
         if (root) {
             const observer = new MutationObserver(() => {
@@ -1631,11 +1755,12 @@
         }
     }
 
+    /* =====================================================
+       START
+       ===================================================== */
+
     if (document.readyState === 'loading') {
-        document.addEventListener(
-            'DOMContentLoaded',
-            initialize
-        );
+        document.addEventListener('DOMContentLoaded', initialize);
     } else {
         initialize();
     }
