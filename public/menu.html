@@ -703,39 +703,77 @@
             }
         }
 
-
         /* =========================================
-           RESTAURANT UPI QR
+            VIGNADIGITAL RECEIPT UPI QR
         ========================================= */
 
         .receipt-upi {
-            text-align: center;
-
-            padding: 12px 0;
-            margin: 10px 0;
-
-            border-top: 1px dashed #999;
-            border-bottom: 1px dashed #999;
-
-            font-size: 10px;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 100% !important;
+            margin: 14px 0 !important;
+            padding: 14px 8px !important;
+            box-sizing: border-box !important;
+            text-align: center !important;
+            border-top: 1px dashed #999 !important;
+            border-bottom: 1px dashed #999 !important;
+            background: #fff !important;
+            color: #222 !important;
+            overflow: visible !important;
         }
 
-        .receipt-upi strong {
-            display: block;
+        .receipt-upi-title {
+            font-size: 15px !important;
+            font-weight: 800 !important;
+            letter-spacing: 1.5px !important;
+            margin-bottom: 10px !important;
+        }
+
+        .receipt-upi-image {
+            display: block !important;
+            width: 150px !important;
+            height: 150px !important;
+            max-width: 100% !important;
+            object-fit: contain !important;
+            margin: 5px auto !important;
+            background: #fff !important;
+        }
+
+        .receipt-upi-id {
+            margin-top: 8px !important;
+            font-size: 12px !important;
+            font-weight: 700 !important;
+            overflow-wrap: anywhere !important;
+        }
+
+        .receipt-upi small {
+            display: block !important;
+            margin-top: 6px !important;
+            font-size: 10px !important;
+            color: #666 !important;
+        }
+
+        .receipt-qr-missing {
+            padding: 20px;
+            color: #b42318;
             font-size: 12px;
-            margin-bottom: 8px;
         }
 
-        .receipt-upi img {
-            width: 120px;
-            height: 120px;
+        @media print {
+            .receipt-upi {
+                display: flex !important;
+                width: 100% !important;
+                page-break-inside: avoid !important;
+            }
 
-            object-fit: contain;
-
-            display: block;
-            margin: 5px auto;
+            .receipt-upi-image {
+                display: block !important;
+                width: 120px !important;
+                height: 120px !important;
+            }
         }
-
 
         /* =========================================
            CART BAR APPEARANCE
@@ -797,19 +835,30 @@
             border: 1px solid #f47721 !important;
         }
 
-        body.menu-page .menu-card-actions .order-now-btn {
-            background: #ef7419 !important;
-            color: #ffffff !important;
+        /* FINAL ORDER NOW BUTTON COLOUR - VIGNADIGITAL */
 
-            border: 1px solid #ef7419 !important;
-        }
-
-        body.menu-page .menu-card-actions .order-add:hover {
-            background: #ffe2ce !important;
+        body.menu-page .menu-card-actions .order-now-btn,
+        body.menu-page .menu-card-actions .order-now-btn:focus,
+        body.menu-page .menu-card-actions .order-now-btn:visited {
+            background: #356F6A !important;
+            background-color: #356F6A !important;
+            color: #FFFFFF !important;
+            border: 1px solid #356F6A !important;
+            box-shadow: none !important;
+            border-radius: 9px !important;
+            font-weight: 700 !important;
+            opacity: 1 !important;
         }
 
         body.menu-page .menu-card-actions .order-now-btn:hover {
-            background: #d9600c !important;
+            background: #285752 !important;
+            background-color: #285752 !important;
+            border-color: #285752 !important;
+        }
+
+        body.menu-page .menu-card-actions .order-now-btn:active {
+            background: #285752 !important;
+            transform: scale(0.97);
         }
 
 
@@ -1003,20 +1052,30 @@
             display: none !important;
         }
 
-        /* STYLE ONLY THE ORDER NOW BUTTON */
-        body.menu-page .menu-card-actions .order-now-btn {
-            background: #34A853 !important;
-            background-color: #34A853 !important;
-            color: #ffffff !important;
-            border: none !important;
+        /* FINAL ORDER NOW BUTTON COLOUR - VIGNADIGITAL */
+
+        body.menu-page .menu-card-actions .order-now-btn,
+        body.menu-page .menu-card-actions .order-now-btn:focus,
+        body.menu-page .menu-card-actions .order-now-btn:visited {
+            background: #356F6A !important;
+            background-color: #356F6A !important;
+            color: #FFFFFF !important;
+            border: 1px solid #356F6A !important;
             box-shadow: none !important;
             border-radius: 9px !important;
             font-weight: 700 !important;
+            opacity: 1 !important;
         }
 
         body.menu-page .menu-card-actions .order-now-btn:hover {
-            background: #2E9148 !important;
-            background-color: #2E9148 !important;
+            background: #285752 !important;
+            background-color: #285752 !important;
+            border-color: #285752 !important;
+        }
+
+        body.menu-page .menu-card-actions .order-now-btn:active {
+            background: #285752 !important;
+            transform: scale(0.97);
         }
 
         /* KEEP ADD BUTTON SEPARATE */

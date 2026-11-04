@@ -4180,23 +4180,27 @@ body.menu-page .menu-card-actions .order-add {
   border: 1px solid #9a5b43 !important;
 }
 
-/* ORDER NOW - ROYAL PURPLE */
+/* STYLE ONLY THE ORDER NOW BUTTON */
+
 body.menu-page .menu-card-actions .order-now-btn {
-  background: #7c3aed !important;
-  background-color: #7c3aed !important;
-  color: #ffffff !important;
-  border: 1px solid #7c3aed !important;
+  background: #356F6A !important;
+  background-color: #356F6A !important;
+  color: #FFFFFF !important;
+  border: 1px solid #356F6A !important;
+  box-shadow: none !important;
+  border-radius: 9px !important;
   font-weight: 700 !important;
+  transition: all 0.2s ease !important;
 }
 
 body.menu-page .menu-card-actions .order-now-btn:hover {
-  background: #6d28d9 !important;
-  background-color: #6d28d9 !important;
-  border-color: #6d28d9 !important;
+  background: #285752 !important;
+  background-color: #285752 !important;
+  border-color: #285752 !important;
 }
 
-body.menu-page .menu-card-actions .order-now-btn:hover {
-  background: #dc5921 !important;
+body.menu-page .menu-card-actions .order-now-btn:active {
+  transform: scale(0.97);
 }
 
 /* Grid/list switch */
@@ -4683,27 +4687,44 @@ body.menu-page textarea:focus-visible {
   }
 }
 
-/* =========================================
-   ORDER NOW - UNIQUE PURPLE THEME
-========================================= */
 
-body.menu-page .menu-card-actions .order-now-btn {
-  background: #7c3aed !important;
-  background-color: #7c3aed !important;
-  color: #ffffff !important;
-  border: 1px solid #7c3aed !important;
-  font-weight: 700 !important;
+
+/* Prevent default orange flash during dashboard initialization */
+html:not(.menu-page),
+body:not(.menu-page) {
+  --theme: #64748b;
+  --theme-dark: #475569;
+  --theme-light: #1e293b;
+  --theme-soft: #292d35;
+  --theme-border: #475569;
+  --theme-ink: #ffffff;
+
+  --brand: #64748b;
+  --brand-600: #475569;
+  --brand-50: #1e293b;
+  --brand-ink: #ffffff;
+
+  background-color: #131316 !important;
+  color-scheme: dark;
+}
+
+/* VIGNADIGITAL - FORCE ORDER NOW BUTTON COLOUR */
+
+.order-now-btn,
+button.order-now-btn,
+body .order-now-btn {
+  background: #356F6A !important;
+  background-color: #356F6A !important;
+  color: #FFFFFF !important;
+  border: 1px solid #356F6A !important;
   border-radius: 9px !important;
-  transition: all 0.2s ease !important;
+  font-weight: 700 !important;
+  box-shadow: none !important;
 }
 
-body.menu-page .menu-card-actions .order-now-btn:hover {
-  background: #6d28d9 !important;
-  background-color: #6d28d9 !important;
-  border-color: #6d28d9 !important;
-  transform: translateY(-1px);
-}
-
-body.menu-page .menu-card-actions .order-now-btn:active {
-  transform: scale(0.97);
+.order-now-btn:hover,
+button.order-now-btn:hover {
+  background: #285752 !important;
+  background-color: #285752 !important;
+  border-color: #285752 !important;
 }

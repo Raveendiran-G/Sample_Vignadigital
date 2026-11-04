@@ -1299,7 +1299,6 @@
             button.textContent = 'Confirm Order';
         }
     }
-
     /* =========================================================
        RECEIPT
        ========================================================= */
@@ -1319,216 +1318,269 @@
             );
 
             return `
-                <div class="receipt-row">
+            <div class="receipt-row">
+                <span>
+                    ${escapeHTML(item.name || item.item_name || 'Item')}
+                </span>
 
-                    <span>
-                        ${escapeHTML(item.name || item.item_name || 'Item')}
-                    </span>
+                <span>${quantity}</span>
 
-                    <span>${quantity}</span>
+                <span>${money(price)}</span>
 
-                    <span>${money(price)}</span>
-
-                    <strong>${money(amount)}</strong>
-
-                </div>
-            `;
+                <strong>${money(amount)}</strong>
+            </div>
+        `;
         }).join('');
     }
 
-    function getReceiptUPI(restaurant) {
 
-        if (!restaurant?.upi_qr_image) {
+    /* =========================================================
+       RESTAURANT UPI QR
+       ========================================================= */
+
+    function getReceiptUPI(restaurant) {
+        console.log('RECEIPT RESTAURANT DATA:', restaurant);
+        console.log('UPI QR IMAGE:', restaurant?.upi_qr_image);
+        console.log('UPI ID:', restaurant?.upi_id);
+        const qrImage = String(
+            restaurant?.upi_qr_image || ''
+        ).trim();
+
+        const upiId = String(
+            restaurant?.upi_id || ''
+        ).trim();
+
+        // Do not display an empty QR section.
+        if (!qrImage && !upiId) {
             return '';
         }
 
         return `
-        <div class="receipt-upi">
+        <section class="receipt-upi">
 
-            <strong>SCAN & PAY</strong>
+            <div class="receipt-upi-title">
+                SCAN & PAY
+            </div>
 
-            <img
-                src="${escapeHTML(restaurant.upi_qr_image)}"
-                alt="Restaurant UPI QR"
-                onerror="this.parentElement.style.display='none'"
-            >
+            ${qrImage
+                ? `
+                        <img
+                            class="receipt-upi-image"
+                            src="${escapeHTML(qrImage)}"
+                            alt="Restaurant UPI Payment QR Code"
+                            loading="eager"
+                            onerror="
+                                this.style.display='none';
+                                this.parentElement.classList.add('qr-error');
+                            "
+                        >
+                    `
+                : `
+                        <div class="receipt-qr-missing">
+                            QR image not available
+                        </div>
+                    `
+            }
 
-            ${restaurant.upi_id ? `
-                <small>${escapeHTML(restaurant.upi_id)}</small>
-            ` : ''}
+            ${upiId
+                ? `
+                        <div class="receipt-upi-id">
+                            UPI ID: ${escapeHTML(upiId)}
+                        </div>
+                    `
+                : ''
+            }
 
-        </div>
+            <small>Pay the restaurant using any UPI app</small>
+
+        </section>
     `;
     }
 
+
+    /* =========================================================
+       RECEIPT HTML
+       ========================================================= */
+
     function receiptHTML(data) {
+
         const restaurant = data.restaurant || {};
 
         const type = data.order_type || '';
 
-        const location = type === 'Dine In'
-            ? data.table_no
-            : type === 'Room Service'
-                ? data.room_no
-                : type === 'Delivery'
-                    ? data.delivery_address
-                    : '';
+        const location =
+            type === 'Dine In'
+                ? data.table_no
+                : type === 'Room Service'
+                    ? data.room_no
+                    : type === 'Delivery'
+                        ? data.delivery_address
+                        : '';
 
-        const locationLabel = type === 'Dine In'
-            ? 'Table No.'
-            : type === 'Room Service'
-                ? 'Room No.'
-                : 'Delivery Address';
+        const locationLabel =
+            type === 'Dine In'
+                ? 'Table No.'
+                : type === 'Room Service'
+                    ? 'Room No.'
+                    : 'Delivery Address';
 
         return `
-            <div class="receipt-final-paper" id="receiptFinalPaper">
+        <div class="receipt-final-paper" id="receiptFinalPaper">
 
-                <header class="receipt-head">
+            <!-- RESTAURANT HEADER -->
 
-                    ${restaurant.logo
+            <header class="receipt-head">
+
+                ${restaurant.logo
                 ? `
-                                <img
-                                    class="receipt-icon"
-                                    src="${escapeHTML(restaurant.logo)}"
-                                    alt=""
-                                >
-                            `
+                            <img
+                                class="receipt-icon"
+                                src="${escapeHTML(restaurant.logo)}"
+                                alt="Restaurant Logo"
+                            >
+                        `
                 : ''
             }
 
-                    <h2>${escapeHTML(restaurant.name || 'Restaurant')}</h2>
+                <h2>
+                    ${escapeHTML(restaurant.name || 'Restaurant')}
+                </h2>
 
-                    <p>${escapeHTML(restaurant.address || '')}</p>
+                <p>${escapeHTML(restaurant.address || '')}</p>
 
-                    <p>${escapeHTML(restaurant.phone || '')}</p>
+                <p>${escapeHTML(restaurant.phone || '')}</p>
 
-                    <p class="receipt-label">ORDER RECEIPT</p>
+                <p class="receipt-label">
+                    ORDER RECEIPT
+                </p>
 
-                </header>
+            </header>
 
-                <div class="receipt-meta">
 
-                   <div class="receipt-info-row">
+            <!-- ORDER DETAILS -->
 
-    <div class="receipt-meta">
+            <div class="receipt-meta">
 
-        <div class="meta-line">
-            <span>Order No</span>
-            <span>:</span>
-            <strong>${escapeHTML(data.order_number)}</strong>
-        </div>
-
-        <div class="meta-line">
-            <span>Date</span>
-            <span>:</span>
-            <span>${escapeHTML(new Date().toLocaleString('en-IN'))}</span>
-        </div>
-
-        <div class="meta-line">
-            <span>Customer</span>
-            <span>:</span>
-            <span>${escapeHTML(data.customer || data.customer_name)}</span>
-        </div>
-
-        <div class="meta-line">
-            <span>Phone</span>
-            <span>:</span>
-            <span>${escapeHTML(data.phone)}</span>
-        </div>
-
-        <div class="meta-line">
-            <span>Order Type</span>
-            <span>:</span>
-            <span>${escapeHTML(type)}</span>
-        </div>
-
-        ${location ? `
-            <div class="meta-line">
-                <span>${escapeHTML(locationLabel)}</span>
-                <span>:</span>
-                <span>${escapeHTML(location)}</span>
-            </div>
-        ` : ''}
-
-    </div>
-
-${getReceiptUPI(restaurant)}
-
-</div>
+                <div class="meta-line">
+                    <span>Order No</span>
+                    <span>:</span>
+                    <strong>
+                        ${escapeHTML(data.order_number || data.order_no || '')}
+                    </strong>
                 </div>
 
-                ${restaurant.upi_qr_image
+                <div class="meta-line">
+                    <span>Date</span>
+                    <span>:</span>
+                    <span>${escapeHTML(new Date().toLocaleString('en-IN'))}</span>
+                </div>
+
+                <div class="meta-line">
+                    <span>Customer</span>
+                    <span>:</span>
+                    <span>
+                        ${escapeHTML(data.customer || data.customer_name || '')}
+                    </span>
+                </div>
+
+                <div class="meta-line">
+                    <span>Phone</span>
+                    <span>:</span>
+                    <span>${escapeHTML(data.phone || '')}</span>
+                </div>
+
+                <div class="meta-line">
+                    <span>Order Type</span>
+                    <span>:</span>
+                    <span>${escapeHTML(type)}</span>
+                </div>
+
+                ${location
                 ? `
-                            <div class="receipt-upi">
-
-                                <strong>SCAN & PAY</strong>
-
-                                <img
-                                    src="${escapeHTML(restaurant.upi_qr_image)}"
-                                    alt="Restaurant UPI QR"
-                                >
-
-                                ${restaurant.upi_id
-                    ? `<div>UPI ID: ${escapeHTML(restaurant.upi_id)}</div>`
-                    : ''
-                }
-
+                            <div class="meta-line">
+                                <span>${escapeHTML(locationLabel)}</span>
+                                <span>:</span>
+                                <span>${escapeHTML(location)}</span>
                             </div>
                         `
                 : ''
             }
 
-                <div class="receipt-items">
+            </div>
 
-                    <div class="receipt-table-head">
-                        <span>Item</span>
-                        <span>Qty</span>
-                        <span>Price</span>
-                        <span>Total</span>
-                    </div>
 
-                    ${receiptItemRows(data.items)}
+            <!-- RESTAURANT UPI QR -->
 
+            ${getReceiptUPI(restaurant)}
+
+
+            <!-- ORDER ITEMS -->
+
+            <div class="receipt-items">
+
+                <div class="receipt-table-head">
+                    <span>Item</span>
+                    <span>Qty</span>
+                    <span>Price</span>
+                    <span>Total</span>
                 </div>
 
-                <div class="receipt-summary-line">
-                    <span>Food Subtotal</span>
-                    <strong>${money(data.subtotal)}</strong>
-                </div>
-
-                <div class="receipt-summary-line">
-                    <span>Tax (5%)</span>
-                    <strong>${money(data.tax)}</strong>
-                </div>
-
-                <div class="receipt-total">
-                    <span>GRAND TOTAL</span>
-                    <strong>${money(data.total)}</strong>
-                </div>
-
-                <footer class="receipt-foot">
-
-                    <strong>Thank you for ordering!</strong>
-
-                    <div>We will confirm your order shortly.</div>
-
-                    <div class="leaf-divider">◆</div>
-
-                    <strong>${escapeHTML(restaurant.name || '')}</strong>
-
-                    <div>Good Food Brings People Together</div>
-
-                    <div class="receipt-hearts">♥ ♥ ♥</div>
-
-                    <div>Powered by VignaDigital</div>
-
-                </footer>
+                ${receiptItemRows(data.items)}
 
             </div>
-        `;
+
+
+            <!-- BILL SUMMARY -->
+
+            <div class="receipt-summary-line">
+                <span>Food Subtotal</span>
+                <strong>${money(data.subtotal)}</strong>
+            </div>
+
+            <div class="receipt-summary-line">
+                <span>Tax (5%)</span>
+                <strong>${money(data.tax)}</strong>
+            </div>
+
+            <div class="receipt-total">
+                <span>GRAND TOTAL</span>
+                <strong>${money(data.total)}</strong>
+            </div>
+
+
+            <!-- FOOTER -->
+
+            <footer class="receipt-foot">
+
+                <strong>Thank you for ordering!</strong>
+
+                <div>We will confirm your order shortly.</div>
+
+                <div class="leaf-divider">◆</div>
+
+                <strong>
+                    ${escapeHTML(restaurant.name || '')}
+                </strong>
+
+                <div>Good Food Brings People Together</div>
+
+                <div class="receipt-hearts">♥ ♥ ♥</div>
+
+                <div>Powered by VignaDigital</div>
+
+            </footer>
+
+        </div>
+    `;
     }
 
+
+    /* =========================================================
+       SHOW ANIMATED RECEIPT
+       ========================================================= */
+
     function showReceipt(data) {
+
         $('#vignaReceiptOverlay')?.remove();
 
         const overlay = document.createElement('div');
@@ -1537,105 +1589,132 @@ ${getReceiptUPI(restaurant)}
         overlay.className = 'checkout-overlay';
 
         overlay.innerHTML = `
-            <section class="checkout-panel receipt-mode">
+        <section class="checkout-panel receipt-mode">
 
-                <div
-                    class="receipt-animation-wrap"
-                    id="receiptAnimation"
-                >
+            <!-- RECEIPT PRINTING ANIMATION -->
 
-                    <section class="receipt-printer-stage">
+            <div
+                class="receipt-animation-wrap"
+                id="receiptAnimation"
+            >
 
-                        <div class="printer-brand">
-                            VIGNADIGITAL
-                        </div>
+                <section class="receipt-printer-stage">
 
-                        <div class="receipt-printing-paper">
+                    <div class="printer-brand">
+                        VIGNADIGITAL
+                    </div>
 
-                            ${data.restaurant?.logo
-                ? `<img src="${escapeHTML(data.restaurant.logo)}" width="48" alt="">`
+                    <div class="receipt-printing-paper">
+
+                        ${data.restaurant?.logo
+                ? `
+                                    <img
+                                        src="${escapeHTML(data.restaurant.logo)}"
+                                        width="48"
+                                        alt=""
+                                    >
+                                `
                 : ''
             }
 
-                            <h2>
-                                ${escapeHTML(data.restaurant?.name || 'Restaurant')}
-                            </h2>
+                        <h2>
+                            ${escapeHTML(data.restaurant?.name || 'Restaurant')}
+                        </h2>
 
-                            <p>ORDER CONFIRMED</p>
+                        <p>ORDER CONFIRMED</p>
 
-                            <p>Order #${escapeHTML(data.order_number)}</p>
+                        <p>
+                            Order #${escapeHTML(data.order_number || '')}
+                        </p>
 
-                            <p>Printing your receipt...</p>
-
-                        </div>
-
-                        <div class="printer-machine">
-                            <span></span>
-                            THERMAL RECEIPT PRINTER
-                        </div>
-
-                        <div class="printer-icon">🧾</div>
-
-                    </section>
-
-                </div>
-
-                <div id="receiptResult" class="receipt-hidden">
-
-                    ${receiptHTML(data)}
-
-                    <div class="receipt-actions">
-
-                        <button
-                            type="button"
-                            id="printReceipt"
-                        >
-                            Print Receipt
-                        </button>
-
-                        <button
-                            type="button"
-                            class="receipt-secondary"
-                            id="backMenu"
-                        >
-                            Back to Menu
-                        </button>
+                        <p>Printing your receipt...</p>
 
                     </div>
 
-                    <p class="order-status" id="liveStatus">
-                        Status: Pending
-                    </p>
+                    <div class="printer-machine">
+                        <span></span>
+                        THERMAL RECEIPT PRINTER
+                    </div>
+
+                    <div class="printer-icon">🧾</div>
+
+                </section>
+
+            </div>
+
+
+            <!-- FINAL RECEIPT -->
+
+            <div id="receiptResult" class="receipt-hidden">
+
+                ${receiptHTML(data)}
+
+                <div class="receipt-actions">
+
+                    <button
+                        type="button"
+                        id="printReceipt"
+                    >
+                        Print Receipt
+                    </button>
+
+                    <button
+                        type="button"
+                        class="receipt-secondary"
+                        id="backMenu"
+                    >
+                        Back to Menu
+                    </button>
 
                 </div>
 
-            </section>
-        `;
+                <p class="order-status" id="liveStatus">
+                    Status: Pending
+                </p>
+
+            </div>
+
+        </section>
+    `;
 
         document.body.appendChild(overlay);
 
         document.body.style.overflow = 'hidden';
 
+
+        // Back to menu
+
         $('#backMenu', overlay).onclick = () => {
+
             overlay.remove();
+
             document.body.style.overflow = '';
+
             currentOrderEventSource?.close();
+
             currentOrderEventSource = null;
         };
+
+
+        // Print receipt
 
         $('#printReceipt', overlay).onclick = () => {
             printReceipt();
         };
 
+
+        // Show final receipt after animation
+
         window.setTimeout(() => {
+
             $('#receiptAnimation', overlay)?.remove();
 
             $('#receiptResult', overlay)?.classList.remove(
                 'receipt-hidden'
             );
+
         }, 2200);
     }
-
     /* =========================================================
        PRINT RECEIPT
        ========================================================= */
