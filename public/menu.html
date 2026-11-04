@@ -13,8 +13,8 @@
 
     <style>
         /* =========================================
-           FLOATING CART BAR
-        ========================================= */
+   FLOATING CART BAR
+========================================= */
 
         body.menu-page #cartBar.cart-bar {
             position: fixed !important;
@@ -24,22 +24,17 @@
             top: auto !important;
             transform: translateX(-50%) !important;
             z-index: 10000 !important;
-
             width: min(1000px, calc(100% - 24px)) !important;
             min-height: 58px;
-
             margin: 0 !important;
             padding: 9px 10px 9px 18px !important;
-
             display: flex !important;
             align-items: center !important;
             justify-content: space-between !important;
             gap: 14px !important;
-
             border: 0;
             border-radius: 13px;
             box-sizing: border-box;
-
             box-shadow: 0 8px 28px rgba(0, 0, 0, .24);
             text-align: left !important;
             cursor: pointer;
@@ -61,24 +56,19 @@
             display: none !important;
         }
 
-
         /* =========================================
-           CHECKOUT POPUP
-        ========================================= */
+   CHECKOUT POPUP
+========================================= */
 
         body.menu-page .checkout-overlay {
             position: fixed !important;
             inset: 0 !important;
             z-index: 20000 !important;
-
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
-
             overflow-y: auto !important;
-
             background: rgba(0, 0, 0, .55) !important;
-
             padding: 14px !important;
             box-sizing: border-box !important;
         }
@@ -86,24 +76,18 @@
         body.menu-page .checkout-panel {
             position: relative !important;
             display: block !important;
-
             width: min(520px, 100%) !important;
-
             margin: auto !important;
             overflow-y: auto !important;
-
             box-sizing: border-box !important;
         }
 
         body.menu-page .checkout-line {
             display: grid;
             grid-template-columns: minmax(0, 1fr) auto auto;
-
             align-items: center;
             gap: 12px;
-
             padding: 14px 0;
-
             border-bottom: 1px solid #e7d8cb;
         }
 
@@ -121,16 +105,13 @@
             display: flex;
             justify-content: space-between;
             gap: 12px;
-
             padding: 4px 0;
         }
 
         body.menu-page .checkout-total {
             border-top: 1px dashed #bba18d;
-
             margin-top: 8px;
             padding-top: 10px !important;
-
             font-size: 1.1rem;
             font-weight: 800;
         }
@@ -143,7 +124,6 @@
         body.menu-page #placeOrderForm label {
             display: grid;
             gap: 6px;
-
             font-weight: 600;
             font-size: 14px;
         }
@@ -152,10 +132,8 @@
             position: absolute;
             top: 10px;
             right: 10px;
-
             min-width: 36px;
             min-height: 36px;
-
             cursor: pointer;
         }
 
@@ -168,20 +146,16 @@
             cursor: pointer;
         }
 
-
         /* =========================================
-           CHECKOUT DESIGN
-        ========================================= */
+   CHECKOUT DESIGN
+========================================= */
 
         body.menu-page .checkout-panel {
             background: #fffaf1 !important;
             color: #4d3429 !important;
-
             border: 1px solid #e7d4c2;
             border-radius: 20px !important;
-
             max-height: min(92dvh, 900px) !important;
-
             padding: 24px 20px calc(20px + env(safe-area-inset-bottom)) !important;
         }
 
@@ -197,10 +171,8 @@
         body.menu-page .checkout-qty button {
             background: #f8e8d8 !important;
             color: #603123 !important;
-
             border: 1px solid #ead3c0;
             border-radius: 8px;
-
             min-width: 32px;
             min-height: 32px;
         }
@@ -210,14 +182,11 @@
         body.menu-page .checkout-panel textarea {
             background: #fffdf9 !important;
             color: #3d2a22 !important;
-
             border: 1px solid #d9c4b4 !important;
             border-radius: 10px !important;
-
             box-sizing: border-box;
             width: 100%;
             max-width: 100%;
-
             padding: 12px !important;
         }
 
@@ -231,7 +200,6 @@
         body.menu-page .checkout-panel .place-order {
             background: #f58220 !important;
             color: #fff !important;
-
             border: 0;
             border-radius: 10px;
         }
@@ -243,15 +211,13 @@
         body.menu-page .checkout-close {
             background: #f4e7dc !important;
             color: #603123 !important;
-
             border: 0;
             border-radius: 9px;
         }
 
-
         /* =========================================
-           RECEIPT ANIMATION
-        ========================================= */
+   RECEIPT ANIMATION
+========================================= */
 
         body.menu-page .receipt-stage {
             position: relative;
@@ -261,17 +227,12 @@
         body.menu-page .animated-receipt {
             background: #fffdf7;
             color: #493328;
-
             width: min(100%, 340px);
-
             box-sizing: border-box;
             margin: 0 auto;
             padding: 22px 18px;
-
             font: 12px/1.5 monospace;
-
             box-shadow: 0 8px 24px rgba(0, 0, 0, .15);
-
             animation: receiptDrop .8s ease both;
         }
 
@@ -300,14 +261,10 @@
 
         body.menu-page .receipt-printer {
             text-align: center;
-
             background: #292929;
             color: #e9b777;
-
             padding: 12px;
-
             border-radius: 12px;
-
             font-size: 11px;
             letter-spacing: 2px;
         }
@@ -315,7 +272,6 @@
         body.menu-page .receipt-actions {
             display: flex;
             gap: 10px;
-
             margin-top: 16px;
         }
 
@@ -341,89 +297,65 @@
             }
         }
 
-
         /* =========================================
-           ANIMATED THERMAL RECEIPT
-        ========================================= */
+   ANIMATED THERMAL RECEIPT
+========================================= */
 
         body.menu-page .checkout-panel.receipt-mode {
             background: transparent !important;
-
             border: 0 !important;
             border-radius: 0 !important;
-
             box-shadow: none !important;
-
             padding: 0 !important;
             overflow: visible !important;
-
             max-height: none !important;
-
             width: min(100%, 410px) !important;
         }
 
         body.menu-page .receipt-animation-wrap {
             width: 100%;
             min-height: 440px;
-
             display: flex;
             align-items: center;
             justify-content: center;
-
             background: transparent;
-
             padding: 8px 0 18px;
         }
 
         body.menu-page .receipt-printer-stage {
             width: min(100%, 360px);
-
             text-align: center;
-
             animation: printerEnter .55s ease both;
         }
 
         body.menu-page .printer-brand {
             color: #fff4e8;
-
             font-weight: 900;
             letter-spacing: 2px;
-
             margin-bottom: 12px;
-
             text-shadow: 0 2px 8px #0008;
         }
 
         body.menu-page .receipt-printing-paper {
             width: 78%;
             min-height: 210px;
-
             margin: 0 auto -3px;
             padding: 18px 14px 25px;
-
             background: #fffdf7;
             color: #493328;
-
             box-shadow: none;
-
             position: relative;
-
             padding-bottom: 12px;
-
             animation: paperFeed 1.8s ease-in-out both;
         }
 
         body.menu-page .receipt-printing-paper::after,
         body.menu-page .receipt-final-paper::after {
             content: "";
-
             display: block;
-
             height: 12px;
             margin: 8px -18px -12px;
-
             background: inherit;
-
             clip-path: polygon(0 0,
                     7.5% 100%,
                     15% 0,
@@ -466,29 +398,20 @@
         body.menu-page .printer-machine {
             position: relative;
             z-index: 1;
-
             background: linear-gradient(#555, #222);
             color: #f5d6b7;
-
             padding: 18px 10px;
-
             border-radius: 12px 12px 18px 18px;
-
             box-shadow: 0 10px 20px #0003;
-
             font-size: 11px;
             letter-spacing: 1px;
         }
 
         body.menu-page .printer-machine span {
             display: block;
-
             height: 8px;
-
             background: #111;
-
             border-radius: 8px;
-
             margin: -10px 12px 12px;
         }
 
@@ -498,27 +421,17 @@
 
         body.menu-page .receipt-final-paper {
             width: min(100%, 360px);
-
             max-height: calc(92dvh - 28px);
-
             overflow: auto;
-
             margin: 0 auto;
             padding: 20px 18px 28px;
-
             box-sizing: border-box;
-
             background: #fffdf7;
             color: #493328;
-
             box-shadow: none;
-
             font: 12px/1.5 monospace;
-
             position: relative;
-
             padding-bottom: 12px;
-
             animation: receiptUnroll .8s cubic-bezier(.2, .8, .2, 1) both;
         }
 
@@ -540,10 +453,8 @@
 
         body.menu-page .receipt-label {
             border-top: 1px dashed #9c8b7d;
-
             margin-top: 10px;
             padding-top: 8px;
-
             font-weight: 800;
         }
 
@@ -554,18 +465,14 @@
 
         body.menu-page .meta-line {
             display: grid;
-
             grid-template-columns: 76px 8px minmax(0, 1fr);
-
             gap: 4px;
-
             overflow-wrap: anywhere;
         }
 
         body.menu-page .receipt-items {
             border-top: 1px dashed #9c8b7d;
             border-bottom: 1px dashed #9c8b7d;
-
             margin: 10px 0;
             padding: 8px 0;
         }
@@ -573,11 +480,8 @@
         body.menu-page .receipt-table-head,
         body.menu-page .receipt-row {
             display: grid;
-
             grid-template-columns: minmax(0, 1fr) 25px 48px 52px;
-
             gap: 3px;
-
             font-size: 9px;
             padding: 5px 0;
         }
@@ -602,17 +506,14 @@
             display: flex;
             justify-content: space-between;
             gap: 10px;
-
             padding: 5px 0;
         }
 
         body.menu-page .receipt-total {
             border-top: 1px dashed #493328;
             border-bottom: 1px dashed #493328;
-
             margin-top: 5px;
             padding: 9px 0;
-
             font-weight: 900;
             font-size: 14px;
         }
@@ -637,13 +538,10 @@
         body.menu-page .receipt-actions button {
             flex: 1;
             min-height: 42px;
-
             border: 0;
             border-radius: 9px;
-
             background: #f58220;
             color: white;
-
             cursor: pointer;
         }
 
@@ -657,10 +555,9 @@
             margin-top: 10px;
         }
 
-
         /* =========================================
-           RECEIPT ANIMATION KEYFRAMES
-        ========================================= */
+   RECEIPT ANIMATION KEYFRAMES
+========================================= */
 
         @keyframes printerEnter {
             from {
@@ -704,48 +601,51 @@
         }
 
         /* =========================================
-            VIGNADIGITAL RECEIPT UPI QR
-        ========================================= */
+   ORIGINAL UPI QR SECTION
+========================================= */
 
         .receipt-upi {
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: center !important;
-            justify-content: center !important;
-            width: 100% !important;
-            margin: 14px 0 !important;
-            padding: 14px 8px !important;
-            box-sizing: border-box !important;
-            text-align: center !important;
-            border-top: 1px dashed #999 !important;
-            border-bottom: 1px dashed #999 !important;
-            background: #fff !important;
-            color: #222 !important;
-            overflow: visible !important;
-        }
-
-        .receipt-upi-title {
-            font-size: 15px !important;
-            font-weight: 800 !important;
-            letter-spacing: 1.5px !important;
-            margin-bottom: 10px !important;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap: 8px;
+            padding: 14px 10px;
+            margin: 12px 0;
+            border-bottom: 1px dashed #999;
+            background: #fff;
+            box-sizing: border-box;
+            width: 100%;
+            overflow: hidden;
         }
 
         .receipt-upi-image {
-            display: block !important;
-            width: 150px !important;
-            height: 150px !important;
-            max-width: 100% !important;
-            object-fit: contain !important;
-            margin: 5px auto !important;
-            background: #fff !important;
+            width: 140px;
+            height: 140px;
+            max-width: 100%;
+            max-height: 140px;
+            object-fit: contain;
+            display: block;
+            margin: 8px auto;
+            background: #fff;
         }
 
         .receipt-upi-id {
-            margin-top: 8px !important;
-            font-size: 12px !important;
-            font-weight: 700 !important;
-            overflow-wrap: anywhere !important;
+            font-size: 12px;
+            font-weight: 600;
+            overflow-wrap: anywhere;
+        }
+
+        .receipt-qr-missing {
+            font-size: 12px;
+            color: #777;
+        }
+
+        .receipt-upi.qr-error::after {
+            content: "QR image could not be loaded";
+            font-size: 11px;
+            color: #d33;
         }
 
         .receipt-upi small {
@@ -753,12 +653,6 @@
             margin-top: 6px !important;
             font-size: 10px !important;
             color: #666 !important;
-        }
-
-        .receipt-qr-missing {
-            padding: 20px;
-            color: #b42318;
-            font-size: 12px;
         }
 
         @media print {
@@ -776,16 +670,14 @@
         }
 
         /* =========================================
-           CART BAR APPEARANCE
-        ========================================= */
+   CART BAR APPEARANCE
+========================================= */
 
         body.menu-page #cartBar.cart-bar {
             background: #ffffff !important;
             background-color: #ffffff !important;
             color: #493328 !important;
-
             border: 1px solid #e5d5c6 !important;
-
             box-shadow: 0 5px 20px rgba(0, 0, 0, .12) !important;
         }
 
@@ -799,10 +691,9 @@
             background: #f5f5f5 !important;
         }
 
-
         /* =========================================
-           MENU CARD ACTION BUTTONS
-        ========================================= */
+   MENU CARD ACTION BUTTONS
+========================================= */
 
         body.menu-page .menu-card-actions {
             display: flex;
@@ -814,24 +705,18 @@
         body.menu-page .menu-card-actions button {
             flex: 1;
             min-width: 0;
-
             height: 38px;
             padding: 0 8px;
-
             border-radius: 10px;
-
             font-size: 13px;
             font-weight: 600;
-
             cursor: pointer;
-
             transition: background .2s ease;
         }
 
         body.menu-page .menu-card-actions .order-add {
             background: #fff0e5 !important;
             color: #d95b0b !important;
-
             border: 1px solid #f47721 !important;
         }
 
@@ -861,23 +746,18 @@
             transform: scale(0.97);
         }
 
-
         /* =========================================
-           GRID / LIST VIEW SWITCH
-        ========================================= */
+   GRID / LIST VIEW SWITCH
+========================================= */
 
         body.menu-page .vigna-view-switch {
             display: inline-flex;
             align-items: center;
             gap: 3px;
-
             padding: 4px;
-
             background: #202024;
-
             border: 1px solid #34343a;
             border-radius: 12px;
-
             width: fit-content;
         }
 
@@ -885,27 +765,21 @@
             width: 35px;
             height: 30px;
             padding: 6px;
-
             display: flex;
             align-items: center;
             justify-content: center;
-
             background: transparent;
             color: #d1d1d5;
-
             border: none;
             border-radius: 7px;
-
             cursor: pointer;
         }
 
         body.menu-page .vigna-view-switch .view-toggle svg {
             width: 19px;
             height: 19px;
-
             stroke: currentColor;
             stroke-width: 1.7;
-
             stroke-linecap: round;
             stroke-linejoin: round;
         }
@@ -919,11 +793,9 @@
             color: #ffffff;
         }
 
-
         /* =========================================
-           DYNAMIC RESTAURANT THEME COLOUR
-           Updated by vigna-custom-menu.js
-        ========================================= */
+   DYNAMIC RESTAURANT THEME COLOUR
+========================================= */
 
         body.menu-page {
             --vigna-theme: #d9480f;
@@ -968,22 +840,16 @@
             border-bottom-color: var(--vigna-theme) !important;
         }
 
-
         /* =========================================
-           MOBILE RESPONSIVE DESIGN
-        ========================================= */
+   MOBILE RESPONSIVE DESIGN
+========================================= */
 
         @media (max-width: 560px) {
-
             body.menu-page #cartBar.cart-bar {
                 width: calc(100% - 16px) !important;
-
                 bottom: max(8px, env(safe-area-inset-bottom)) !important;
-
                 min-height: 58px;
-
                 padding: 8px 8px 8px 12px !important;
-
                 gap: 8px !important;
             }
 
@@ -998,9 +864,7 @@
 
             body.menu-page #cartBar.cart-bar>strong {
                 font-size: 12px;
-
                 padding: 10px 11px !important;
-
                 white-space: nowrap;
             }
 
@@ -1014,18 +878,15 @@
 
             body.menu-page .checkout-panel {
                 max-height: 94dvh !important;
-
                 padding: 22px 16px calc(18px + env(safe-area-inset-bottom)) !important;
             }
         }
 
-
         /* =========================================
-           REDUCED MOTION
-        ========================================= */
+   REDUCED MOTION
+========================================= */
 
         @media (prefers-reduced-motion: no-preference) {
-
             body.menu-page #cartBar.cart-bar {
                 transition: box-shadow .18s ease, transform .18s ease;
             }
@@ -1036,6 +897,7 @@
         }
 
         /* REMOVE THE OUTER BOX AROUND ORDER BUTTONS */
+
         body.menu-page .menu-card-actions {
             background: transparent !important;
             background-color: transparent !important;
@@ -1046,6 +908,7 @@
         }
 
         /* REMOVE ANY EXTRA WRAPPER DECORATION */
+
         body.menu-page .menu-card-actions::before,
         body.menu-page .menu-card-actions::after {
             content: none !important;
@@ -1079,57 +942,125 @@
         }
 
         /* KEEP ADD BUTTON SEPARATE */
+
         body.menu-page .menu-card-actions .order-add {
             box-shadow: none !important;
         }
 
-        .receipt-info-row {
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) 90px;
-            gap: 7px;
-            align-items: start;
-            padding: 7px 0;
-        }
-
-        .receipt-meta {
-            min-width: 0;
-        }
+        /* =========================================
+   FINAL UPI QR RECEIPT FIX
+   Preserve existing receipt design and colours
+========================================= */
 
         .receipt-upi {
-            width: 90px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-width: 0;
             text-align: center;
-            padding: 5px 2px;
+            gap: 8px;
+            padding: 14px 10px;
+            margin: 12px 0;
+            border-bottom: 1px dashed #999;
+            background: #fff;
             box-sizing: border-box;
-            border: 1px solid #d5d5d5;
-            border-radius: 5px;
-            overflow-wrap: anywhere;
+            overflow: hidden;
         }
 
-        .receipt-upi strong {
+        .receipt-upi h3 {
             display: block;
-            font-size: 8px;
-            margin-bottom: 5px;
+            margin: 0 0 5px;
+            font-size: 12px;
+            text-align: center;
         }
 
-        .receipt-upi img {
+        .receipt-upi img,
+        .receipt-upi-image {
             display: block;
-            width: 76px;
-            height: 76px;
+            width: 140px;
+            height: 140px;
+            max-width: 100%;
             object-fit: contain;
-            margin: 0 auto 5px;
+            margin: 8px auto;
+            background: #fff;
         }
 
         .receipt-upi-id {
-            font-size: 7px;
-            line-height: 1.3;
+            font-size: 12px;
+            font-weight: 600;
+            line-height: 1.4;
             overflow-wrap: anywhere;
+            word-break: break-word;
+            text-align: center;
         }
 
+        .receipt-qr-missing {
+            font-size: 12px;
+            color: #777;
+        }
+
+        .receipt-upi.qr-error::after {
+            content: "QR image could not be loaded";
+            font-size: 11px;
+            color: #d33;
+        }
+
+        .receipt-upi small {
+            display: block !important;
+            margin-top: 6px !important;
+            font-size: 10px !important;
+            color: #666 !important;
+        }
+
+        /* PRINT RECEIPT */
+
         @media print {
-            .receipt-info-row {
-                display: grid !important;
-                grid-template-columns: minmax(0, 1fr) 90px !important;
+            .receipt-upi {
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                width: 100% !important;
+                min-width: 0 !important;
+                page-break-inside: avoid !important;
             }
+
+            .receipt-upi img,
+            .receipt-upi-image {
+                display: block !important;
+                width: 120px !important;
+                height: 120px !important;
+                max-width: 100% !important;
+                object-fit: contain !important;
+            }
+        }
+
+        /* CENTER RESTAURANT NAME IN RECEIPT */
+
+        body.menu-page .receipt-head {
+            width: 100% !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            text-align: center !important;
+        }
+
+        body.menu-page .receipt-head h2 {
+            display: block !important;
+            width: 100% !important;
+            text-align: center !important;
+            margin: 5px auto !important;
+            padding: 0 !important;
+            box-sizing: border-box !important;
+        }
+
+        body.menu-page .receipt-head p {
+            width: 100% !important;
+            text-align: center !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
         }
     </style>
 </head>

@@ -60,7 +60,6 @@
     function getRestaurant() {
         return menuData?.restaurant || {};
     }
-
     function getCategories() {
         return Array.isArray(menuData?.categories)
             ? menuData.categories
@@ -858,7 +857,6 @@
     }
 
 
-
     /* =========================================================
        CHECKOUT
        ========================================================= */
@@ -1257,6 +1255,7 @@
                 order.orderNumber ||
                 orderId ||
                 'Pending';
+            const restaurantData = getRestaurant();
 
             const receiptData = {
                 ...payload,
@@ -1274,7 +1273,13 @@
                 tax: order.tax ?? payload.tax,
                 total: order.total ?? payload.total,
 
-                restaurant: getRestaurant()
+                restaurant: {
+                    ...restaurantData,
+
+                    upi_id: restaurantData.upi_id || '',
+
+                    upi_qr_image: restaurantData.upi_qr_image || ''
+                }
             };
 
             cart.clear();
@@ -1338,19 +1343,16 @@
        RESTAURANT UPI QR
        ========================================================= */
 
-    function getReceiptUPI(restaurant) {
-        console.log('RECEIPT RESTAURANT DATA:', restaurant);
-        console.log('UPI QR IMAGE:', restaurant?.upi_qr_image);
-        console.log('UPI ID:', restaurant?.upi_id);
+    function getReceiptUPI(restaurant = {}) {
         const qrImage = String(
-            restaurant?.upi_qr_image || ''
+            restaurant.upi_qr_image || ''
         ).trim();
 
         const upiId = String(
-            restaurant?.upi_id || ''
+            restaurant.upi_id || ''
         ).trim();
 
-        // Do not display an empty QR section.
+        // Do not show an empty payment section.
         if (!qrImage && !upiId) {
             return '';
         }
@@ -1358,21 +1360,16 @@
         return `
         <section class="receipt-upi">
 
-            <div class="receipt-upi-title">
-                SCAN & PAY
-            </div>
+            <h3>SCAN & PAY</h3>
 
             ${qrImage
                 ? `
                         <img
                             class="receipt-upi-image"
                             src="${escapeHTML(qrImage)}"
-                            alt="Restaurant UPI Payment QR Code"
+                            alt="Restaurant UPI QR Code"
                             loading="eager"
-                            onerror="
-                                this.style.display='none';
-                                this.parentElement.classList.add('qr-error');
-                            "
+                            onerror="this.style.display='none'; this.parentElement.classList.add('qr-error');"
                         >
                     `
                 : `
@@ -1391,7 +1388,7 @@
                 : ''
             }
 
-            <small>Pay the restaurant using any UPI app</small>
+            <small>Scan the QR code to make payment</small>
 
         </section>
     `;
@@ -1465,14 +1462,16 @@
                     <span>Order No</span>
                     <span>:</span>
                     <strong>
-                        ${escapeHTML(data.order_number || data.order_no || '')}
+                        ${escapeHTML(data.order_number || 'Pending')}
                     </strong>
                 </div>
 
                 <div class="meta-line">
                     <span>Date</span>
                     <span>:</span>
-                    <span>${escapeHTML(new Date().toLocaleString('en-IN'))}</span>
+                    <span>
+                        ${escapeHTML(new Date().toLocaleString('en-IN'))}
+                    </span>
                 </div>
 
                 <div class="meta-line">
@@ -1509,11 +1508,6 @@
             </div>
 
 
-            <!-- RESTAURANT UPI QR -->
-
-            ${getReceiptUPI(restaurant)}
-
-
             <!-- ORDER ITEMS -->
 
             <div class="receipt-items">
@@ -1525,7 +1519,7 @@
                     <span>Total</span>
                 </div>
 
-                ${receiptItemRows(data.items)}
+                ${receiptItemRows(data.items) || ''}
 
             </div>
 
@@ -1546,6 +1540,9 @@
                 <span>GRAND TOTAL</span>
                 <strong>${money(data.total)}</strong>
             </div>
+
+            <!-- UPI QR - ONLY INSIDE THE RECEIPT -->
+                ${getReceiptUPI(restaurant)}
 
 
             <!-- FOOTER -->
