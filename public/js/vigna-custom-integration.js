@@ -691,6 +691,63 @@
                 font-size: 14px;
             }
 
+            .vigna-receipt-upi {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 6px;
+                margin: 14px 0 4px;
+                padding: 10px;
+                border-radius: 10px;
+                background: #fff;
+                text-align: center;
+                overflow-wrap: anywhere;
+            }
+
+            .vigna-receipt-upi img {
+                display: block;
+                width: auto;
+                height: auto;
+                max-width: 140px;
+                max-height: 140px;
+                object-fit: contain;
+            }
+
+            .vigna-order-success-notification {
+                position: fixed;
+                top: max(16px, env(safe-area-inset-top));
+                left: 50%;
+                z-index: 1000000;
+                width: min(520px, calc(100% - 24px));
+                box-sizing: border-box;
+                padding: 13px 16px;
+                transform: translate(-50%, -18px);
+                border: 1px solid #FFCA28;
+                border-radius: 12px;
+                background: #FFF3CD;
+                color: #664D03;
+                box-shadow: 0 8px 26px #0002;
+                font: 14px/1.45 Arial, sans-serif;
+                opacity: 0;
+                animation: vignaOrderSuccess .25s ease forwards;
+            }
+
+            .vigna-order-success-notification strong {
+                display: block;
+                margin-bottom: 3px;
+            }
+
+            .vigna-order-success-notification p {
+                margin: 0;
+            }
+
+            @keyframes vignaOrderSuccess {
+                to {
+                    opacity: 1;
+                    transform: translate(-50%, 0);
+                }
+            }
+
             .vigna-receipt-foot {
                 padding-top: 12px;
                 line-height: 1.8;
@@ -1036,6 +1093,30 @@
         document.body.style.overflow = '';
     }
 
+    function showOrderSuccessNotification(orderNumber) {
+        document.querySelectorAll('.vigna-order-success-notification')
+            .forEach(notification => notification.remove());
+
+        const notification = document.createElement('div');
+        notification.className = 'vigna-order-success-notification';
+        notification.setAttribute('role', 'status');
+        notification.setAttribute('aria-live', 'polite');
+
+        const orderText = orderNumber
+            ? ` Order No: ${orderNumber}.`
+            : '';
+
+        notification.innerHTML = `
+            <strong>✅ Order placed successfully!</strong>
+            <p>Your order has been placed successfully!${escapeHTML(orderText)}
+                The hotel owner will confirm your order shortly.</p>
+        `;
+
+        document.body.appendChild(notification);
+
+        window.setTimeout(() => notification.remove(), 5000);
+    }
+
     // =====================================================
     // RECEIPT DATA
     // =====================================================
@@ -1051,6 +1132,30 @@
         `).join('');
     }
 
+    function receiptUPIHTML() {
+        const qrImage = String(
+            state.restaurant?.upi_qr_image || ''
+        ).trim();
+        const upiId = String(
+            state.restaurant?.upi_id || ''
+        ).trim();
+
+        if (!qrImage && !upiId) return '';
+
+        return `
+            <div class="vigna-receipt-upi">
+                ${qrImage ? `
+                    <img src="${escapeHTML(qrImage)}"
+                        alt="Restaurant UPI QR Code"
+                        loading="eager"
+                        onerror="this.style.display='none'">
+                ` : ''}
+                ${upiId ? `
+                    <div>UPI ID: ${escapeHTML(upiId)}</div>
+                ` : ''}
+            </div>
+        `;
+    }
 
     function receiptHTML(order) {
         const restaurantName =
@@ -1146,6 +1251,8 @@
                     <span>GRAND TOTAL</span>
                     <strong>${money(order.total)}</strong>
                 </div>
+
+                ${receiptUPIHTML()}
 
                 ${order.note ? `
                     <div class="vigna-receipt-summary">
@@ -1467,6 +1574,8 @@
             };
 
             state.lastOrder = order;
+
+            showOrderSuccessNotification(order.orderNo);
 
             state.cart.clear();
 
