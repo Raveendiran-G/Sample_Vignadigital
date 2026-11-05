@@ -58,6 +58,54 @@ function tabs(root, onChange) {
   show(buttons[0].dataset.tab);
   return show;
 }
+
+function initMobileSidebar() {
+  const shell = document.querySelector('.shell');
+  const side = shell?.querySelector(':scope > .side');
+  const main = shell?.querySelector(':scope > .main');
+
+  if (!shell || !side || !main || side.dataset.mobileSidebarReady) return;
+
+  side.dataset.mobileSidebarReady = 'true';
+
+  const toggle = document.createElement('button');
+  toggle.type = 'button';
+  toggle.className = 'mobile-menu-toggle';
+  toggle.setAttribute('aria-label', 'Open navigation');
+  toggle.setAttribute('aria-expanded', 'false');
+  toggle.innerHTML = '<span></span><span></span><span></span>';
+
+  const overlay = document.createElement('div');
+  overlay.className = 'mobile-sidebar-overlay';
+  overlay.hidden = true;
+
+  main.prepend(toggle);
+  document.body.appendChild(overlay);
+
+  const setOpen = open => {
+    side.classList.toggle('mobile-open', open);
+    overlay.hidden = !open;
+    document.body.classList.toggle('mobile-sidebar-open', open);
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
+  };
+
+  toggle.addEventListener('click', () => {
+    setOpen(!side.classList.contains('mobile-open'));
+  });
+
+  overlay.addEventListener('click', () => setOpen(false));
+
+  side.addEventListener('click', event => {
+    if (event.target.closest('button, a')) setOpen(false);
+  });
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 860) setOpen(false);
+  });
+}
+
+initMobileSidebar();
 // sub tabs inside a section: <div class="subtabs"> with [data-subtab], panels [data-subpanel]
 function subTabs() {
   document.querySelectorAll('.subtabs').forEach((bar) => bar.addEventListener('click', (e) => {
@@ -81,9 +129,17 @@ function openModal({ title, sub = '', html, wide = false }) {
 function closeModal() { if (modalEl) { modalEl.remove(); modalEl = null; document.body.style.overflow = ''; } }
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
-function confirmDialog({ title, message, confirmText = 'Confirm', danger = false }) {
+function confirmDialog({
+  title,
+  message,
+  confirmText = 'Confirm',
+  danger = false,
+  className = ''
+}) {
   return new Promise((resolve) => {
-    const el = document.createElement('div'); el.className = 'modal'; el.setAttribute('role', 'alertdialog');
+    const el = document.createElement('div');
+    el.className = `modal ${className}`.trim();
+    el.setAttribute('role', 'alertdialog');
     el.innerHTML = `<div class="modal-box confirm-box"><div class="confirm-ico ${danger ? 'danger' : ''}">${ico(danger ? 'trash' : 'check')}</div><h3>${esc(title)}</h3><p class="muted">${esc(message)}</p>
       <div class="confirm-actions"><button class="ghost" data-r="0">Cancel</button><button class="${danger ? 'danger-solid' : ''}" data-r="1">${esc(confirmText)}</button></div></div>`;
     const done = (v) => { document.removeEventListener('keydown', onKey); el.remove(); document.body.style.overflow = ''; resolve(v); };

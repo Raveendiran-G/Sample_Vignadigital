@@ -2,6 +2,10 @@
 <html lang="en">
 
 <head>
+  <script>
+    document.documentElement.classList.add('theme-loading');
+  </script>
+
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
 
@@ -16,25 +20,25 @@
 
     :root {
 
-      --status-green: #16a34a;
+      --status-green: var(--theme);
 
-      --status-green-hover: #15803d;
-
-
-
-      --status-blue: #2563eb;
-
-      --status-blue-hover: #1d4ed8;
+      --status-green-hover: var(--theme-dark);
 
 
 
-      --status-red: #dc2626;
+      --status-blue: var(--theme);
 
-      --status-red-hover: #b91c1c;
+      --status-blue-hover: var(--theme-dark);
 
 
 
-      --logout-green: #15803d;
+      --status-red: var(--theme-dark);
+
+      --status-red-hover: var(--theme-darker);
+
+
+
+      --logout-green: #15803D;
 
       --logout-green-hover: #166534;
 
@@ -76,11 +80,11 @@
 
     html body .orders-print-btn {
 
-      background: var(--brand, #d9480f) !important;
+      background: var(--brand, var(--theme)) !important;
 
       color: var(--brand-ink, #fff) !important;
 
-      border: 1px solid var(--brand, #d9480f) !important;
+      border: 1px solid var(--brand, var(--theme)) !important;
 
       border-radius: 10px;
 
@@ -122,7 +126,7 @@
 
       border-radius: 50%;
 
-      background: #ef2020;
+      background: var(--theme-dark);
 
       display: none;
 
@@ -368,11 +372,11 @@
 
     html body .orders-modal .orders-tools button:not(.ghost):not(.danger) {
 
-      background: var(--brand, #d9480f) !important;
+      background: var(--brand, var(--theme)) !important;
 
       color: var(--brand-ink, #fff) !important;
 
-      border: 1px solid var(--brand, #d9480f) !important;
+      border: 1px solid var(--brand, var(--theme)) !important;
 
     }
 
@@ -408,11 +412,11 @@
 
     html body .orders-modal .orders-tools button.danger {
 
-      background: #dc2626 !important;
+      background: var(--theme-dark) !important;
 
       color: #ffffff !important;
 
-      border: 1px solid #dc2626 !important;
+      border: 1px solid var(--theme-dark) !important;
 
     }
 
@@ -420,7 +424,7 @@
 
     html body .orders-modal .orders-tools button.danger:hover {
 
-      background: #b91c1c !important;
+      background: var(--theme-darker) !important;
 
     }
 
@@ -472,7 +476,7 @@
 
       line-height: 1.65;
 
-      color: #334155;
+      color: var(--theme-dark);
 
     }
 
@@ -504,13 +508,13 @@
 
     html body .orders-modal button[data-order-status="active"] {
 
-      background: #16a34a !important;
+      background: var(--theme) !important;
 
-      background-color: #16a34a !important;
+      background-color: var(--theme) !important;
 
       color: #ffffff !important;
 
-      border: 1px solid #16a34a !important;
+      border: 1px solid var(--theme) !important;
 
       opacity: 1;
 
@@ -522,11 +526,11 @@
 
     html body .orders-modal button.order-active:hover:not(:disabled) {
 
-      background: #15803d !important;
+      background: var(--theme-dark) !important;
 
-      background-color: #15803d !important;
+      background-color: var(--theme-dark) !important;
 
-      border-color: #15803d !important;
+      border-color: var(--theme-dark) !important;
 
     }
 
@@ -542,13 +546,13 @@
 
     html body .orders-modal button[data-order-status="prepared"] {
 
-      background: #2563eb !important;
+      background: var(--theme) !important;
 
-      background-color: #2563eb !important;
+      background-color: var(--theme) !important;
 
       color: #ffffff !important;
 
-      border: 1px solid #2563eb !important;
+      border: 1px solid var(--theme) !important;
 
       opacity: 1;
 
@@ -560,11 +564,11 @@
 
     html body .orders-modal button.order-prepared:hover:not(:disabled) {
 
-      background: #1d4ed8 !important;
+      background: var(--theme-dark) !important;
 
-      background-color: #1d4ed8 !important;
+      background-color: var(--theme-dark) !important;
 
-      border-color: #1d4ed8 !important;
+      border-color: var(--theme-dark) !important;
 
     }
 
@@ -602,13 +606,13 @@
 
       grid-column: 1 / -1;
 
-      background: var(--brand, #d9480f) !important;
+      background: var(--brand, var(--theme)) !important;
 
-      background-color: var(--brand, #d9480f) !important;
+      background-color: var(--brand, var(--theme)) !important;
 
       color: var(--brand-ink, #ffffff) !important;
 
-      border: 1px solid var(--brand, #d9480f) !important;
+      border: 1px solid var(--brand, var(--theme)) !important;
 
     }
 
@@ -658,7 +662,7 @@
 
     html body .orders-modal button:focus-visible {
 
-      outline: 2px solid var(--brand, #d9480f);
+      outline: 2px solid var(--brand, var(--theme));
 
       outline-offset: 2px;
 
@@ -710,7 +714,7 @@
 
       border: 1px solid #bbf7d0;
 
-      border-left: 4px solid #16a34a;
+      border-left: 4px solid var(--theme);
 
       border-radius: 10px;
 
@@ -734,7 +738,7 @@
 
       border-color: #bfdbfe;
 
-      border-left-color: #2563eb;
+      border-left-color: var(--theme);
 
       background: #eff6ff;
 
@@ -1192,13 +1196,13 @@
 
     html body .orders-modal #ordersList button.order-active {
 
-      background: #d97706 !important;
+      background: var(--theme) !important;
 
-      background-color: #d97706 !important;
+      background-color: var(--theme) !important;
 
       color: #ffffff !important;
 
-      border: 1px solid #d97706 !important;
+      border: 1px solid var(--theme) !important;
 
       opacity: 1 !important;
 
@@ -1208,9 +1212,9 @@
 
     html body .orders-modal #ordersList button.order-active:hover {
 
-      background: #b45309 !important;
+      background: var(--theme-dark) !important;
 
-      background-color: #b45309 !important;
+      background-color: var(--theme-dark) !important;
 
     }
 
@@ -1222,9 +1226,9 @@
 
     html body .orders-modal #ordersList button.order-prepared {
 
-      background: #15803d !important;
+      background: var(--theme-dark) !important;
 
-      background-color: #15803d !important;
+      background-color: var(--theme-dark) !important;
 
       color: #ffffff !important;
 
@@ -1238,9 +1242,9 @@
 
     html body .orders-modal #ordersList button.order-prepared:hover {
 
-      background: #166534 !important;
+      background: var(--theme-darker) !important;
 
-      background-color: #166534 !important;
+      background-color: var(--theme-darker) !important;
 
     }
 
@@ -1252,13 +1256,13 @@
 
     html body .orders-modal #ordersList button.order-print {
 
-      background: #334155 !important;
+      background: var(--theme-dark) !important;
 
-      background-color: #334155 !important;
+      background-color: var(--theme-dark) !important;
 
       color: #ffffff !important;
 
-      border: 1px solid #334155 !important;
+      border: 1px solid var(--theme-dark) !important;
 
       opacity: 1 !important;
 
@@ -1268,9 +1272,9 @@
 
     html body .orders-modal #ordersList button.order-print:hover {
 
-      background: #1e293b !important;
+      background: var(--theme-darker) !important;
 
-      background-color: #1e293b !important;
+      background-color: var(--theme-darker) !important;
 
     }
 
@@ -1287,9 +1291,9 @@
 
     /* Bind the existing theme variables to the dashboard. */
     html body {
-      --brand: var(--theme, #64748b);
-      --brand-600: var(--theme-dark, #475569);
-      --brand-50: var(--theme-light, #1e293b);
+      --brand: var(--theme, var(--theme));
+      --brand-600: var(--theme-dark, var(--theme-dark));
+      --brand-50: var(--theme-light, var(--theme-darker));
       --brand-ink: var(--theme-ink, #ffffff);
     }
 
@@ -1405,44 +1409,44 @@
 
     /* Preserve the specified independent status/action colours. */
     html body .orders-modal #ordersList button.order-active {
-      background: #d97706 !important;
+      background: var(--theme) !important;
       color: #ffffff !important;
-      border: 1px solid #d97706 !important;
+      border: 1px solid var(--theme) !important;
     }
 
     html body .orders-modal #ordersList button.order-active:hover {
-      background: #b45309 !important;
+      background: var(--theme-dark) !important;
     }
 
     html body .orders-modal #ordersList button.order-prepared {
-      background: #15803d !important;
+      background: var(--theme-dark) !important;
       color: #ffffff !important;
-      border: 1px solid #15803d !important;
+      border: 1px solid var(--theme-dark) !important;
     }
 
     html body .orders-modal #ordersList button.order-prepared:hover {
-      background: #166534 !important;
+      background: var(--theme-darker) !important;
     }
 
     html body .orders-modal #ordersList button.order-print {
-      background: #334155 !important;
+      background: var(--theme-dark) !important;
       color: #ffffff !important;
-      border: 1px solid #334155 !important;
+      border: 1px solid var(--theme-dark) !important;
     }
 
     html body .orders-modal #ordersList button.order-print:hover {
-      background: #1e293b !important;
+      background: var(--theme-darker) !important;
     }
 
     /* Preserve green logout button. */
     html body .shell aside.side button.logout {
-      background: #15803d !important;
+      background: var(--theme-dark) !important;
       color: #ffffff !important;
-      border: 1px solid #15803d !important;
+      border: 1px solid var(--theme-dark) !important;
     }
 
     html body .shell aside.side button.logout:hover {
-      background: #166534 !important;
+      background: var(--theme-darker) !important;
     }
 
     /* Keep focus visible and accessible; remove orange focus glow only. */
@@ -1464,16 +1468,16 @@
 ===================================================== */
 
     :root {
-      --status-green: #16a34a;
-      --status-green-hover: #15803d;
+      --status-green: var(--theme);
+      --status-green-hover: var(--theme-dark);
 
-      --status-blue: #2563eb;
-      --status-blue-hover: #1d4ed8;
+      --status-blue: var(--theme);
+      --status-blue-hover: var(--theme-dark);
 
-      --status-red: #dc2626;
-      --status-red-hover: #b91c1c;
+      --status-red: var(--theme-dark);
+      --status-red-hover: var(--theme-darker);
 
-      --logout-green: #15803d;
+      --logout-green: #15803D;
       --logout-green-hover: #166534;
     }
 
@@ -1494,9 +1498,9 @@
 ===================================================== */
 
     html body .orders-print-btn {
-      background: var(--brand, #d9480f) !important;
+      background: var(--brand, var(--theme)) !important;
       color: var(--brand-ink, #fff) !important;
-      border: 1px solid var(--brand, #d9480f) !important;
+      border: 1px solid var(--brand, var(--theme)) !important;
       border-radius: 10px;
       padding: 10px 18px;
       font: inherit;
@@ -1517,7 +1521,7 @@
       height: 13px;
       border: 2px solid #fff;
       border-radius: 50%;
-      background: #ef2020;
+      background: var(--theme-dark);
       display: none;
       z-index: 5;
       animation: ordersDotPulse 1.2s infinite;
@@ -1640,9 +1644,9 @@
     /* Refresh */
 
     html body .orders-modal .orders-tools button:not(.ghost):not(.danger) {
-      background: var(--brand, #d9480f) !important;
+      background: var(--brand, var(--theme)) !important;
       color: var(--brand-ink, #fff) !important;
-      border: 1px solid var(--brand, #d9480f) !important;
+      border: 1px solid var(--brand, var(--theme)) !important;
     }
 
     html body .orders-modal .orders-tools button:not(.ghost):not(.danger):hover {
@@ -1660,13 +1664,13 @@
     /* Delete */
 
     html body .orders-modal .orders-tools button.danger {
-      background: #dc2626 !important;
+      background: var(--theme-dark) !important;
       color: #ffffff !important;
-      border: 1px solid #dc2626 !important;
+      border: 1px solid var(--theme-dark) !important;
     }
 
     html body .orders-modal .orders-tools button.danger:hover {
-      background: #b91c1c !important;
+      background: var(--theme-darker) !important;
     }
 
     /* =====================================================
@@ -1692,7 +1696,7 @@
     .order-meta {
       font-size: 13px;
       line-height: 1.65;
-      color: #334155;
+      color: var(--theme-dark);
     }
 
     .order-title {
@@ -1708,18 +1712,18 @@
     html body .orders-modal .order-actions>button.order-active,
     html body .orders-modal button.order-active,
     html body .orders-modal button[data-order-status="active"] {
-      background: #16a34a !important;
-      background-color: #16a34a !important;
+      background: var(--theme) !important;
+      background-color: var(--theme) !important;
       color: #ffffff !important;
-      border: 1px solid #16a34a !important;
+      border: 1px solid var(--theme) !important;
       opacity: 1;
     }
 
     html body .orders-modal .order-actions>button.order-active:hover:not(:disabled),
     html body .orders-modal button.order-active:hover:not(:disabled) {
-      background: #15803d !important;
-      background-color: #15803d !important;
-      border-color: #15803d !important;
+      background: var(--theme-dark) !important;
+      background-color: var(--theme-dark) !important;
+      border-color: var(--theme-dark) !important;
     }
 
     /* Prepared - BLUE */
@@ -1727,18 +1731,18 @@
     html body .orders-modal .order-actions>button.order-prepared,
     html body .orders-modal button.order-prepared,
     html body .orders-modal button[data-order-status="prepared"] {
-      background: #2563eb !important;
-      background-color: #2563eb !important;
+      background: var(--theme) !important;
+      background-color: var(--theme) !important;
       color: #ffffff !important;
-      border: 1px solid #2563eb !important;
+      border: 1px solid var(--theme) !important;
       opacity: 1;
     }
 
     html body .orders-modal .order-actions>button.order-prepared:hover:not(:disabled),
     html body .orders-modal button.order-prepared:hover:not(:disabled) {
-      background: #1d4ed8 !important;
-      background-color: #1d4ed8 !important;
-      border-color: #1d4ed8 !important;
+      background: var(--theme-dark) !important;
+      background-color: var(--theme-dark) !important;
+      border-color: var(--theme-dark) !important;
     }
 
     /* Disabled buttons */
@@ -1757,10 +1761,10 @@
     html body .orders-modal .order-actions>button.order-print,
     html body .orders-modal button.order-print {
       grid-column: 1 / -1;
-      background: var(--brand, #d9480f) !important;
-      background-color: var(--brand, #d9480f) !important;
+      background: var(--brand, var(--theme)) !important;
+      background-color: var(--brand, var(--theme)) !important;
       color: var(--brand-ink, #ffffff) !important;
-      border: 1px solid var(--brand, #d9480f) !important;
+      border: 1px solid var(--brand, var(--theme)) !important;
     }
 
     html body .orders-modal button.order-print:hover {
@@ -1785,7 +1789,7 @@
     }
 
     html body .orders-modal button:focus-visible {
-      outline: 2px solid var(--brand, #d9480f);
+      outline: 2px solid var(--brand, var(--theme));
       outline-offset: 2px;
     }
 
@@ -1811,7 +1815,7 @@
       align-items: flex-start;
       padding: 12px 38px 12px 14px;
       border: 1px solid #bbf7d0;
-      border-left: 4px solid #16a34a;
+      border-left: 4px solid var(--theme);
       border-radius: 10px;
       background: #f0fdf4;
       color: #14532d;
@@ -1823,7 +1827,7 @@
 
     .order-notification.prepared {
       border-color: #bfdbfe;
-      border-left-color: #2563eb;
+      border-left-color: var(--theme);
       background: #eff6ff;
       color: #1e3a8a;
     }
@@ -2052,46 +2056,46 @@
 
     /* ACTIVE - ORANGE */
     html body .orders-modal #ordersList button.order-active {
-      background: #d97706 !important;
-      background-color: #d97706 !important;
+      background: var(--theme) !important;
+      background-color: var(--theme) !important;
       color: #ffffff !important;
-      border: 1px solid #d97706 !important;
+      border: 1px solid var(--theme) !important;
       opacity: 1 !important;
     }
 
     html body .orders-modal #ordersList button.order-active:hover {
-      background: #b45309 !important;
-      background-color: #b45309 !important;
+      background: var(--theme-dark) !important;
+      background-color: var(--theme-dark) !important;
     }
 
 
     /* PREPARED - GREEN */
     html body .orders-modal #ordersList button.order-prepared {
-      background: #15803d !important;
-      background-color: #15803d !important;
+      background: var(--theme-dark) !important;
+      background-color: var(--theme-dark) !important;
       color: #ffffff !important;
       border: none !important;
       opacity: 1 !important;
     }
 
     html body .orders-modal #ordersList button.order-prepared:hover {
-      background: #166534 !important;
-      background-color: #166534 !important;
+      background: var(--theme-darker) !important;
+      background-color: var(--theme-darker) !important;
     }
 
 
     /* PRINT BILL - DARK NAVY */
     html body .orders-modal #ordersList button.order-print {
-      background: #334155 !important;
-      background-color: #334155 !important;
+      background: var(--theme-dark) !important;
+      background-color: var(--theme-dark) !important;
       color: #ffffff !important;
-      border: 1px solid #334155 !important;
+      border: 1px solid var(--theme-dark) !important;
       opacity: 1 !important;
     }
 
     html body .orders-modal #ordersList button.order-print:hover {
-      background: #1e293b !important;
-      background-color: #1e293b !important;
+      background: var(--theme-darker) !important;
+      background-color: var(--theme-darker) !important;
     }
 
     /* =====================================================
@@ -2257,7 +2261,7 @@
 ----------------------------------------- */
 
     html body .orders-modal #ordersList button.order-print {
-      background: #334155 !important;
+      background: var(--theme-dark) !important;
       color: #ffffff !important;
       border: none !important;
     }
@@ -2268,7 +2272,7 @@
 ----------------------------------------- */
 
     html body .orders-modal #ordersList button.order-active {
-      background: #d97706 !important;
+      background: var(--theme) !important;
       color: #ffffff !important;
       border: none !important;
     }
@@ -2279,7 +2283,7 @@
 ----------------------------------------- */
 
     html body .orders-modal #ordersList button.order-prepared {
-      background: #15803d !important;
+      background: var(--theme-dark) !important;
       color: #ffffff !important;
       border: none !important;
     }
@@ -2290,13 +2294,13 @@
 ----------------------------------------- */
 
     html body .shell aside.side button.logout {
-      background: #15803d !important;
+      background: var(--theme-dark) !important;
       color: #ffffff !important;
       border: none !important;
     }
 
     html body .shell aside.side button.logout:hover {
-      background: #166534 !important;
+      background: var(--theme-darker) !important;
       border: none !important;
     }
 
@@ -2324,8 +2328,8 @@
     html body .shell aside.side nav#tabs>button.active,
     html body .shell aside.side nav#tabs>button[aria-current="page"],
     html body .shell aside.side nav#tabs>button[aria-selected="true"] {
-      background: var(--theme, #d97706) !important;
-      background-color: var(--theme, #d97706) !important;
+      background: var(--theme, var(--theme)) !important;
+      background-color: var(--theme, var(--theme)) !important;
       color: var(--theme-ink, #ffffff) !important;
       border: none !important;
       box-shadow: none !important;
@@ -2333,8 +2337,8 @@
 
     html body .shell aside.side nav#tabs>button.on:hover,
     html body .shell aside.side nav#tabs>button.active:hover {
-      background: var(--theme-dark, #b45309) !important;
-      background-color: var(--theme-dark, #b45309) !important;
+      background: var(--theme-dark, var(--theme-dark)) !important;
+      background-color: var(--theme-dark, var(--theme-dark)) !important;
       color: var(--theme-ink, #ffffff) !important;
     }
 
@@ -2407,15 +2411,451 @@
     html body .shell .subtabs button[data-subtab]:hover {
       transition: background .2s ease;
     }
+
+    /* =====================================================
+   FIX INITIAL DASHBOARD BLUE BUTTONS
+   Use the restaurant owner's saved theme colour
+===================================================== */
+
+    /* Active sidebar button */
+    html body .shell #tabs>button.on {
+      background: var(--theme) !important;
+      background-color: var(--theme) !important;
+      color: var(--theme-ink, #ffffff) !important;
+      border-color: var(--theme) !important;
+    }
+
+    /* Orders / Print Bills */
+    html body #ordersPrintBills.orders-print-btn {
+      background: var(--theme) !important;
+      background-color: var(--theme) !important;
+      color: var(--theme-ink, #ffffff) !important;
+      border-color: var(--theme) !important;
+    }
+
+    /* Add Menu and Add Item */
+    html body #addMenu,
+    html body #addItem {
+      background: var(--theme) !important;
+      background-color: var(--theme) !important;
+      color: var(--theme-ink, #ffffff) !important;
+      border-color: var(--theme) !important;
+    }
+
+    /* Selected Grid / List button */
+    html body #itemView button.active,
+    html body #itemView button.on,
+    html body #itemView button.active-view,
+    html body #itemView button[aria-pressed="true"] {
+      background: var(--theme) !important;
+      background-color: var(--theme) !important;
+      color: var(--theme-ink, #ffffff) !important;
+      border-color: var(--theme) !important;
+    }
+
+    /* Hover */
+    html body #ordersPrintBills:hover,
+    html body #addMenu:hover,
+    html body #addItem:hover {
+      background: var(--theme-dark) !important;
+      background-color: var(--theme-dark) !important;
+      border-color: var(--theme-dark) !important;
+    }
+
+    /* ==========================================
+   VIGNADIGITAL – APPLY RESTAURANT THEME
+========================================== */
+
+    html body {
+      --brand: var(--theme, #f97316);
+      --brand-600: var(--theme-dark, #ea580c);
+      --brand-50: var(--theme-light, #fff7ed);
+      --brand-ink: var(--theme-ink, #ffffff);
+    }
+
+    /* Active sidebar navigation */
+    html body #tabs button.on,
+    html body #tabs button.active,
+    html body #tabs button[aria-current="page"] {
+      background: var(--theme) !important;
+      background-color: var(--theme) !important;
+      color: var(--theme-ink, #fff) !important;
+      border-color: var(--theme) !important;
+    }
+
+    /* Orders / Print Bills */
+    html body #ordersPrintBills,
+    html body #ordersPrintBillsSidebar {
+      background: var(--theme) !important;
+      color: var(--theme-ink, #fff) !important;
+      border-color: var(--theme) !important;
+    }
+
+    /* Add Menu and Add Item */
+    html body #addMenu,
+    html body #addItem,
+    html body button#addMenu,
+    html body button#addItem {
+      background: var(--theme) !important;
+      color: var(--theme-ink, #fff) !important;
+      border-color: var(--theme) !important;
+    }
+
+    /* Other primary buttons */
+    html body button.lg,
+    html body #pf button[type="submit"],
+    html body #catForm button[type="submit"],
+    html body #upiForm button[type="submit"],
+    html body #pwf button[type="submit"],
+    html body #dlQr {
+      background: var(--theme) !important;
+      color: var(--theme-ink, #fff) !important;
+      border-color: var(--theme) !important;
+    }
+
+    /* Hover effects */
+    html body #ordersPrintBills:hover,
+    html body #ordersPrintBillsSidebar:hover,
+    html body #addMenu:hover,
+    html body #addItem:hover,
+    html body button.lg:hover,
+    html body #dlQr:hover {
+      background: var(--theme-dark) !important;
+      border-color: var(--theme-dark) !important;
+    }
+
+    /* Selected view buttons */
+    html body #itemView button.active,
+    html body #itemView button.on,
+    html body #itemView button[aria-pressed="true"] {
+      background: var(--theme) !important;
+      color: var(--theme-ink, #fff) !important;
+      border-color: var(--theme) !important;
+    }
+
+    /* Restaurant details active tabs */
+    html body .subtabs button.on,
+    html body .subtabs button.active {
+      background: var(--theme) !important;
+      color: var(--theme-ink, #fff) !important;
+      border-color: var(--theme) !important;
+    }
+
+    /* Statistics */
+    html body .stat.hl,
+    html body .stat.big {
+      background: var(--theme-light) !important;
+      border-color: var(--theme) !important;
+    }
+
+    html body .stat.hl b,
+    html body .stat.big b {
+      color: var(--theme) !important;
+    }
+
+    /* Item card category labels and prices */
+    html body .item .price,
+    html body .item .item-price {
+      color: var(--theme) !important;
+    }
+
+    /* Theme focus */
+    html body button:focus-visible,
+    html body input:focus-visible,
+    html body select:focus-visible {
+      outline-color: var(--theme) !important;
+    }
+
+    /* ==========================================
+   VIGNA DIGITAL - DYNAMIC RESTAURANT THEME
+   ========================================== */
+
+    :root {
+      --theme-color: var(--theme);
+    }
+
+    /* ALL PRIMARY BUTTONS */
+    button,
+    .btn,
+    .btn-primary,
+    .primary-btn,
+    .save-btn,
+    .submit-btn,
+    .action-btn,
+    .add-btn,
+    .order-btn,
+    .checkout-btn {
+      transition: all 0.25s ease;
+    }
+
+    /* Primary button backgrounds */
+    .btn-primary,
+    .primary-btn,
+    .save-btn,
+    .submit-btn,
+    .action-btn,
+    .add-btn,
+    .order-btn,
+    .checkout-btn,
+    button.primary,
+    button[type="submit"] {
+      background: var(--theme-color) !important;
+      border-color: var(--theme-color) !important;
+      color: #ffffff !important;
+    }
+
+    /* Hover effects */
+    .btn-primary:hover,
+    .primary-btn:hover,
+    .save-btn:hover,
+    .submit-btn:hover,
+    .action-btn:hover,
+    .add-btn:hover,
+    .order-btn:hover,
+    .checkout-btn:hover,
+    button.primary:hover,
+    button[type="submit"]:hover {
+      background: var(--theme-hover) !important;
+      border-color: var(--theme-hover) !important;
+      transform: translateY(-1px);
+    }
+
+    /* ACTIVE TABS */
+    .tab.active,
+    .tab-btn.active,
+    .nav-tab.active,
+    .settings-tab.active,
+    [aria-selected="true"] {
+      background: var(--theme-color) !important;
+      border-color: var(--theme-color) !important;
+      color: #ffffff !important;
+    }
+
+    /* SIDEBAR ACTIVE ITEM */
+    .sidebar a.active,
+    .sidebar button.active,
+    .nav-item.active,
+    .menu-item.active {
+      background: var(--theme-color) !important;
+      color: #ffffff !important;
+    }
+
+    /* SELECTED NAVIGATION */
+    .sidebar a:hover,
+    .sidebar button:hover,
+    .nav-item:hover {
+      border-color: var(--theme-border);
+    }
+
+    /* ORDERS / PRINT BILLS BUTTON */
+    .orders-btn,
+    .print-bill-btn,
+    .header-action-btn {
+      background: var(--theme-color) !important;
+      color: white !important;
+      border-color: var(--theme-color) !important;
+    }
+
+    /* INPUT FOCUS */
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: var(--theme-color) !important;
+      outline-color: var(--theme-color) !important;
+      box-shadow: 0 0 0 2px var(--theme-light) !important;
+    }
+
+    /* CHECKBOX AND RADIO */
+    input[type="checkbox"],
+    input[type="radio"] {
+      accent-color: var(--theme-color);
+    }
+
+    /* LINKS */
+    a:hover {
+      color: var(--theme-color);
+    }
+
+    /* ICON BUTTONS */
+    .icon-btn:hover,
+    .action-icon:hover {
+      color: var(--theme-color);
+      border-color: var(--theme-color);
+    }
+
+    /* BADGES */
+    .badge-primary,
+    .status-active {
+      background: var(--theme-light);
+      color: var(--theme-color);
+    }
+
+    /* REMOVE DEFAULT BLUE BUTTON COLORS */
+    button:focus-visible,
+    a:focus-visible {
+      outline: 2px solid var(--theme-color);
+      outline-offset: 2px;
+    }
+  </style>
+
+  <style>
+    /* Final dashboard button contract:
+       order status actions are intentionally independent from the restaurant theme. */
+    html body.owner-dashboard #ordersPrintBills,
+    html body.owner-dashboard #ordersPrintBillsSidebar,
+    html body.owner-dashboard #refreshOrders,
+    html body.owner-dashboard #downloadOrdersPdf,
+    html body.owner-dashboard #addMenu,
+    html body.owner-dashboard #addItem,
+    html body.owner-dashboard #catForm button,
+    html body.owner-dashboard #pf button[type="submit"],
+    html body.owner-dashboard #upiForm button[type="submit"],
+    html body.owner-dashboard #pwf button[type="submit"],
+    html body.owner-dashboard #dlQr {
+      background: var(--theme) !important;
+      background-color: var(--theme) !important;
+      border: 1px solid var(--theme) !important;
+      color: var(--theme-ink) !important;
+      border-radius: 9px;
+      transition: background-color .2s ease, border-color .2s ease, color .2s ease;
+    }
+
+    html body.owner-dashboard #downloadOrdersPdf {
+      background: var(--theme-light) !important;
+      background-color: var(--theme-light) !important;
+      border-color: var(--theme-border) !important;
+      color: var(--theme) !important;
+    }
+
+    html body.owner-dashboard #ordersPrintBills:hover,
+    html body.owner-dashboard #ordersPrintBillsSidebar:hover,
+    html body.owner-dashboard #refreshOrders:hover,
+    html body.owner-dashboard #downloadOrdersPdf:hover,
+    html body.owner-dashboard #addMenu:hover,
+    html body.owner-dashboard #addItem:hover,
+    html body.owner-dashboard #catForm button:hover,
+    html body.owner-dashboard #pf button[type="submit"]:hover,
+    html body.owner-dashboard #upiForm button[type="submit"]:hover,
+    html body.owner-dashboard #pwf button[type="submit"]:hover,
+    html body.owner-dashboard #dlQr:hover {
+      background: var(--theme-dark) !important;
+      background-color: var(--theme-dark) !important;
+      border-color: var(--theme-dark) !important;
+    }
+
+    html body.owner-dashboard #downloadOrdersPdf:hover {
+      background: var(--theme-soft) !important;
+      background-color: var(--theme-soft) !important;
+      border-color: var(--theme) !important;
+      color: var(--theme-dark) !important;
+    }
+
+    html body.owner-dashboard .orders-modal #ordersList button.order-active,
+    html body.owner-dashboard .orders-modal #ordersList button[data-order-status="active"] {
+      background: #E58A24 !important;
+      background-color: #E58A24 !important;
+      border: 1px solid #E58A24 !important;
+      color: #ffffff !important;
+    }
+
+    html body.owner-dashboard .orders-modal #ordersList button.order-active:hover:not(:disabled),
+    html body.owner-dashboard .orders-modal #ordersList button[data-order-status="active"]:hover:not(:disabled) {
+      background: #C87516 !important;
+      background-color: #C87516 !important;
+      border-color: #C87516 !important;
+    }
+
+    html body.owner-dashboard .orders-modal #ordersList button.order-prepared,
+    html body.owner-dashboard .orders-modal #ordersList button[data-order-status="prepared"] {
+      background: #15803D !important;
+      background-color: #15803D !important;
+      border: 1px solid #15803D !important;
+      color: #ffffff !important;
+    }
+
+    html body.owner-dashboard .orders-modal #ordersList button.order-prepared:hover:not(:disabled),
+    html body.owner-dashboard .orders-modal #ordersList button[data-order-status="prepared"]:hover:not(:disabled) {
+      background: #166534 !important;
+      background-color: #166534 !important;
+      border-color: #166534 !important;
+    }
+
+    html body.owner-dashboard .orders-modal #ordersList button.order-print {
+      background: #2563EB !important;
+      background-color: #2563EB !important;
+      border: 1px solid #2563EB !important;
+      color: #ffffff !important;
+    }
+
+    html body.owner-dashboard .orders-modal #ordersList button.order-print:hover {
+      background: #1D4ED8 !important;
+      background-color: #1D4ED8 !important;
+      border-color: #1D4ED8 !important;
+    }
+
+    html body.owner-dashboard .orders-modal #deleteOldOrders {
+      background: #DC2626 !important;
+      background-color: #DC2626 !important;
+      border: 1px solid #DC2626 !important;
+      color: #ffffff !important;
+    }
+
+    html body.owner-dashboard .orders-modal #deleteOldOrders:hover:not(:disabled) {
+      background: #B91C1C !important;
+      background-color: #B91C1C !important;
+      border-color: #B91C1C !important;
+    }
+
+    html body.owner-dashboard .orders-modal #deleteSelectedOrders {
+      background: #E87979 !important;
+      background-color: #E87979 !important;
+      border: 1px solid #E87979 !important;
+      color: #ffffff !important;
+    }
+
+    html body.owner-dashboard .orders-modal #deleteSelectedOrders:hover:not(:disabled) {
+      background: #DC5555 !important;
+      background-color: #DC5555 !important;
+      border-color: #DC5555 !important;
+    }
+
+    html body.owner-dashboard .side button.logout {
+      background: #15803D !important;
+      background-color: #15803D !important;
+      border: 1px solid #15803D !important;
+      color: #ffffff !important;
+    }
+
+    html body.owner-dashboard .side button.logout:hover {
+      background: #166534 !important;
+      background-color: #166534 !important;
+      border-color: #166534 !important;
+    }
+
+    html body.owner-dashboard .orders-modal button:focus-visible,
+    html body.owner-dashboard .orders-modal a:focus-visible,
+    html body.owner-dashboard .side button.logout:focus-visible {
+      outline: 2px solid currentColor !important;
+      outline-offset: 2px;
+      box-shadow: none !important;
+    }
+
+    html body.owner-dashboard .orders-modal button:disabled {
+      cursor: not-allowed;
+      opacity: .55;
+    }
   </style>
 </head>
 
-<body>
+<body class="owner-dashboard">
   <div class="shell">
     <aside class="side">
-      <div class="brand">
-        <div class="mark" data-ico="menu"></div>
-        <div><span id="brandName">Restaurant</span><small>Menu dashboard</small></div>
+      <div class="sidebar-brand" id="sidebarBrandLogo">
+        <img id="sidebarRestaurantLogo" alt="Restaurant logo" hidden>
+        <div class="sidebar-brand-text">
+          <span id="brandName">Restaurant</span>
+          <small>Menu dashboard</small>
+        </div>
       </div>
       <nav class="tabs" id="tabs">
         <button class="on" data-tab="items" data-ico="list" data-title="Menu items"
@@ -2430,9 +2870,10 @@
       </nav>
       <div class="spacer"></div>
       <button class="logout" onclick="logout()" data-ico="logout" style="
-        background: #15803d !important;
-        background-color: #15803d !important;
+        background: #15803D !important;
+        background-color: #15803D !important;
         color: #ffffff !important;
+        border: 1px solid #15803D !important;
         border-radius: 10px !important;
         width: 100%;
         font-weight: 700;
@@ -2547,7 +2988,8 @@
                   name="tagline" maxlength="120" placeholder="Authentic family dining"></div>
             </div>
             <div class="err pfErr" role="alert"></div>
-            <div class="card-foot"><button class="lg">Save details</button></div>
+            <div class="card-foot"><button type="button" class="ghost sm" id="restoreThemePreview">Restore saved
+                color</button><button class="lg">Save details</button></div>
           </div>
           <div class="card hidden" data-subpanel="business">
             <h3>Business information</h3>
@@ -2590,7 +3032,7 @@
           <div style="margin-top:14px">
             <label>QR code preview</label>
             <div id="upiQrPreview"
-              style="width:180px;min-height:100px;padding:10px;border:1px dashed #cbd5e1;border-radius:12px;display:flex;align-items:center;justify-content:center;background:#fff;color:#64748b">
+              style="width:180px;min-height:100px;padding:10px;border:1px dashed var(--theme-border);border-radius:12px;display:flex;align-items:center;justify-content:center;background:#fff;color:var(--theme)">
               No QR image uploaded
             </div>
           </div>
@@ -2651,161 +3093,796 @@
   <script src="/app.js"></script>
   <script src="/menu-library.js"></script>
   <script>
-    let profile, categories = [], items = [], logoData = null, logoRemoved = false;
-    const thumbHtml = (img, name) => img ? `<img src="${esc(img)}" alt="" loading="lazy">` : esc((name || '?').trim().charAt(0).toUpperCase());
+    let profile, categories = [], items = [], logoData = null, logoRemoved = false, savedThemeColor = '';
 
-    // ---------- items ----------
+    const thumbHtml = (img, name) =>
+      img
+        ? `<img src="${esc(img)}" alt="" loading="lazy">`
+        : esc((name || '?').trim().charAt(0).toUpperCase());
+
+    // ---------- ITEMS ----------
+
     function renderItemStats() {
-      const on = items.filter((i) => i.available).length;
-      $('#itemStats').innerHTML = [['Total items', items.length, 'hl big'], ['Available', on], ['Hidden', items.length - on], ['Categories', categories.length]]
-        .map(([l, v, c]) => `<div class="stat ${c || ''}"><span>${l}</span><b>${v}</b></div>`).join('');
+      const on = items.filter(i => i.available).length;
+
+      $('#itemStats').innerHTML = [
+        ['Total items', items.length, 'hl big'],
+        ['Available', on],
+        ['Hidden', items.length - on],
+        ['Categories', categories.length]
+      ].map(([l, v, c]) =>
+        `<div class="stat ${c || ''}"><span>${l}</span><b>${v}</b></div>`
+      ).join('');
     }
+
     function renderItems() {
       renderItemStats();
-      const q = $('#iSearch').value.trim().toLowerCase(), cat = $('#iCat').value;
-      const rows = items.filter((i) => (!cat || String(i.category_id) === cat) && (!q || i.name.toLowerCase().includes(q) || i.description.toLowerCase().includes(q)));
-      $('#itemList').innerHTML = rows.length ? rows.map((i) => `<div class="item ${i.available ? '' : 'off'}" style="--tc:${esc(profile.theme_color)}">
-    <div class="thumb">${thumbHtml(i.image, i.name)}</div>
-    <div class="item-body"><div class="nm">${esc(i.name)}</div><div><span class="pill">${esc(i.category)}</span> ${i.available ? '' : '<span class="pill warn">Hidden</span>'}</div>
-      <div class="ds">${esc(i.description)}</div><div class="price">${rupees(i.price)}</div>
-      <div class="item-foot"><button class="sm ghost" data-act="edit" data-id="${i.id}">Edit</button><button class="sm ghost" data-act="toggle" data-id="${i.id}">${i.available ? 'Hide' : 'Show'}</button><button class="sm danger" data-act="del" data-id="${i.id}">Delete</button></div></div></div>`).join('')
-        : `<div class="card empty" style="grid-column:1/-1">${items.length ? 'No items match your search.' : 'No items yet. Click “Add item” to create your first dish.'}</div>`;
+
+      const q = $('#iSearch').value.trim().toLowerCase();
+      const cat = $('#iCat').value;
+
+      const rows = items.filter(i =>
+        (!cat || String(i.category_id) === cat) &&
+        (!q ||
+          i.name.toLowerCase().includes(q) ||
+          i.description.toLowerCase().includes(q))
+      );
+
+      $('#itemList').innerHTML = rows.length
+        ? rows.map(i => `
+      <div class="item ${i.available ? '' : 'off'}"
+           style="--tc:${esc(profile.theme_color)}">
+
+        <div class="thumb">
+          ${thumbHtml(i.image, i.name)}
+        </div>
+
+        <div class="item-body">
+          <div class="nm">${esc(i.name)}</div>
+
+          <div>
+            <span class="pill">${esc(i.category)}</span>
+            ${i.available ? '' : '<span class="pill warn">Hidden</span>'}
+          </div>
+
+          <div class="ds">${esc(i.description)}</div>
+          <div class="price">${rupees(i.price)}</div>
+
+          <div class="item-foot">
+            <button class="sm ghost" data-act="edit" data-id="${i.id}">
+              Edit
+            </button>
+
+            <button class="sm ghost" data-act="toggle" data-id="${i.id}">
+              ${i.available ? 'Hide' : 'Show'}
+            </button>
+
+            <button class="sm danger" data-act="del" data-id="${i.id}">
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    `).join('')
+        : `<div class="card empty" style="grid-column:1/-1">
+        ${items.length
+          ? 'No items match your search.'
+          : 'No items yet. Click “Add item” to create your first dish.'}
+      </div>`;
     }
+
     function fillCategoryFilter() {
       const cur = $('#iCat').value;
-      $('#iCat').innerHTML = '<option value="">All categories</option>' + categories.map((c) => `<option value="${c.id}">${esc(c.name)}</option>`).join('');
+
+      $('#iCat').innerHTML =
+        '<option value="">All categories</option>' +
+        categories.map(c =>
+          `<option value="${c.id}">${esc(c.name)}</option>`
+        ).join('');
+
       $('#iCat').value = cur;
     }
+
     async function loadAll() {
-      const [c, i] = await Promise.all([api('/api/v1/categories'), api('/api/v1/items')]);
-      categories = c.categories; items = i.items;
-      fillCategoryFilter(); renderItems(); renderCategories();
+      const [c, i] = await Promise.all([
+        api('/api/v1/categories'),
+        api('/api/v1/items')
+      ]);
+
+      categories = c.categories;
+      items = i.items;
+
+      fillCategoryFilter();
+      renderItems();
+      renderCategories();
     }
-    ['input', 'change'].forEach((ev) => ['#iSearch', '#iCat'].forEach((id) => $(id).addEventListener(ev, renderItems)));
+
+    ['input', 'change'].forEach(ev =>
+      ['#iSearch', '#iCat'].forEach(id =>
+        $(id).addEventListener(ev, renderItems)
+      )
+    );
+
+    // ---------- ITEM MODAL ----------
 
     function itemModal(item) {
-      if (!categories.length) { toast('Create a category first'); showTab('categories'); return; }
+      if (!categories.length) {
+        toast('Create a category first');
+        showTab('categories');
+        return;
+      }
+
       let image, removeImg = false;
+
       const m = openModal({
-        title: item ? 'Edit item' : 'Add item', wide: true, html: `
-    <form id="itemForm">
-      <div class="img-pick"><div class="thumb" id="ipPrev" style="--tc:${esc(profile.theme_color)}">${thumbHtml(item?.image, item?.name || '?')}</div>
-        <div><input type="file" id="ipFile" accept="image/png,image/jpeg,image/webp"><button type="button" class="ghost sm" id="ipRemove" style="margin-top:8px">Remove image</button><div class="small muted" style="margin-top:6px">Photos are resized automatically.</div></div></div>
-      <label>Item name</label><input name="name" required maxlength="80" value="${esc(item?.name || '')}">
-      <div class="row">
-        <div><label>Price (₹)</label><input name="price" type="number" min="0" step="0.01" inputmode="decimal" required value="${item ? item.price : ''}"></div>
-        <div><label>Category</label><select name="category_id" required>${categories.map((c) => `<option value="${c.id}" ${item?.category_id === c.id ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</select></div>
-      </div>
-      <label>Description</label><textarea name="description" maxlength="300" placeholder="What is in it? Any note for guests?">${esc(item?.description || '')}</textarea>
-      <label class="check"><input type="checkbox" name="available" ${!item || item.available ? 'checked' : ''}> Show this item on the menu</label>
-      <div class="err" id="itemErr" role="alert"></div>
-      <div class="card-foot"><button type="button" class="ghost" data-close>Cancel</button><button id="itemSave">${item ? 'Save changes' : 'Add item'}</button></div>
-    </form>` });
-      const prev = $('#ipPrev', m);
-      $('#ipFile', m).addEventListener('change', async (e) => {
-        const f = e.target.files[0]; if (!f) return;
-        try { image = await resizeImage(f); removeImg = false; prev.innerHTML = `<img src="${image}" alt="">`; } catch (er) { $('#itemErr', m).textContent = er.message; }
+        title: item ? 'Edit item' : 'Add item',
+        wide: true,
+
+        html: `
+      <form id="itemForm">
+
+        <div class="img-pick">
+          <div class="thumb" id="ipPrev"
+               style="--tc:${esc(profile.theme_color)}">
+            ${thumbHtml(item?.image, item?.name || '?')}
+          </div>
+
+          <div>
+            <input type="file" id="ipFile"
+                   accept="image/png,image/jpeg,image/webp">
+
+            <button type="button" class="ghost sm"
+                    id="ipRemove" style="margin-top:8px">
+              Remove image
+            </button>
+
+            <div class="small muted" style="margin-top:6px">
+              Photos are resized automatically.
+            </div>
+          </div>
+        </div>
+
+        <label>Item name</label>
+        <input name="name" required maxlength="80"
+               value="${esc(item?.name || '')}">
+
+        <div class="row">
+          <div>
+            <label>Price (₹)</label>
+            <input name="price" type="number"
+                   min="0" step="0.01"
+                   inputmode="decimal" required
+                   value="${item ? item.price : ''}">
+          </div>
+
+          <div>
+            <label>Category</label>
+            <select name="category_id" required>
+              ${categories.map(c => `
+                <option value="${c.id}"
+                  ${item?.category_id === c.id ? 'selected' : ''}>
+                  ${esc(c.name)}
+                </option>
+              `).join('')}
+            </select>
+          </div>
+        </div>
+
+        <label>Description</label>
+        <textarea name="description" maxlength="300"
+          placeholder="What is in it? Any note for guests?">${esc(item?.description || '')}</textarea>
+
+        <label class="check">
+          <input type="checkbox" name="available"
+            ${!item || item.available ? 'checked' : ''}>
+          Show this item on the menu
+        </label>
+
+        <div class="err" id="itemErr" role="alert"></div>
+
+        <div class="card-foot">
+          <button type="button" class="ghost" data-close>
+            Cancel
+          </button>
+
+          <button id="itemSave">
+            ${item ? 'Save changes' : 'Add item'}
+          </button>
+        </div>
+      </form>
+    `
       });
-      $('#ipRemove', m).addEventListener('click', () => { image = undefined; removeImg = true; prev.textContent = ($('[name=name]', m).value || '?').trim().charAt(0).toUpperCase(); $('#ipFile', m).value = ''; });
-      $('#itemForm', m).addEventListener('submit', async (e) => {
-        e.preventDefault(); $('#itemErr', m).textContent = ''; $('#itemSave', m).disabled = true;
+
+      const prev = $('#ipPrev', m);
+
+      $('#ipFile', m).addEventListener('change', async e => {
+        const f = e.target.files[0];
+        if (!f) return;
+
+        try {
+          image = await resizeImage(f);
+          removeImg = false;
+          prev.innerHTML = `<img src="${image}" alt="">`;
+        } catch (er) {
+          $('#itemErr', m).textContent = er.message;
+        }
+      });
+
+      $('#ipRemove', m).addEventListener('click', () => {
+        image = undefined;
+        removeImg = true;
+
+        prev.textContent =
+          ($('[name=name]', m).value || '?').trim().charAt(0).toUpperCase();
+
+        $('#ipFile', m).value = '';
+      });
+
+      $('#itemForm', m).addEventListener('submit', async e => {
+        e.preventDefault();
+
+        $('#itemErr', m).textContent = '';
+        $('#itemSave', m).disabled = true;
+
         const f = e.target.elements;
-        const body = { name: f.name.value, price: f.price.value, category_id: f.category_id.value, description: f.description.value, available: f.available.checked, image, remove_image: removeImg };
-        try { await api(item ? `/api/v1/items/${item.id}` : '/api/v1/items', item ? 'PUT' : 'POST', body); closeModal(); toast(item ? 'Item saved' : 'Item added'); await loadAll(); }
-        catch (er) { $('#itemErr', m).textContent = er.message; $('#itemSave', m).disabled = false; }
+
+        const body = {
+          name: f.name.value,
+          price: f.price.value,
+          category_id: f.category_id.value,
+          description: f.description.value,
+          available: f.available.checked,
+          image,
+          remove_image: removeImg
+        };
+
+        try {
+          await api(
+            item ? `/api/v1/items/${item.id}` : '/api/v1/items',
+            item ? 'PUT' : 'POST',
+            body
+          );
+
+          closeModal();
+          toast(item ? 'Item saved' : 'Item added');
+
+          await loadAll();
+
+        } catch (er) {
+          $('#itemErr', m).textContent = er.message;
+          $('#itemSave', m).disabled = false;
+        }
       });
     }
+
     $('#addItem').addEventListener('click', () => itemModal(null));
-    $('#addMenu').addEventListener('click', () => MenuLibrary.open({ base: '/api/v1', onDone: loadAll }));
-    $('#itemList').addEventListener('click', async (e) => {
-      const b = e.target.closest('button[data-act]'); if (!b) return;
-      const i = items.find((x) => x.id == b.dataset.id);
+
+    $('#addMenu').addEventListener('click', () =>
+      MenuLibrary.open({
+        base: '/api/v1',
+        onDone: loadAll
+      })
+    );
+
+    $('#itemList').addEventListener('click', async e => {
+      const b = e.target.closest('button[data-act]');
+      if (!b) return;
+
+      const i = items.find(x => x.id == b.dataset.id);
+
       try {
-        if (b.dataset.act === 'edit') itemModal(i);
-        else if (b.dataset.act === 'toggle') { await api(`/api/v1/items/${i.id}/availability`, 'PATCH', { available: !i.available }); await loadAll(); toast(i.available ? 'Item hidden from menu' : 'Item is visible again'); }
-        else if (await confirmDialog({ title: 'Delete this item?', message: `"${i.name}" will be removed from your menu. This can't be undone.`, confirmText: 'Delete item', danger: true })) { await api(`/api/v1/items/${i.id}`, 'DELETE'); await loadAll(); toast('Item deleted'); }
-      } catch (er) { toast(er.message); }
+        if (b.dataset.act === 'edit') {
+          itemModal(i);
+
+        } else if (b.dataset.act === 'toggle') {
+          await api(
+            `/api/v1/items/${i.id}/availability`,
+            'PATCH',
+            { available: !i.available }
+          );
+
+          await loadAll();
+
+          toast(i.available
+            ? 'Item hidden from menu'
+            : 'Item is visible again'
+          );
+
+        } else if (
+          await confirmDialog({
+            title: 'Delete this item?',
+            message: `"${i.name}" will be removed from your menu. This can't be undone.`,
+            confirmText: 'Delete item',
+            danger: true
+          })
+        ) {
+          await api(`/api/v1/items/${i.id}`, 'DELETE');
+          await loadAll();
+          toast('Item deleted');
+        }
+
+      } catch (er) {
+        toast(er.message);
+      }
     });
 
-    // ---------- categories ----------
+    // ---------- CATEGORIES ----------
+
     function renderCategories() {
-      $('#catList').innerHTML = categories.length ? `<table><thead><tr><th>Category</th><th>Items</th><th>Action</th></tr></thead><tbody>${categories.map((c) => `<tr><td><b>${esc(c.name)}</b></td><td>${c.items}</td>
-    <td><div class="actions"><button class="sm ghost" data-cat-edit="${c.id}">Rename</button><button class="sm danger" data-cat-del="${c.id}">Delete</button></div></td></tr>`).join('')}</tbody></table>`
+      $('#catList').innerHTML = categories.length
+        ? `
+      <table>
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Items</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          ${categories.map(c => `
+            <tr>
+              <td><b>${esc(c.name)}</b></td>
+              <td>${c.items}</td>
+
+              <td>
+                <div class="actions">
+                  <button class="sm ghost"
+                          data-cat-edit="${c.id}">
+                    Rename
+                  </button>
+
+                  <button class="sm danger"
+                          data-cat-del="${c.id}">
+                    Delete
+                  </button>
+                </div>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `
         : '<p class="empty">No categories yet. Add your first one above.</p>';
     }
-    $('#catForm').addEventListener('submit', async (e) => {
-      e.preventDefault(); $('#catErr').textContent = '';
-      try { await api('/api/v1/categories', 'POST', { name: e.target.elements.name.value }); e.target.reset(); await loadAll(); toast('Category added'); }
-      catch (er) { $('#catErr').textContent = er.message; }
-    });
-    $('#catList').addEventListener('click', async (e) => {
-      const ed = e.target.closest('[data-cat-edit]'), del = e.target.closest('[data-cat-del]');
-      if (ed) {
-        const c = categories.find((x) => x.id == ed.dataset.catEdit);
-        const m = openModal({ title: 'Rename category', html: `<form id="renForm"><label style="margin-top:0">Name</label><input name="name" value="${esc(c.name)}" maxlength="40" required><div class="err" id="renErr" role="alert"></div><div class="card-foot"><button type="button" class="ghost" data-close>Cancel</button><button>Save</button></div></form>` });
-        $('#renForm', m).addEventListener('submit', async (ev) => {
-          ev.preventDefault();
-          try { await api(`/api/v1/categories/${c.id}`, 'PUT', { name: ev.target.elements.name.value }); closeModal(); await loadAll(); toast('Category renamed'); } catch (er) { $('#renErr', m).textContent = er.message; }
+
+    $('#catForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      $('#catErr').textContent = '';
+
+      try {
+        await api('/api/v1/categories', 'POST', {
+          name: e.target.elements.name.value
         });
+
+        e.target.reset();
+        await loadAll();
+        toast('Category added');
+
+      } catch (er) {
+        $('#catErr').textContent = er.message;
+      }
+    });
+
+    $('#catList').addEventListener('click', async e => {
+      const ed = e.target.closest('[data-cat-edit]');
+      const del = e.target.closest('[data-cat-del]');
+
+      if (ed) {
+        const c = categories.find(x => x.id == ed.dataset.catEdit);
+
+        const m = openModal({
+          title: 'Rename category',
+
+          html: `
+        <form id="renForm">
+          <label style="margin-top:0">Name</label>
+
+          <input name="name"
+                 value="${esc(c.name)}"
+                 maxlength="40" required>
+
+          <div class="err" id="renErr" role="alert"></div>
+
+          <div class="card-foot">
+            <button type="button" class="ghost" data-close>
+              Cancel
+            </button>
+
+            <button>Save</button>
+          </div>
+        </form>
+      `
+        });
+
+        $('#renForm', m).addEventListener('submit', async ev => {
+          ev.preventDefault();
+
+          try {
+            await api(
+              `/api/v1/categories/${c.id}`,
+              'PUT',
+              { name: ev.target.elements.name.value }
+            );
+
+            closeModal();
+            await loadAll();
+            toast('Category renamed');
+
+          } catch (er) {
+            $('#renErr', m).textContent = er.message;
+          }
+        });
+
       } else if (del) {
-        const c = categories.find((x) => x.id == del.dataset.catDel);
-        if (await confirmDialog({ title: 'Delete this category?', message: `"${c.name}" will be removed.`, confirmText: 'Delete category', danger: true })) {
-          try { await api(`/api/v1/categories/${c.id}`, 'DELETE'); await loadAll(); toast('Category deleted'); } catch (er) { toast(er.message); }
+        const c = categories.find(x => x.id == del.dataset.catDel);
+
+        if (await confirmDialog({
+          title: 'Delete this category?',
+          message: `"${c.name}" will be removed.`,
+          confirmText: 'Delete category',
+          danger: true
+        })) {
+          try {
+            await api(`/api/v1/categories/${c.id}`, 'DELETE');
+            await loadAll();
+            toast('Category deleted');
+
+          } catch (er) {
+            toast(er.message);
+          }
         }
       }
     });
 
-    // ---------- QR ----------
-    const loadImg = (src) => new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => rej(new Error('Could not load image')); i.src = src; });
-    // The QR code as a canvas, with the restaurant's logo in the middle when it has one and the box is ticked.
-    // Logo side = 22% of the code (under 5% of its area) on a white plate, with error correction level H, so it still scans.
-    async function makeQr(size) {
-      const logoOn = !!profile.logo && $('#qrLogo').checked;
-      const c = document.createElement('canvas'); c.width = c.height = size; const g = c.getContext('2d');
-      g.drawImage(await loadImg(`/api/v1/qr.png?size=${size}${logoOn ? '&level=H' : ''}&v=${Date.now()}`), 0, 0, size, size);
-      if (logoOn) {
-        const logo = await loadImg(profile.logo), box = Math.round(size * 0.22), at = Math.round((size - box) / 2), pad = Math.round(box * 0.1);
-        g.fillStyle = '#fff'; g.beginPath(); g.roundRect(at, at, box, box, box * 0.18); g.fill();
-        const k = Math.min((box - 2 * pad) / logo.width, (box - 2 * pad) / logo.height), w = logo.width * k, h = logo.height * k;
-        g.drawImage(logo, (size - w) / 2, (size - h) / 2, w, h);
+
+    // =====================================================
+    // QR CODE GENERATION WITH RESTAURANT LOGO
+    // Dashboard Preview + PNG Download + Table Poster
+    // =====================================================
+
+    const loadImg = src => new Promise((resolve, reject) => {
+      const img = new Image();
+
+      img.onload = () => resolve(img);
+
+      img.onerror = () => reject(new Error(`Unable to load image: ${src}`));
+
+      if (/^https?:\/\//i.test(String(src))) {
+        img.crossOrigin = 'anonymous';
       }
-      return c;
-    }
-    async function renderQr() {
-      $('#qrBox').classList.add('skel'); const qr = $('#qrImg'); qr.style.opacity = 0;
-      $('#qrLogo').disabled = !profile.logo;
-      $('#qrLogoNote').textContent = profile.logo ? 'Keeps the code scannable. Untick it if you prefer the plain code.' : 'Add a logo under Restaurant details to show it in the center of the QR code.';
-      try { qr.src = (await makeQr(640)).toDataURL('image/png'); } catch { qr.src = `/api/v1/qr.png?size=640&v=${Date.now()}`; }
-      $('#qrBox').classList.remove('skel'); qr.style.opacity = 1;
-      $('#menuUrl').textContent = profile.menu_url; $('#openMenu').href = profile.menu_url;
-      $('#lanNote').textContent = /localhost|127\.0\.0\.1/.test(profile.menu_url) ? 'Tip: this QR points to a local address, so phones cannot open it. Set BASE_URL to your real web address when you deploy.' : '';
-    }
-    $('#qrLogo').addEventListener('change', renderQr);
-    $('#dlQr').addEventListener('click', async (e) => {
-      e.preventDefault();
-      try { const a = document.createElement('a'); a.href = (await makeQr(1500)).toDataURL('image/png'); a.download = `${profile.slug}-menu-qr.png`; a.click(); }
-      catch (er) { toast(er.message); }
-    });
-    $('#copyUrl').addEventListener('click', () => copyText(profile.menu_url));
-    $('#dlPoster').addEventListener('click', async () => {
-      const W = 1200, H = 1600, c = document.createElement('canvas'); c.width = W; c.height = H; const g = c.getContext('2d');
-      g.fillStyle = profile.theme_color; g.fillRect(0, 0, W, H); g.fillStyle = '#fff'; g.beginPath(); g.roundRect(90, 330, W - 180, 1000, 48); g.fill();
-      g.drawImage(await makeQr(900), 150, 400, 900, 900);
-      g.textAlign = 'center'; g.fillStyle = '#fff'; g.font = '800 84px Inter, system-ui, sans-serif'; g.fillText(profile.name.length > 22 ? profile.name.slice(0, 21) + '…' : profile.name, W / 2, 200);
-      g.font = '500 42px Inter, system-ui, sans-serif'; g.globalAlpha = .9; g.fillText('Scan to view our menu', W / 2, 270); g.globalAlpha = 1;
-      g.font = '500 30px Inter, system-ui, sans-serif'; g.fillText(profile.menu_url.replace(/^https?:\/\//, ''), W / 2, 1440);
-      const a = document.createElement('a'); a.href = c.toDataURL('image/png'); a.download = `${profile.slug}-table-poster.png`; a.click();
+
+      img.src = src;
     });
 
-    // ==========================================================
-    // DYNAMIC RESTAURANT THEME
-    // ==========================================================
+
+    // -----------------------------------------------------
+    // GENERATE QR WITH CENTERED RESTAURANT LOGO
+    // -----------------------------------------------------
+
+    async function makeQr(size = 640) {
+
+      const logoOn = Boolean(
+        profile?.logo && $('#qrLogo').checked
+      );
+
+      const canvas = document.createElement('canvas');
+
+      canvas.width = size;
+      canvas.height = size;
+
+      const ctx = canvas.getContext('2d');
+
+      // Draw the existing QR first, then compose the logo on top.
+      const qrImage = await loadImg(
+        `/api/v1/qr.png?size=${size}&level=${logoOn ? 'H' : 'M'}&v=${Date.now()}`
+      );
+
+      ctx.drawImage(qrImage, 0, 0, size, size);
+
+      if (logoOn) {
+        try {
+          const logo = await loadImg(profile.logo);
+          const box = Math.round(size * 0.17);
+          const x = (size - box) / 2;
+          const y = (size - box) / 2;
+          const padding = Math.max(8, Math.round(box * 0.12));
+          const maxLogoSize = box - padding * 2;
+          const scale = Math.min(
+            maxLogoSize / logo.naturalWidth,
+            maxLogoSize / logo.naturalHeight
+          );
+          const logoWidth = logo.naturalWidth * scale;
+          const logoHeight = logo.naturalHeight * scale;
+
+          ctx.fillStyle = '#ffffff';
+          ctx.beginPath();
+          ctx.roundRect(x, y, box, box, Math.round(box * 0.14));
+          ctx.fill();
+          ctx.drawImage(
+            logo,
+            (size - logoWidth) / 2,
+            (size - logoHeight) / 2,
+            logoWidth,
+            logoHeight
+          );
+        } catch (error) {
+          console.error('Restaurant logo could not be overlaid:', {
+            logoUrl: profile.logo,
+            error
+          });
+        }
+      }
+
+      return canvas;
+    }
+
+
+    // -----------------------------------------------------
+    // DASHBOARD QR PREVIEW
+    // -----------------------------------------------------
+
+    async function renderQr() {
+
+      const qrBox = $('#qrBox');
+      const qrImage = $('#qrImg');
+
+      qrBox.classList.add('skel');
+
+      qrImage.style.opacity = '0';
+
+      $('#qrLogo').disabled = !profile?.logo;
+
+      $('#qrLogoNote').textContent = profile?.logo
+        ? 'Your restaurant logo appears in the centre of your QR code.'
+        : 'Upload your restaurant logo under Restaurant Details → Branding.';
+
+      try {
+
+        const canvas = await makeQr(640);
+
+        qrImage.src = canvas.toDataURL('image/png');
+
+        await new Promise((resolve, reject) => {
+          qrImage.onload = resolve;
+          qrImage.onerror = reject;
+        });
+
+      } catch (error) {
+
+        console.error('QR generation error:', error);
+
+        qrImage.src =
+          `/api/v1/qr.png?size=640&v=${Date.now()}`;
+
+      } finally {
+
+        qrBox.classList.remove('skel');
+
+        qrImage.style.opacity = '1';
+
+      }
+
+      $('#menuUrl').textContent = profile.menu_url;
+
+      $('#openMenu').href = profile.menu_url;
+
+      $('#lanNote').textContent =
+        /localhost|127\.0\.0\.1/.test(profile.menu_url)
+          ? 'Tip: Set BASE_URL to your real website address when deploying.'
+          : '';
+
+    }
+
+
+    // -----------------------------------------------------
+    // LOGO CHECKBOX
+    // -----------------------------------------------------
+
+    $('#qrLogo').addEventListener('change', renderQr);
+
+
+    // -----------------------------------------------------
+    // DOWNLOAD QR PNG WITH HOTEL LOGO
+    // -----------------------------------------------------
+
+    $('#dlQr').addEventListener('click', async event => {
+
+      event.preventDefault();
+
+      const button = $('#dlQr');
+
+      try {
+
+        button.style.pointerEvents = 'none';
+
+        const canvas = await makeQr(1500);
+
+        const imageURL = canvas.toDataURL('image/png');
+
+        const download = document.createElement('a');
+
+        download.href = imageURL;
+
+        download.download =
+          `${profile.slug}-menu-qr.png`;
+
+        document.body.appendChild(download);
+
+        download.click();
+
+        download.remove();
+
+        toast('QR code downloaded successfully!');
+
+      } catch (error) {
+
+        console.error('QR download error:', error);
+
+        toast(error.message || 'Unable to download QR code.');
+
+      } finally {
+
+        button.style.pointerEvents = '';
+      }
+
+    });
+
+
+    // -----------------------------------------------------
+    // COPY MENU URL
+    // -----------------------------------------------------
+
+    $('#copyUrl').addEventListener('click', () => {
+
+      copyText(profile.menu_url);
+
+    });
+
+
+    // -----------------------------------------------------
+    // DOWNLOAD TABLE POSTER WITH HOTEL LOGO
+    // -----------------------------------------------------
+
+    $('#dlPoster').addEventListener('click', async () => {
+
+      const button = $('#dlPoster');
+
+      try {
+
+        button.disabled = true;
+
+        button.textContent = 'Generating poster...';
+
+        const W = 1200;
+        const H = 1600;
+
+        const canvas = document.createElement('canvas');
+
+        canvas.width = W;
+        canvas.height = H;
+
+        const ctx = canvas.getContext('2d');
+
+        // Restaurant theme background
+        ctx.fillStyle = profile.theme_color || '#ea580c';
+
+        ctx.fillRect(0, 0, W, H);
+
+
+        // Restaurant name
+        ctx.textAlign = 'center';
+
+        ctx.fillStyle = '#ffffff';
+
+        ctx.font = '800 84px Inter, system-ui, sans-serif';
+
+        ctx.fillText(
+          profile.name.length > 22
+            ? profile.name.slice(0, 21) + '…'
+            : profile.name,
+          W / 2,
+          190
+        );
+
+
+        // Subtitle
+        ctx.font = '500 42px Inter, system-ui, sans-serif';
+
+        ctx.fillText(
+          'Scan to view our menu',
+          W / 2,
+          270
+        );
+
+
+        // White QR container
+        ctx.fillStyle = '#ffffff';
+
+        ctx.beginPath();
+
+        ctx.roundRect(
+          90,
+          330,
+          W - 180,
+          1000,
+          48
+        );
+
+        ctx.fill();
+
+
+        // Generate the SAME QR with centered hotel logo
+        const qrCanvas = await makeQr(900);
+
+        ctx.drawImage(
+          qrCanvas,
+          150,
+          400,
+          900,
+          900
+        );
+
+
+        // Website address
+        ctx.fillStyle = '#ffffff';
+
+        ctx.font = '500 30px Inter, system-ui, sans-serif';
+
+        ctx.fillText(
+          profile.menu_url.replace(/^https?:\/\//, ''),
+          W / 2,
+          1440
+        );
+
+
+        // Export poster
+        const imageURL = canvas.toDataURL('image/png');
+
+        const download = document.createElement('a');
+
+        download.href = imageURL;
+
+        download.download =
+          `${profile.slug}-table-poster.png`;
+
+        document.body.appendChild(download);
+
+        download.click();
+
+        download.remove();
+
+        toast('Table poster downloaded successfully!');
+
+      } catch (error) {
+
+        console.error('Poster generation error:', error);
+
+        toast(error.message || 'Unable to generate poster.');
+
+      } finally {
+
+        button.disabled = false;
+
+        button.textContent = 'Download table poster';
+
+      }
+
+    });
+
+
+    // =====================================================
+    // END QR CODE SECTION
+    // =====================================================
+
+    // ---------- DYNAMIC RESTAURANT THEME ----------
 
     function hexToRgb(hex) {
       const value = String(hex || '').replace('#', '').trim();
 
       if (!/^[0-9a-fA-F]{6}$/.test(value)) {
-        return { r: 217, g: 72, b: 15 };
+        return { r: 100, g: 116, b: 139 };
       }
 
       return {
@@ -2845,82 +3922,53 @@
       return luminance > 0.60 ? '#171717' : '#ffffff';
     }
 
+    // ---------- GLOBAL RESTAURANT THEME ----------
+
     function applyRestaurantTheme(color) {
-      const theme = /^#[0-9a-fA-F]{6}$/.test(String(color || ''))
-        ? color
-        : '#64748b';
-
-      const rgb = hexToRgb(theme);
-
-      const dark = mixColor(theme, '#000000', 0.28);
-      const light = mixColor(theme, '#ffffff', 0.88);
-      const soft = mixColor(theme, '#000000', 0.78);
-      const border = mixColor(theme, '#ffffff', 0.38);
-      const text = getContrastColor(theme);
+      if (!/^#[0-9a-fA-F]{6}$/.test(String(color || ''))) return;
 
       const root = document.documentElement;
-      localStorage.setItem('vigna_dashboard_theme', theme);
-      // Save the selected restaurant theme for the next dashboard visit
-      try {
-        localStorage.setItem('vigna_dashboard_theme', theme);
-      } catch (error) {
-        console.warn('Unable to save dashboard theme:', error);
-      }
+      const normalized = color.toLowerCase();
+      const darker = mixColor(normalized, '#000000', 0.3);
+      const darkest = mixColor(normalized, '#000000', 0.5);
+      const lighter = mixColor(normalized, '#ffffff', 0.86);
+      const border = mixColor(normalized, '#ffffff', 0.55);
+      const lightAlpha = `${normalized}26`;
 
-      root.style.setProperty('--theme', theme);
-      root.style.setProperty('--theme-dark', dark);
-      root.style.setProperty('--theme-light', light);
-      root.style.setProperty('--theme-soft', soft);
-      root.style.setProperty('--theme-border', border);
-      root.style.setProperty('--theme-ink', text);
-
-      root.style.setProperty(
-        '--theme-rgb',
-        `${rgb.r}, ${rgb.g}, ${rgb.b}`
-      );
-
-      root.style.setProperty('--brand', theme);
-      root.style.setProperty('--brand-600', dark);
-      root.style.setProperty('--brand-50', light);
-      root.style.setProperty('--brand-ink', text);
-      root.style.setProperty(
-        '--ring',
-        `0 0 0 3px rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, .25)`
-      );
-
-      // IMPORTANT: Apply theme variables directly to BODY too.
-      // This overrides any older theme variables inherited by the dashboard.
-
-      const body = document.body;
-
-      if (body) {
-        body.style.setProperty('--theme', theme, 'important');
-        body.style.setProperty('--theme-dark', dark, 'important');
-        body.style.setProperty('--theme-light', light, 'important');
-        body.style.setProperty('--theme-soft', soft, 'important');
-        body.style.setProperty('--theme-border', border, 'important');
-        body.style.setProperty('--theme-ink', text, 'important');
-
-        body.style.setProperty(
-          '--theme-rgb',
-          `${rgb.r}, ${rgb.g}, ${rgb.b}`,
-          'important'
-        );
-
-        body.style.setProperty('--brand', theme, 'important');
-        body.style.setProperty('--brand-600', dark, 'important');
-        body.style.setProperty('--brand-50', light, 'important');
-        body.style.setProperty('--brand-ink', text, 'important');
-
-        body.style.setProperty(
-          '--ring',
-          `0 0 0 3px rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, .25)`,
-          'important'
-        );
-      }
+      [
+        ['--restaurant-theme', normalized],
+        ['--restaurant-theme-dark', darker],
+        ['--restaurant-theme-light', lightAlpha],
+        ['--restaurant-theme-border', `${normalized}73`],
+        ['--restaurant-theme-ink', getContrastColor(normalized)],
+        ['--theme', normalized],
+        ['--theme-color', normalized],
+        ['--theme-dark', darker],
+        ['--theme-hover', darker],
+        ['--theme-darker', darkest],
+        ['--theme-light', lightAlpha],
+        ['--theme-soft', `${normalized}38`],
+        ['--theme-border', `${normalized}73`],
+        ['--theme-ink', getContrastColor(normalized)],
+        ['--brand', normalized],
+        ['--brand-600', darker],
+        ['--brand-50', lightAlpha],
+        ['--brand-ink', getContrastColor(normalized)],
+        ['--accent', normalized],
+        ['--accent-hover', darker],
+        ['--accent-light', lighter],
+        ['--status-green', normalized],
+        ['--status-green-hover', darker],
+        ['--status-blue', normalized],
+        ['--status-blue-hover', darker],
+        ['--status-red', darkest],
+        ['--status-red-hover', darker],
+        ['--logout-green', '#15803D'],
+        ['--logout-green-hover', '#166534']
+      ].forEach(([name, value]) => root.style.setProperty(name, value));
     }
+    // ---------- RESTAURANT DETAILS ----------
 
-    // ---------- details ----------
     function fillProfile() {
       $('#brandName').textContent =
         profile.name.length > 18
@@ -2941,8 +3989,8 @@
         f[k].value = profile[k] || '';
       }
 
-      // Apply the restaurant's saved colour to its dashboard.
-      applyRestaurantTheme(profile.theme_color);
+      savedThemeColor = profile.theme_color;
+      applyRestaurantTheme(savedThemeColor);
 
       $('#mobileRO').value = profile.owner_mobile || '';
       $('#emailRO').value = profile.owner_email || '';
@@ -2954,13 +4002,62 @@
       fillUpiDetails();
     }
 
-    function showLogo(src) { const p = $('#logoPrev'); p.style.setProperty('--tc', profile.theme_color); p.innerHTML = src ? `<img src="${esc(src)}" alt="" style="object-fit:contain;background:#fff">` : esc(profile.name.charAt(0).toUpperCase()); }
-    $('#logoFile').addEventListener('change', async (e) => {
-      const f = e.target.files[0]; if (!f) return;
-      try { logoData = await resizeImage(f, { max: 400, type: 'image/png' }); logoRemoved = false; showLogo(logoData); } catch (er) { toast(er.message); }
+    function showSidebarLogo(src) {
+      const mark = $('#sidebarBrandLogo');
+      const image = $('#sidebarRestaurantLogo');
+      if (!mark || !image) return;
+
+      const hasLogo = Boolean(src);
+      image.hidden = !hasLogo;
+      image.src = hasLogo ? src : '';
+      image.onerror = hasLogo ? () => showSidebarLogo('') : null;
+      mark.classList.toggle('has-logo', hasLogo);
+    }
+
+    function showLogo(src) {
+      const p = $('#logoPrev');
+
+      p.style.setProperty('--tc', profile.theme_color);
+
+      p.innerHTML = src
+        ? `<img src="${esc(src)}" alt="" style="object-fit:contain;background:#fff">`
+        : esc(profile.name.charAt(0).toUpperCase());
+      showSidebarLogo(src);
+    }
+
+    $('#logoFile').addEventListener('change', async e => {
+      const f = e.target.files[0];
+      if (!f) return;
+
+      try {
+        logoData = await resizeImage(f, {
+          max: 400,
+          type: 'image/png'
+        });
+
+        logoRemoved = false;
+        showLogo(logoData);
+
+      } catch (er) {
+        toast(er.message);
+      }
     });
-    $('#logoRemove').addEventListener('click', () => { logoData = null; logoRemoved = true; $('#logoFile').value = ''; showLogo(null); });
-    $('#pf').addEventListener('submit', async (e) => {
+
+    $('#logoRemove').addEventListener('click', () => {
+      logoData = null;
+      logoRemoved = true;
+
+      $('#logoFile').value = '';
+      showLogo(null);
+    });
+
+    $('#restoreThemePreview').addEventListener('click', () => {
+      $('#pf').elements.theme_color.value = savedThemeColor;
+      applyRestaurantTheme(savedThemeColor);
+      toast('Saved theme color restored.');
+    });
+
+    $('#pf').addEventListener('submit', async e => {
       e.preventDefault();
 
       document.querySelectorAll('.pfErr').forEach(x => {
@@ -2985,7 +4082,6 @@
           remove_logo: logoRemoved
         };
 
-        // Save the restaurant profile through the existing API.
         const updatedProfile = await api(
           '/api/v1/restaurant',
           'PATCH',
@@ -2994,29 +4090,41 @@
 
         profile = updatedProfile;
 
-        // Apply the saved colour immediately.
+        // Apply saved theme everywhere
         applyRestaurantTheme(profile.theme_color);
 
+        // Update restaurant information
         fillProfile();
 
-        // Refresh item accents without refreshing the page.
+        // Refresh menu item accents
         renderItems();
 
         toast('Restaurant details and theme color saved successfully.');
 
       } catch (er) {
+        applyRestaurantTheme(savedThemeColor);
+        $('#pf').elements.theme_color.value = savedThemeColor;
         document.querySelectorAll('.pfErr').forEach(x => {
           x.textContent = er.message;
         });
       }
     });
-    // ---------- UPI payment details ----------
+
+    // ---------- UPI PAYMENT DETAILS ----------
+
     let upiQrData = null;
 
     function renderUpiQr(src) {
       const preview = $('#upiQrPreview');
+
       if (src) {
-        preview.innerHTML = `<img src="${esc(src)}" alt="UPI QR code preview" style="display:block;max-width:100%;max-height:220px;object-fit:contain">`;
+        preview.innerHTML = `
+      <img
+        src="${esc(src)}"
+        alt="UPI QR code preview"
+        style="display:block;max-width:100%;max-height:220px;object-fit:contain"
+      >
+    `;
       } else {
         preview.textContent = 'No QR image uploaded';
       }
@@ -3024,88 +4132,138 @@
 
     function fillUpiDetails() {
       $('#upiId').value = profile?.upi_id || '';
+
       upiQrData = null;
+
       $('#upiQrFile').value = '';
       $('#removeSavedUpiQr').checked = false;
+
       renderUpiQr(profile?.upi_qr_image || '');
     }
 
-    $('#upiQrFile').addEventListener('change', async (e) => {
+    $('#upiQrFile').addEventListener('change', async e => {
       const file = e.target.files?.[0];
+
       if (!file) return;
 
       $('#upiErr').textContent = '';
+
       if (!['image/png', 'image/jpeg', 'image/webp'].includes(file.type)) {
         e.target.value = '';
         upiQrData = null;
-        $('#upiErr').textContent = 'UPI QR must be a PNG, JPG or WebP image.';
+
+        $('#upiErr').textContent =
+          'UPI QR must be a PNG, JPG or WebP image.';
+
         return;
       }
+
       if (file.size > 1500000) {
         e.target.value = '';
         upiQrData = null;
-        $('#upiErr').textContent = 'UPI QR image must be 1.5 MB or smaller.';
+
+        $('#upiErr').textContent =
+          'UPI QR image must be 1.5 MB or smaller.';
+
         return;
       }
 
       try {
         upiQrData = await new Promise((resolve, reject) => {
           const reader = new FileReader();
-          reader.onload = () => resolve(String(reader.result || ''));
-          reader.onerror = () => reject(new Error('Unable to read QR image.'));
+
+          reader.onload = () =>
+            resolve(String(reader.result || ''));
+
+          reader.onerror = () =>
+            reject(new Error('Unable to read QR image.'));
+
           reader.readAsDataURL(file);
         });
+
         $('#removeSavedUpiQr').checked = false;
+
         renderUpiQr(upiQrData);
+
       } catch (error) {
         upiQrData = null;
         $('#upiErr').textContent = error.message;
       }
     });
 
-    $('#removeSavedUpiQr').addEventListener('change', (e) => {
+    $('#removeSavedUpiQr').addEventListener('change', e => {
       if (e.target.checked) {
         upiQrData = null;
+
         $('#upiQrFile').value = '';
+
         renderUpiQr('');
+
       } else {
         renderUpiQr(profile?.upi_qr_image || '');
       }
     });
 
-    $('#upiForm').addEventListener('submit', async (e) => {
+    $('#upiForm').addEventListener('submit', async e => {
       e.preventDefault();
 
       const errorBox = $('#upiErr');
       const button = $('#saveUpiBtn');
+
       errorBox.textContent = '';
 
       const upiId = $('#upiId').value.trim();
-      if (upiId && !/^[A-Za-z0-9._-]{2,}@[A-Za-z0-9.-]{2,}$/.test(upiId)) {
-        errorBox.textContent = 'Enter a valid UPI ID, such as restaurant@upi.';
+
+      if (
+        upiId &&
+        !/^[A-Za-z0-9._-]{2,}@[A-Za-z0-9.-]{2,}$/.test(upiId)
+      ) {
+        errorBox.textContent =
+          'Enter a valid UPI ID, such as restaurant@upi.';
+
         return;
       }
 
-      const body = { upi_id: upiId };
-      if (upiQrData) body.upi_qr_image = upiQrData;
-      if ($('#removeSavedUpiQr').checked) body.remove_upi_qr = true;
+      const body = {
+        upi_id: upiId
+      };
+
+      if (upiQrData) {
+        body.upi_qr_image = upiQrData;
+      }
+
+      if ($('#removeSavedUpiQr').checked) {
+        body.remove_upi_qr = true;
+      }
 
       button.disabled = true;
       button.textContent = 'Saving...';
 
       try {
-        profile = await api('/api/v1/restaurant', 'PATCH', body);
+        profile = await api(
+          '/api/v1/restaurant',
+          'PATCH',
+          body
+        );
+
         fillUpiDetails();
+
         toast('Payment details saved successfully.');
+
       } catch (error) {
-        errorBox.textContent = error.message || 'Unable to save payment details.';
+        errorBox.textContent =
+          error.message || 'Unable to save payment details.';
+
       } finally {
         button.disabled = false;
         button.textContent = 'Save payment details';
       }
     });
 
-    $('#pwf').addEventListener('submit', async (e) => {
+
+    // ---------- PASSWORD UPDATE ----------
+
+    $('#pwf').addEventListener('submit', async e => {
       e.preventDefault();
 
       const form = e.currentTarget;
@@ -3114,10 +4272,14 @@
 
       error.textContent = '';
 
-      const data = Object.fromEntries(new FormData(form));
+      const data = Object.fromEntries(
+        new FormData(form)
+      );
 
       if (data.new_password.length < 8) {
-        error.textContent = 'Password must contain at least 8 characters.';
+        error.textContent =
+          'Password must contain at least 8 characters.';
+
         return;
       }
 
@@ -3127,7 +4289,9 @@
       }
 
       if (data.current_password === data.new_password) {
-        error.textContent = 'New password must be different from the current password.';
+        error.textContent =
+          'New password must be different from the current password.';
+
         return;
       }
 
@@ -3135,61 +4299,113 @@
       button.textContent = 'Updating...';
 
       try {
-        await api('/api/v1/auth/password', 'POST', data);
+        await api(
+          '/api/v1/auth/password',
+          'POST',
+          data
+        );
 
         form.reset();
+
         toast('Password updated successfully');
 
       } catch (err) {
-        error.textContent = err.message || 'Unable to update password.';
+        error.textContent =
+          err.message || 'Unable to update password.';
+
       } finally {
         button.disabled = false;
         button.textContent = 'Update password';
       }
     });
-    // Preview the selected theme before saving.
-    $('#pf').elements.theme_color.addEventListener('input', e => {
-      applyRestaurantTheme(e.target.value);
+
+
+    // ---------- THEME PREVIEW ----------
+
+    const themeInput = $('#pf').elements.theme_color;
+
+    // Preview immediately when the owner selects a colour
+    themeInput.addEventListener('input', event => {
+      applyRestaurantTheme(event.target.value);
     });
 
-    // Restore the saved theme if the owner leaves without saving.
-    $('#pf').elements.theme_color.addEventListener('change', e => {
-      e.target.dataset.preview = 'true';
+    // Restore saved colour if the owner leaves without saving
+    themeInput.addEventListener('change', event => {
+      applyRestaurantTheme(event.target.value);
+      themeInput.dataset.preview = 'true';
     });
 
-    // ---------- Orders / Print Bills ----------
+
+    // ---------- ORDERS / PRINT BILLS ----------
 
     const orderMoney = n =>
       '₹' + Number(n || 0).toFixed(2);
 
     let cachedOrders = [];
+
     const orderNotificationKeys = new Set();
+
+
+    // ---------- ORDER STATUS NOTIFICATION ----------
+
     function showOrderNotification(orderNumber, status, orderId) {
       const key = `${orderId}:${status}`;
+
       if (orderNotificationKeys.has(key)) return;
+
       orderNotificationKeys.add(key);
+
       let stack = document.getElementById('orderNotifications');
+
       if (!stack) {
         stack = document.createElement('div');
+
         stack.id = 'orderNotifications';
+
         stack.setAttribute('aria-live', 'polite');
         stack.setAttribute('aria-label', 'Order updates');
+
         document.body.appendChild(stack);
       }
+
       const item = document.createElement('div');
-      item.className = `order-notification${status === 'Ready' ? ' prepared' : ''}`;
-      item.innerHTML = `<span>${safeOrderText(status === 'Ready' ? `Order #${orderNumber} is Prepared and ready!` : `Order #${orderNumber} is now Active.`)}</span><button type="button" class="order-notification-close" aria-label="Close notification">×</button>`;
+
+      item.className =
+        `order-notification${status === 'Ready' ? ' prepared' : ''}`;
+
+      item.innerHTML = `
+    <span>
+      ${safeOrderText(
+        status === 'Ready'
+          ? `Order #${orderNumber} is Prepared and ready!`
+          : `Order #${orderNumber} is now Active.`
+      )}
+    </span>
+
+    <button
+      type="button"
+      class="order-notification-close"
+      aria-label="Close notification"
+    >×</button>
+  `;
+
       item.querySelector('button').addEventListener('click', event => {
         event.stopPropagation();
+
         orderNotificationKeys.delete(key);
+
         item.remove();
       });
+
       stack.appendChild(item);
     }
 
     function safeOrderText(v) {
       return esc(String(v ?? ''));
     }
+
+
+    // ---------- PRINT INDIVIDUAL ORDER ----------
 
     function printOrder(o) {
       const w = window.open('', '_blank', 'width=420,height=700');
@@ -3200,136 +4416,207 @@
       }
 
       const billLines = (o.items || []).map(i => `
-        <tr>
-          <td>${safeOrderText(i.name)} × ${Number(i.qty || 1)}</td>
-          <td style="text-align:right">
-            ${orderMoney(i.line_total ?? (Number(i.price || 0) * Number(i.qty || 1)))}
-          </td>
-        </tr>
-      `).join('');
+    <tr>
+      <td>
+        ${safeOrderText(i.name)} × ${Number(i.qty || 1)}
+      </td>
+
+      <td style="text-align:right">
+        ${orderMoney(
+        i.line_total ??
+        (Number(i.price || 0) * Number(i.qty || 1))
+      )}
+      </td>
+    </tr>
+  `).join('');
 
       const kotLines = (o.items || []).map(i => `
-        <tr>
-          <td>${safeOrderText(i.name)}</td>
-          <td class="kot-qty">× ${Number(i.qty || 1)}</td>
-        </tr>
-      `).join('');
+    <tr>
+      <td>${safeOrderText(i.name)}</td>
+
+      <td class="kot-qty">
+        × ${Number(i.qty || 1)}
+      </td>
+    </tr>
+  `).join('');
 
       w.document.write(`
-        <!doctype html>
-        <html>
-        <head>
-          <meta charset="utf-8">
-          <title>Bill ${safeOrderText(o.order_no)}</title>
-          <style>
-            * { box-sizing: border-box; }
-            body {
-              font: 14px Arial, sans-serif;
-              width: 280px;
-              margin: 16px auto;
-              color: #111;
-            }
-            h2, p { text-align: center; margin: 5px 0; }
-            table {
-              width: 100%;
-              border-collapse: collapse;
-              margin: 18px 0;
-            }
-            td {
-              padding: 5px 0;
-              border-bottom: 1px dashed #aaa;
-            }
-            .total {
-              border-top: 1px dashed #111;
-              border-bottom: 1px dashed #111;
-              padding: 8px 0;
-              font-weight: bold;
-              display: flex;
-              justify-content: space-between;
-            }
-            .kot {
-              margin-top: 28px;
-              padding-top: 14px;
-              border-top: 2px dashed #111;
-              break-inside: avoid;
-            }
-            .kot-heading {
-              text-align: center;
-              font-size: 20px;
-              font-weight: 900;
-              letter-spacing: 2px;
-              margin-bottom: 12px;
-            }
-            .kot-info {
-              font-size: 15px;
-              font-weight: bold;
-              margin: 8px 0;
-            }
-            .kot table { margin: 12px 0; }
-            .kot td {
-              font-size: 16px;
-              font-weight: bold;
-              padding: 9px 3px;
-              border-bottom: 1px dashed #777;
-            }
-            .kot-qty {
-              text-align: right;
-              white-space: nowrap;
-              width: 65px;
-            }
-            .kot-footer {
-              text-align: center;
-              font-size: 11px;
-              margin-top: 12px;
-              border-top: 2px dashed #111;
-              padding-top: 10px;
-            }
-            @media print {
-              body { width: 280px; margin: 0 auto; }
-            }
-          </style>
-        </head>
-        <body>
-          <h2>${safeOrderText(profile.name)}</h2>
-          <p>Order Bill</p>
-          <hr>
-          <p>Order: ${safeOrderText(o.order_no)}</p>
-          <p>${new Date(o.created_at).toLocaleString('en-IN')}</p>
-          <p>${safeOrderText(o.customer)} · ${safeOrderText(o.phone)}</p>
-          <hr>
-          <table>${billLines}</table>
-          <div class="total">
-            <span>Total</span>
-            <span>${orderMoney(o.total)}</span>
-          </div>
-          <p style="margin-top:18px">Thank you!</p>
+    <!doctype html>
 
-          <section class="kot">
-            <div class="kot-heading">KITCHEN ORDER TICKET</div>
-            <div class="kot-info">Order No: ${safeOrderText(o.order_no)}</div>
-            <div class="kot-info">Table: ${safeOrderText(o.table_no || 'N/A')}</div>
-            <hr>
-            <table>${kotLines}</table>
-            <div class="kot-footer">KITCHEN COPY</div>
-          </section>
+    <html>
+    <head>
+      <meta charset="utf-8">
 
-          <script>
-            window.onload = () => window.print();
-          <\/script>
-        </body>
-        </html>
-      `);
+      <title>Bill ${safeOrderText(o.order_no)}</title>
+
+      <style>
+        * {
+          box-sizing: border-box;
+        }
+
+        body {
+          font: 14px Arial, sans-serif;
+          width: 280px;
+          margin: 16px auto;
+          color: #111;
+        }
+
+        h2, p {
+          text-align: center;
+          margin: 5px 0;
+        }
+
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          margin: 18px 0;
+        }
+
+        td {
+          padding: 5px 0;
+          border-bottom: 1px dashed #aaa;
+        }
+
+        .total {
+          border-top: 1px dashed #111;
+          border-bottom: 1px dashed #111;
+          padding: 8px 0;
+          font-weight: bold;
+          display: flex;
+          justify-content: space-between;
+        }
+
+        .kot {
+          margin-top: 28px;
+          padding-top: 14px;
+          border-top: 2px dashed #111;
+          break-inside: avoid;
+        }
+
+        .kot-heading {
+          text-align: center;
+          font-size: 20px;
+          font-weight: 900;
+          letter-spacing: 2px;
+          margin-bottom: 12px;
+        }
+
+        .kot-info {
+          font-size: 15px;
+          font-weight: bold;
+          margin: 8px 0;
+        }
+
+        .kot table {
+          margin: 12px 0;
+        }
+
+        .kot td {
+          font-size: 16px;
+          font-weight: bold;
+          padding: 9px 3px;
+          border-bottom: 1px dashed #777;
+        }
+
+        .kot-qty {
+          text-align: right;
+          white-space: nowrap;
+          width: 65px;
+        }
+
+        .kot-footer {
+          text-align: center;
+          font-size: 11px;
+          margin-top: 12px;
+          border-top: 2px dashed #111;
+          padding-top: 10px;
+        }
+
+        @media print {
+          body {
+            width: 280px;
+            margin: 0 auto;
+          }
+        }
+      </style>
+    </head>
+
+    <body>
+
+      <h2>${safeOrderText(profile.name)}</h2>
+
+      <p>Order Bill</p>
+
+      <hr>
+
+      <p>Order: ${safeOrderText(o.order_no)}</p>
+
+      <p>${new Date(o.created_at).toLocaleString('en-IN')}</p>
+
+      <p>
+        ${safeOrderText(o.customer)}
+        ·
+        ${safeOrderText(o.phone)}
+      </p>
+
+      <hr>
+
+      <table>
+        ${billLines}
+      </table>
+
+      <div class="total">
+        <span>Total</span>
+        <span>${orderMoney(o.total)}</span>
+      </div>
+
+      <p style="margin-top:18px">Thank you!</p>
+
+      <section class="kot">
+
+        <div class="kot-heading">
+          KITCHEN ORDER TICKET
+        </div>
+
+        <div class="kot-info">
+          Order No: ${safeOrderText(o.order_no)}
+        </div>
+
+        <div class="kot-info">
+          Table: ${safeOrderText(o.table_no || 'N/A')}
+        </div>
+
+        <hr>
+
+        <table>
+          ${kotLines}
+        </table>
+
+        <div class="kot-footer">
+          KITCHEN COPY
+        </div>
+
+      </section>
+
+      <script>
+        window.onload = () => window.print();
+      <\/script>
+
+    </body>
+    </html>
+  `);
 
       w.document.close();
     }
 
-    // Render orders
+
+    // ---------- RENDER ORDERS ----------
 
     function renderOrders() {
-
       const host = $('#ordersList');
 
       host.innerHTML = cachedOrders.length
+
         ? cachedOrders.map(o => {
 
           const status = String(o.status || 'Pending');
@@ -3343,92 +4630,91 @@
               .includes(status);
 
           return `
-                <article class="order-row">
+          <article class="order-row">
 
-                    <div>
+            <div>
 
-                        <label style="display:flex;gap:8px;align-items:center;margin:0 0 8px">
+              <label style="display:flex;gap:8px;align-items:center;margin:0 0 8px">
 
-                            <input
-                                type="checkbox"
-                                data-order-select="${safeOrderText(o.id)}"
-                            >
+                <input
+                  type="checkbox"
+                  data-order-select="${safeOrderText(o.id)}"
+                >
 
-                            <b>Select order</b>
+                <b>Select order</b>
 
-                        </label>
+              </label>
 
-                        <div class="order-title">
-                            ${safeOrderText(o.order_no)}
-                        </div>
+              <div class="order-title">
+                ${safeOrderText(o.order_no)}
+              </div>
 
-                        <div class="order-meta">
+              <div class="order-meta">
 
-                            ${safeOrderText(o.customer)}
-                            ·
-                            ${safeOrderText(o.phone)}
+                ${safeOrderText(o.customer)}
+                ·
+                ${safeOrderText(o.phone)}
 
-                            <br>
+                <br>
 
-                            ${safeOrderText(o.order_type || 'Dine In')}
+                ${safeOrderText(o.order_type || 'Dine In')}
 
-                            ${o.table_no
+                ${o.table_no
               ? ' · Table ' + safeOrderText(o.table_no)
               : ''
             }
 
-                            <br>
+                <br>
 
-                            ${safeOrderText(o.note || '')}
+                ${safeOrderText(o.note || '')}
 
-                            <br>
+                <br>
 
-                            <b>${orderMoney(o.total)}</b>
+                <b>${orderMoney(o.total)}</b>
 
-                            <br>
+                <br>
 
-                            Status:
-                            <b>${safeOrderText(status)}</b>
+                Status:
+                <b>${safeOrderText(status)}</b>
 
-                        </div>
+              </div>
 
-                    </div>
+            </div>
 
-                    <div class="order-actions">
+            <div class="order-actions">
 
-                        <button
-                            type="button"
-                            class="order-active"
-                            data-order-status="active"
-                            data-order-id="${safeOrderText(o.id)}"
-                            ${activeDisabled ? 'disabled' : ''}
-                        >
-                            Active
-                        </button>
+              <button
+                type="button"
+                class="order-active"
+                data-order-status="active"
+                data-order-id="${safeOrderText(o.id)}"
+                ${activeDisabled ? 'disabled' : ''}
+              >
+                Active
+              </button>
 
-                        <button
-                            type="button"
-                            class="order-prepared"
-                            data-order-status="prepared"
-                            data-order-id="${safeOrderText(o.id)}"
-                            ${preparedDisabled ? 'disabled' : ''}
-                        >
-                            Prepared
-                        </button>
+              <button
+                type="button"
+                class="order-prepared"
+                data-order-status="prepared"
+                data-order-id="${safeOrderText(o.id)}"
+                ${preparedDisabled ? 'disabled' : ''}
+              >
+                Prepared
+              </button>
 
-                        <button
-                            type="button"
-                            class="order-print"
-                            data-print-order="${safeOrderText(o.id)}"
-                        >
-                            Print Bill
-                        </button>
-                        
+              <button
+                type="button"
+                class="order-print"
+                data-print-order="${safeOrderText(o.id)}"
+              >
+                Print Bill
+              </button>
 
-                    </div>
+            </div>
 
-                </article>
-            `;
+          </article>
+        `;
 
         }).join('')
 
@@ -3436,18 +4722,15 @@
 
       $('#ordersCount').textContent =
         `Loaded ${cachedOrders.length} order(s).`;
-
     }
 
 
-    // Load orders
+    // ---------- LOAD ORDERS ----------
 
     async function refreshOrders() {
-
       $('#ordersCount').textContent = 'Loading orders...';
 
       try {
-
         const out = await api('/api/v1/orders');
 
         cachedOrders = out.orders || [];
@@ -3455,18 +4738,15 @@
         renderOrders();
 
       } catch (error) {
-
         $('#ordersCount').textContent = error.message;
-
       }
-
     }
-
-
-    // Open orders modal
+    // ---------- ORDERS MODAL ----------
 
     function setOrdersNewDot(visible) {
-      document.getElementById('ordersNewDot')?.classList.toggle('is-visible', Boolean(visible));
+      document
+        .getElementById('ordersNewDot')
+        ?.classList.toggle('is-visible', Boolean(visible));
     }
 
     function openOrders() {
@@ -3474,55 +4754,56 @@
 
       const m = openModal({
         title: '▤ Orders / Print Bills',
+
         sub: 'Only orders available to your authenticated owner session are shown here.',
+
         wide: true,
 
         html: `
-            <div class="orders-tools">
+      <div class="orders-tools">
 
-                <button id="refreshOrders">
-                    Refresh Orders
-                </button>
+        <button id="refreshOrders">
+          Refresh Orders
+        </button>
 
-                <button class="ghost" id="downloadOrdersPdf">
-                    Download All Past Orders as PDF
-                </button>
+        <button class="ghost" id="downloadOrdersPdf">
+          Download All Past Orders as PDF
+        </button>
 
-                <button class="danger" id="deleteOldOrders">
-                    Delete Orders Older Than 15 Days
-                </button>
+        <button class="danger" id="deleteOldOrders">
+          Delete Orders Older Than 15 Days
+        </button>
 
-            </div>
+      </div>
 
-            <div class="orders-tools">
+      <div class="orders-tools">
 
-                <label style="display:flex;align-items:center;gap:8px;margin:0">
+        <label style="display:flex;align-items:center;gap:8px;margin:0">
 
-                    <input type="checkbox" id="selectAllOrders">
+          <input type="checkbox" id="selectAllOrders">
 
-                    Select all listed orders
+          Select all listed orders
 
-                </label>
-                
+        </label>
 
-                <button class="danger" id="deleteSelectedOrders" disabled>
-                    Delete Selected (0)
-                </button>
+        <button class="danger" id="deleteSelectedOrders" disabled>
+          Delete Selected (0)
+        </button>
 
-            </div>
+      </div>
 
-            <div id="ordersCount" class="small muted">
-                Loading orders...
-            </div>
+      <div id="ordersCount" class="small muted">
+        Loading orders...
+      </div>
 
-            <div id="ordersList" class="orders-list"></div>
-        `
+      <div id="ordersList" class="orders-list"></div>
+    `
       });
 
       m.classList.add('orders-modal');
 
 
-      // Refresh
+      // ---------- REFRESH ORDERS ----------
 
       $('#refreshOrders', m).addEventListener(
         'click',
@@ -3530,7 +4811,7 @@
       );
 
 
-      // Print/download all orders
+      // ---------- DOWNLOAD ALL ORDERS ----------
 
       $('#downloadOrdersPdf', m).addEventListener('click', () => {
 
@@ -3542,54 +4823,59 @@
         }
 
         const rows = cachedOrders.map(o => `
-            <section style="border:1px solid #ddd;padding:12px;margin:10px 0">
+      <section style="border:1px solid #ddd;padding:12px;margin:10px 0">
 
-                <b>${safeOrderText(o.order_no)}</b>
+        <b>${safeOrderText(o.order_no)}</b>
 
-                <p>
-                    ${safeOrderText(o.customer)}
-                    ·
-                    ${safeOrderText(o.phone)}
-                </p>
+        <p>
+          ${safeOrderText(o.customer)}
+          ·
+          ${safeOrderText(o.phone)}
+        </p>
 
-                <p>
-                    ${safeOrderText(o.status)}
-                    ·
-                    ${orderMoney(o.total)}
-                </p>
+        <p>
+          ${safeOrderText(o.status)}
+          ·
+          ${orderMoney(o.total)}
+        </p>
 
-                <p>
-                    ${(o.items || []).map(i =>
+        <p>
+          ${(o.items || []).map(i =>
           `${safeOrderText(i.name)} × ${Number(i.qty || 1)}`
         ).join('<br>')}
-                </p>
+        </p>
 
-            </section>
-        `).join('');
+      </section>
+    `).join('');
 
         w.document.write(`
-            <html>
-            <head><title>Past Orders</title></head>
-            <body>
+      <!doctype html>
 
-                <h1>${safeOrderText(profile.name)} — Orders</h1>
+      <html>
+      <head>
+        <title>Past Orders</title>
+      </head>
 
-                ${rows}
+      <body>
 
-                <script>
-                    window.onload = () => window.print();
-                <\/script>
+        <h1>${safeOrderText(profile.name)} — Orders</h1>
 
-            </body>
-            </html>
-        `);
+        ${rows}
+
+        <script>
+          window.onload = () => window.print();
+        <\/script>
+
+      </body>
+      </html>
+    `);
 
         w.document.close();
 
       });
 
 
-      // Select all
+      // ---------- SELECT ALL ORDERS ----------
 
       $('#selectAllOrders', m).addEventListener('change', e => {
 
@@ -3601,15 +4887,19 @@
 
       });
 
-      // Update selected count whenever an individual checkbox changes.
+
+      // ---------- INDIVIDUAL SELECTION ----------
+
       $('#ordersList', m).addEventListener('change', e => {
+
         if (e.target.matches('[data-order-select]')) {
           updateSelected();
         }
+
       });
 
 
-      // Update selected count
+      // ---------- UPDATE SELECTED COUNT ----------
 
       function updateSelected() {
 
@@ -3633,97 +4923,114 @@
       }
 
 
-      // Delete selected orders
+      // ---------- DELETE SELECTED ORDERS ----------
 
-      $('#deleteSelectedOrders', m).addEventListener('click', async () => {
+      $('#deleteSelectedOrders', m).addEventListener(
+        'click',
+        async () => {
 
-        const ids = [
-          ...m.querySelectorAll('[data-order-select]:checked')
-        ].map(cb => cb.dataset.orderSelect);
+          const ids = [
+            ...m.querySelectorAll('[data-order-select]:checked')
+          ].map(cb => cb.dataset.orderSelect);
 
-        if (!ids.length) return;
+          if (!ids.length) return;
 
-        if (!(await confirmDialog({
-          title: 'Confirm deletion',
-          message: `Are you sure you want to delete ${ids.length} selected order(s)? Archived copies will be retained.`,
-          confirmText: 'Confirm Delete',
-          danger: true
-        }))) return;
+          if (!(await confirmDialog({
 
-        try {
+            title: 'Confirm deletion',
 
-          const result = await api(
-            '/api/v1/orders/delete-selected',
-            'POST',
-            { ids }
-          );
+            message:
+              `Are you sure you want to delete ${ids.length} selected order(s)? Archived copies will be retained.`,
 
-          toast(
-            `${result.deleted} order(s) deleted. Archived copies retained.`
-          );
+            confirmText: 'Confirm Delete',
 
-          $('#selectAllOrders', m).checked = false;
+            danger: true
 
-          await refreshOrders();
+          }))) return;
 
-          updateSelected();
+          try {
 
-        } catch (error) {
+            const result = await api(
+              '/api/v1/orders/delete-selected',
+              'POST',
+              { ids }
+            );
 
-          toast(error.message);
+            toast(
+              `${result.deleted} order(s) deleted. Archived copies retained.`
+            );
 
-        }
+            $('#selectAllOrders', m).checked = false;
 
-      });
+            await refreshOrders();
 
+            updateSelected();
 
-      // Delete orders older than 15 days
+          } catch (error) {
 
-      $('#deleteOldOrders', m).addEventListener('click', async () => {
+            toast(error.message);
 
-        if (!confirm(
-          'Delete all orders older than 15 days? Archived copies will be retained.'
-        )) return;
-
-        const button = $('#deleteOldOrders', m);
-
-        button.disabled = true;
-
-        try {
-
-          const result = await api(
-            '/api/v1/orders/delete-older-than-15-days',
-            'POST',
-            {}
-          );
-
-          toast(
-            `${result.deleted} old order(s) deleted. Archived copies retained.`
-          );
-
-          await refreshOrders();
-
-        } catch (error) {
-
-          toast(error.message);
-
-        } finally {
-
-          button.disabled = false;
+          }
 
         }
+      );
 
-      });
+
+      // ---------- DELETE ORDERS OLDER THAN 15 DAYS ----------
+
+      $('#deleteOldOrders', m).addEventListener(
+        'click',
+        async () => {
+
+          if (!confirm(
+            'Delete all orders older than 15 days? Archived copies will be retained.'
+          )) return;
+
+          const button = $('#deleteOldOrders', m);
+
+          button.disabled = true;
+
+          try {
+
+            const result = await api(
+              '/api/v1/orders/delete-older-than-15-days',
+              'POST',
+              {}
+            );
+
+            toast(
+              `${result.deleted} old order(s) deleted. Archived copies retained.`
+            );
+
+            await refreshOrders();
+
+          } catch (error) {
+
+            toast(error.message);
+
+          } finally {
+
+            button.disabled = false;
+
+          }
+
+        }
+      );
 
 
-      // Order actions: Active, Prepared and Print Bill
-      $('#ordersList', m).addEventListener('click', async (e) => {
+      // ---------- ORDER ACTIONS ----------
+
+      $('#ordersList', m).addEventListener('click', async e => {
 
         const statusButton = e.target.closest('[data-order-status]');
+
         const printButton = e.target.closest('[data-print-order]');
 
-        // Print bill
+
+        // PRINT BILL
+
         if (printButton) {
+
           const order = cachedOrders.find(
             o => String(o.id) === printButton.dataset.printOrder
           );
@@ -3735,7 +5042,9 @@
           return;
         }
 
-        // Active / Prepared
+
+        // ACTIVE / PREPARED
+
         if (!statusButton) return;
 
         const orderId = statusButton.dataset.orderId;
@@ -3748,15 +5057,18 @@
         statusButton.disabled = true;
 
         try {
+
           const result = await api(
             `/api/v1/orders/${encodeURIComponent(orderId)}/status`,
             'PATCH',
-            { status: requestedStatus }
+            {
+              status: requestedStatus
+            }
           );
 
           showOrderNotification(
             result.order?.order_no || orderId,
-            result.status,
+            result.status || requestedStatus,
             orderId
           );
 
@@ -3769,120 +5081,169 @@
           await refreshOrders();
 
         } catch (error) {
+
           console.error('Order status update failed:', error);
+
           toast(error.message);
+
           statusButton.disabled = false;
+
         }
+
       });
 
+
+      // LOAD ORDERS WHEN MODAL OPENS
 
       refreshOrders();
 
     }
 
 
-    // Open orders modal
+    // ---------- OPEN ORDERS FROM DASHBOARD ----------
 
-    $('#ordersPrintBills').addEventListener('click', openOrders);
+    $('#ordersPrintBills').addEventListener(
+      'click',
+      openOrders
+    );
 
-    $('#ordersPrintBillsSidebar').addEventListener('click', openOrders);
+    $('#ordersPrintBillsSidebar').addEventListener(
+      'click',
+      openOrders
+    );
 
-    viewToggle($('#itemView'), 'dm_view_items', (m) => $('#itemList').classList.toggle('as-list', m === 'list'));
+
+    // ---------- ITEM VIEW TOGGLE ----------
+
+    viewToggle(
+      $('#itemView'),
+      'dm_view_items',
+      m => $('#itemList').classList.toggle(
+        'as-list',
+        m === 'list'
+      )
+    );
+
+
+    // ---------- DASHBOARD INITIALIZATION ----------
 
     let showTab;
-    (async () => {
-      await requireRole('owner');
-      // Keep the owner dashboard informed as soon as a customer places an order.
-      // EventSource reconnects automatically after temporary network interruptions.
-      const orderStream = new EventSource('/api/v1/orders/events');
-      orderStream.addEventListener('new-order', async (event) => {
-        try {
-          const incoming = JSON.parse(event.data || '{}');
-          const orderNo = incoming.order_no || incoming.orderNumber || incoming.id || 'New order';
-          setOrdersNewDot(true);
-          const stack = document.getElementById('orderNotifications') || (() => {
-            const el = document.createElement('div');
-            el.id = 'orderNotifications';
-            el.setAttribute('aria-live', 'polite');
-            document.body.appendChild(el);
-            return el;
-          })();
-          const notice = document.createElement('div');
-          notice.className = 'order-notification';
-          const label = document.createElement('span');
-          label.textContent = `New order #${orderNo} from ${incoming.customer || 'customer'} · ${orderMoney(incoming.total)}`;
-          const close = document.createElement('button');
-          close.type = 'button'; close.className = 'order-notification-close';
-          close.setAttribute('aria-label', 'Close notification'); close.textContent = '×';
-          close.addEventListener('click', () => notice.remove());
-          notice.append(label, close); stack.appendChild(notice);
-          // Refresh the order list if the Orders dialog is currently open.
-          if (document.querySelector('.orders-modal')) await refreshOrders();
-        } catch (error) {
-          console.error('Could not process new-order event:', error);
-        }
-      });
-      orderStream.onerror = () => console.warn('Order event stream interrupted; reconnecting automatically.');
-      window.addEventListener('pagehide', () => orderStream.close(), { once: true });
-      profile = await api('/api/v1/restaurant');
-      const orderingEnabled = profile.order_enabled !== false;
 
-      $('#ordersPrintBills').hidden = !orderingEnabled;
-      $('#ordersPrintBillsSidebar').hidden = !orderingEnabled;
-      fillProfile(); renderQr();
-      subTabs(); await loadAll();
-      showTab = tabs($('#tabs'), (n) => { if (n === 'qr') renderQr(); });
+    (async function initializeDashboard() {
+
+      try {
+
+        await requireRole('owner');
+
+        profile = await api('/api/v1/restaurant');
+
+        const orderingEnabled = profile.order_enabled !== false;
+
+        $('#ordersPrintBills').hidden = !orderingEnabled;
+
+        $('#ordersPrintBillsSidebar').hidden = !orderingEnabled;
+
+        fillProfile();
+
+        renderQr();
+
+        subTabs();
+
+        await loadAll();
+
+        showTab = tabs($('#tabs'), n => {
+
+          if (n === 'qr') {
+            renderQr();
+          }
+
+        });
+
+      } catch (error) {
+
+        console.error('Dashboard initialization failed:', error);
+
+        toast(error.message || 'Unable to load dashboard.');
+
+      }
+
     })();
 
 
-    (function () {
-      const tabs = document.querySelector('#tabs');
-      if (!tabs) return;
+    // ---------- ACTIVE THEME TAB ----------
 
-      const navButtons = tabs.querySelectorAll('button[data-tab]');
-      const panels = document.querySelectorAll('[data-panel]');
+    (function () {
+
+      const tabsElement = document.querySelector('#tabs');
+
+      if (!tabsElement) return;
+
+      const navButtons =
+        tabsElement.querySelectorAll('button[data-tab]');
+
+      const panels =
+        document.querySelectorAll('[data-panel]');
+
 
       function syncActiveThemeTab() {
+
         let activePanel = null;
 
         panels.forEach(panel => {
+
           if (!panel.classList.contains('hidden')) {
             activePanel = panel.dataset.panel;
           }
+
         });
 
         if (!activePanel) return;
 
         navButtons.forEach(button => {
-          const isActive = button.dataset.tab === activePanel;
+
+          const isActive =
+            button.dataset.tab === activePanel;
 
           button.classList.toggle('on', isActive);
+
           button.setAttribute(
             'aria-current',
             isActive ? 'page' : 'false'
           );
+
         });
+
       }
 
-      // Update immediately when a navigation tab is clicked.
-      tabs.addEventListener('click', () => {
+
+      // Update immediately after clicking navigation.
+
+      tabsElement.addEventListener('click', () => {
+
         setTimeout(syncActiveThemeTab, 0);
+
       });
 
+
       // Detect dashboard panel changes.
-      const observer = new MutationObserver(syncActiveThemeTab);
+
+      const observer = new MutationObserver(
+        syncActiveThemeTab
+      );
 
       panels.forEach(panel => {
+
         observer.observe(panel, {
           attributes: true,
           attributeFilter: ['class']
         });
+
       });
 
+
       syncActiveThemeTab();
+
     })();
-
-
   </script>
 </body>
 

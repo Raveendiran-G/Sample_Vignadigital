@@ -58,7 +58,9 @@
        ========================================================= */
 
     function getRestaurant() {
-        return menuData?.restaurant || {};
+        return menuData?.restaurant ||
+            menuData?.data?.restaurant ||
+            {};
     }
     function getCategories() {
         return Array.isArray(menuData?.categories)
@@ -99,11 +101,17 @@
     }
 
     function getItemImage(item) {
-        return item.image_url ||
+        const image = item.image_url ||
             item.image ||
             item.photo ||
             item.imageUrl ||
             '';
+
+        if (!image || /^(data:|https?:|blob:|\/)/i.test(String(image))) {
+            return image;
+        }
+
+        return `/${String(image).replace(/^\.?\//, '')}`;
     }
 
     function isItemAvailable(item) {
@@ -203,16 +211,21 @@
             `${API}/public/menu/${encodeURIComponent(slug)}?include_unavailable=1&_=${Date.now()}`
         );
 
+        const payload = data?.data?.restaurant
+            ? data.data
+            : data;
+
         if (
-            !data ||
-            !data.restaurant ||
-            !Array.isArray(data.categories)
+            !payload ||
+            !payload ||
+            !payload.restaurant ||
+            !Array.isArray(payload.categories)
         ) {
             throw new Error('Invalid menu response from server.');
         }
 
         // Store the latest menu data.
-        menuData = data;
+        menuData = payload;
 
         const restaurant = getRestaurant();
 
@@ -222,9 +235,16 @@
         // Get the restaurant's saved theme color.
         const themeColor =
             /^#[0-9a-fA-F]{6}$/.test(
-                String(restaurant.theme_color || '')
+                String(
+                    restaurant.theme_color ||
+                    data.theme_color ||
+                    ''
+                )
             )
-                ? restaurant.theme_color
+                ? (
+                    restaurant.theme_color ||
+                    data.theme_color
+                )
                 : '#d9480f';
 
         // Apply restaurant theme.
@@ -349,6 +369,9 @@
             <article
                 class="m-card order-card"
                 data-item="${escapeHTML(id)}"
+                tabindex="${available && enabled ? '0' : '-1'}"
+                role="${available && enabled ? 'button' : 'article'}"
+                aria-label="${available && enabled ? `Add ${escapeHTML(name)} to cart` : escapeHTML(name)}"
             >
 
                 ${image
@@ -359,12 +382,14 @@
                                     alt="${escapeHTML(name)}"
                                     loading="lazy"
                                     decoding="async"
+                                    onerror="this.closest('.thumb').classList.add('image-error'); this.remove();"
                                 >
+                                <span class="thumb-fallback" aria-hidden="true">Image unavailable</span>
                             </div>
                         `
                 : `
-                            <div class="thumb" aria-hidden="true">
-                                ${escapeHTML(name.charAt(0).toUpperCase())}
+                            <div class="thumb image-error" aria-hidden="true">
+                                <span class="thumb-fallback">Image unavailable</span>
                             </div>
                         `
             }
@@ -2089,16 +2114,20 @@
                 `${API}/public/menu/${encodeURIComponent(slug)}?include_unavailable=1&_=${Date.now()}`
             );
 
+            const payload = latest?.data?.restaurant
+                ? latest.data
+                : latest;
+
             if (
-                !latest.restaurant ||
-                !Array.isArray(latest.categories)
+                !payload.restaurant ||
+                !Array.isArray(payload.categories)
             ) {
                 return;
             }
 
             const previousOrderingState = orderingEnabled();
 
-            menuData = latest;
+            menuData = payload;
 
             const newOrderingState = orderingEnabled();
 
@@ -2115,21 +2144,55 @@
             console.warn('Menu refresh failed:', error);
         }
     }
-
     /* =========================================================
-       GLOBAL CLICK HANDLER
-       ========================================================= */
+       GLOBAL CLICK HANDLER - FIXED
+    ========================================================= */
 
     document.addEventListener('click', event => {
+
+        // ADD TO CART
+        const addButton = event.target.closest('[data-add]');
+
+        if (addButton) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            const itemId = addButton.dataset.add;
+
+            addToCart(itemId);
+
+            return;
+        }
+
+        // ORDER NOW
         const orderButton = event.target.closest('[data-order-now]');
 
         if (orderButton) {
+
             event.preventDefault();
+            event.stopPropagation();
+
             orderNow(orderButton.dataset.orderNow);
+
             return;
         }
-    });
 
+        // CARD CLICK
+        const card = event.target.closest('.m-card[data-item]');
+
+        if (
+            card &&
+            !event.target.closest(
+                'button, a, input, textarea, select'
+            )
+        ) {
+
+            addToCart(card.dataset.item);
+
+        }
+
+    });
     /* =========================================================
        CLEANUP
        ========================================================= */

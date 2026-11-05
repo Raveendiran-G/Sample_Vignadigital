@@ -1370,7 +1370,7 @@ owner.get('/qr.png', async (req, res) => {
                     Math.max(Number(req.query.size) || 800, 128),
                     2048
                 ),
-                margin: 2,
+                margin: 4,
                 errorCorrectionLevel: level
             }
         )

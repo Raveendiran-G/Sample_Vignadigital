@@ -1724,7 +1724,8 @@ Password: ${password}${r.menu_url ? `\nYour menu: ${r.menu_url}` : ''}`;
           if (await confirmDialog({
             title: `Reset password for ${r.name}?`,
             message: 'A new password is generated. The old one stops working immediately.',
-            confirmText: 'Reset password'
+            confirmText: 'Reset password',
+            className: 'reset-password-confirm'
           })) {
 
             const out = await api(
