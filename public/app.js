@@ -101,6 +101,7 @@ function initDashboardSidebar() {
     toggle.setAttribute('aria-expanded', String(open));
     toggle.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
   };
+  const closeSidebar = () => setOpen(false);
 
   setOpen(false);
 
@@ -108,15 +109,18 @@ function initDashboardSidebar() {
     setOpen(!side.classList.contains('is-open'));
   });
 
-  overlay.addEventListener('click', () => setOpen(false));
+  overlay.addEventListener('click', closeSidebar);
 
   const navigation = side.querySelector('.tabs');
   navigation?.addEventListener('click', event => {
-    if (event.target.closest('button, a')) setOpen(false);
-  });
+    const control = event.target.closest(
+      'button[data-tab], #ordersPrintBillsSidebar, a[href]'
+    );
+    if (control && navigation.contains(control)) closeSidebar();
+  }, true);
 
   document.addEventListener('keydown', event => {
-    if (event.key === 'Escape' && side.classList.contains('is-open')) setOpen(false);
+    if (event.key === 'Escape' && side.classList.contains('is-open')) closeSidebar();
   });
 }
 
