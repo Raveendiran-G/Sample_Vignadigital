@@ -1317,18 +1317,243 @@ th {
   }
 }
 
+/* Kalvium-style collapsed dashboard shell. */
+.shell {
+  display: block !important;
+  min-height: 100dvh;
+}
+
+.shell > .side {
+  position: fixed !important;
+  inset: 0 auto 0 0;
+  z-index: 100;
+  width: 252px;
+  max-width: calc(100vw - 24px);
+  height: 100dvh;
+  min-height: 0;
+  transform: translateX(-100%) !important;
+  transition: transform .28s ease !important;
+  overflow: hidden;
+}
+
+.shell > .side.is-open {
+  transform: translateX(0) !important;
+}
+
+.shell > .side > .tabs {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.shell > .side > .spacer {
+  display: none;
+}
+
+.shell > .side > .logout {
+  flex: 0 0 auto;
+  margin-top: auto;
+}
+
+main.main,
+main.main.wide {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+}
+
+.dashboard-toolbar {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  margin-bottom: 16px;
+}
+
+.hamburger-btn {
+  display: inline-flex !important;
+  position: static;
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+  flex: 0 0 40px;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  background: var(--side);
+  border: 1px solid rgba(255, 255, 255, .16);
+  border-radius: 9px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.hamburger-btn span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  margin: 0 auto;
+  border-radius: 2px;
+  background: currentColor;
+}
+
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgba(0, 0, 0, .42);
+}
+
+.sidebar-overlay[hidden] {
+  display: none !important;
+}
+
+@media (max-width: 860px) {
+  main.main,
+  main.main.wide {
+    padding: 20px 16px 48px;
+  }
+
+  .dashboard-toolbar {
+    margin-bottom: 16px;
+  }
+
+  .shell > .side {
+    width: min(260px, calc(100vw - 24px));
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
+  }
+}
+
+@media (max-width: 480px) {
+  main.main,
+  main.main.wide {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
+
+/* Keep the collapsed overlay shell last so page-specific rules cannot reopen it. */
+.shell {
+  display: block !important;
+}
+
+.shell > .side {
+  position: fixed !important;
+  inset: 0 auto 0 0 !important;
+  z-index: 100 !important;
+  width: 252px !important;
+  max-width: calc(100vw - 24px) !important;
+  height: 100dvh !important;
+  min-height: 0 !important;
+  transform: translateX(-100%) !important;
+  transition: transform .28s ease !important;
+  overflow: hidden !important;
+}
+
+.shell > .side.is-open {
+  transform: translateX(0) !important;
+}
+
+.shell > .side > .tabs {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+
+.shell > .side > .logout {
+  flex: 0 0 auto !important;
+  margin-top: auto !important;
+}
+
+main.main,
+main.main.wide {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+}
+
+.dashboard-toolbar {
+  display: flex !important;
+  align-items: center;
+  height: 40px;
+  margin-bottom: 16px;
+}
+
+.hamburger-btn {
+  display: inline-flex !important;
+  position: static !important;
+  width: 40px !important;
+  height: 40px !important;
+  padding: 8px !important;
+  flex: 0 0 40px !important;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  background: var(--side) !important;
+  border: 1px solid rgba(255, 255, 255, .16) !important;
+  border-radius: 9px !important;
+  color: #fff !important;
+  cursor: pointer;
+}
+
+.hamburger-btn span {
+  display: block !important;
+  width: 22px !important;
+  height: 2px !important;
+  margin: 0 auto;
+  border-radius: 2px;
+  background: currentColor !important;
+}
+
+.sidebar-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 90 !important;
+  background: rgba(0, 0, 0, .42) !important;
+}
+
+.sidebar-overlay[hidden] {
+  display: none !important;
+}
+
+@media (max-width: 860px) {
+  main.main,
+  main.main.wide {
+    padding: 20px 16px 48px !important;
+  }
+
+  .shell > .side {
+    width: min(260px, calc(100vw - 24px)) !important;
+    padding-bottom: max(20px, env(safe-area-inset-bottom)) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  main.main,
+  main.main.wide {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+}
+
+html body .shell > aside.side:not(.is-open) {
+  transform: translateX(-100%) !important;
+}
+
+html body .shell > aside.side.is-open {
+  transform: translateX(0) !important;
+}
+
 /* Super Admin: only the two requested primary actions. */
 #editForm button[type="submit"],
-.reset-password-confirm .confirm-actions button[data-r="1"],
-#copyCreds {
+.reset-password-confirm .confirm-actions button[data-r="1"] {
   background-color: #F97316 !important;
   color: #FFFFFF !important;
   border-color: #F97316 !important;
 }
 
 #editForm button[type="submit"]:hover,
-.reset-password-confirm .confirm-actions button[data-r="1"]:hover,
-#copyCreds:hover {
+.reset-password-confirm .confirm-actions button[data-r="1"]:hover {
   background-color: #EA580C !important;
   border-color: #EA580C !important;
 }
@@ -4140,5 +4365,110 @@ body.owner-dashboard .orders-modal #ordersList button.order-active:hover {
   .img-pick {
     align-items: flex-start;
     flex-direction: column;
+  }
+}
+
+/* Final collapsed dashboard shell overrides. */
+.shell {
+  display: block !important;
+}
+
+.shell > .side {
+  position: fixed !important;
+  inset: 0 auto 0 0 !important;
+  z-index: 100 !important;
+  width: 252px !important;
+  max-width: calc(100vw - 24px) !important;
+  height: 100dvh !important;
+  min-height: 0 !important;
+  transform: translateX(-100%) !important;
+  transition: transform .28s ease !important;
+  overflow: hidden !important;
+}
+
+.shell > .side.is-open {
+  transform: translateX(0) !important;
+}
+
+.shell > .side > .tabs {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+
+.shell > .side > .logout {
+  flex: 0 0 auto !important;
+  margin-top: auto !important;
+}
+
+main.main,
+main.main.wide {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+}
+
+.dashboard-toolbar {
+  display: flex !important;
+  align-items: center;
+  height: 40px;
+  margin-bottom: 16px;
+}
+
+.hamburger-btn {
+  display: inline-flex !important;
+  position: static !important;
+  width: 40px !important;
+  height: 40px !important;
+  padding: 8px !important;
+  flex: 0 0 40px !important;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  background: var(--side) !important;
+  border: 1px solid rgba(255, 255, 255, .16) !important;
+  border-radius: 9px !important;
+  color: #fff !important;
+  cursor: pointer;
+}
+
+.hamburger-btn span {
+  display: block !important;
+  width: 22px !important;
+  height: 2px !important;
+  margin: 0 auto;
+  border-radius: 2px;
+  background: currentColor !important;
+}
+
+.sidebar-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 90 !important;
+  background: rgba(0, 0, 0, .42) !important;
+}
+
+.sidebar-overlay[hidden] {
+  display: none !important;
+}
+
+@media (max-width: 860px) {
+  main.main,
+  main.main.wide {
+    padding: 20px 16px 48px !important;
+  }
+
+  .shell > .side {
+    width: min(260px, calc(100vw - 24px)) !important;
+    padding-bottom: max(20px, env(safe-area-inset-bottom)) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  main.main,
+  main.main.wide {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
   }
 }

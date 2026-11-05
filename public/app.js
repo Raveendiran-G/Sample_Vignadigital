@@ -59,53 +59,68 @@ function tabs(root, onChange) {
   return show;
 }
 
-function initMobileSidebar() {
+function initDashboardSidebar() {
   const shell = document.querySelector('.shell');
   const side = shell?.querySelector(':scope > .side');
   const main = shell?.querySelector(':scope > .main');
 
-  if (!shell || !side || !main || side.dataset.mobileSidebarReady) return;
+  if (!shell || !side || !main || side.dataset.dashboardSidebarReady) return;
 
-  side.dataset.mobileSidebarReady = 'true';
+  side.dataset.dashboardSidebarReady = 'true';
 
   const toggle = document.createElement('button');
   toggle.type = 'button';
-  toggle.className = 'mobile-menu-toggle';
+  toggle.className = 'hamburger-btn';
+  toggle.id = 'dashboardMenuToggle';
+  toggle.setAttribute('aria-controls', side.id || 'dashboardSidebar');
   toggle.setAttribute('aria-label', 'Open navigation');
   toggle.setAttribute('aria-expanded', 'false');
   toggle.innerHTML = '<span></span><span></span><span></span>';
+  if (!side.id) side.id = 'dashboardSidebar';
+
+  const toolbar = document.createElement('div');
+  toolbar.className = 'dashboard-toolbar';
+  toolbar.append(toggle);
 
   const overlay = document.createElement('div');
-  overlay.className = 'mobile-sidebar-overlay';
+  overlay.className = 'sidebar-overlay';
   overlay.hidden = true;
 
-  main.prepend(toggle);
+  main.prepend(toolbar);
   document.body.appendChild(overlay);
 
   const setOpen = open => {
-    side.classList.toggle('mobile-open', open);
+    side.classList.toggle('is-open', open);
+    side.style.setProperty(
+      'transform',
+      open ? 'translateX(0)' : 'translateX(-100%)',
+      'important'
+    );
     overlay.hidden = !open;
-    document.body.classList.toggle('mobile-sidebar-open', open);
+    document.body.classList.toggle('sidebar-open', open);
     toggle.setAttribute('aria-expanded', String(open));
     toggle.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
   };
 
+  setOpen(false);
+
   toggle.addEventListener('click', () => {
-    setOpen(!side.classList.contains('mobile-open'));
+    setOpen(!side.classList.contains('is-open'));
   });
 
   overlay.addEventListener('click', () => setOpen(false));
 
-  side.addEventListener('click', event => {
+  const navigation = side.querySelector('.tabs');
+  navigation?.addEventListener('click', event => {
     if (event.target.closest('button, a')) setOpen(false);
   });
 
-  window.addEventListener('resize', () => {
-    if (window.innerWidth > 860) setOpen(false);
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && side.classList.contains('is-open')) setOpen(false);
   });
 }
 
-initMobileSidebar();
+initDashboardSidebar();
 // sub tabs inside a section: <div class="subtabs"> with [data-subtab], panels [data-subpanel]
 function subTabs() {
   document.querySelectorAll('.subtabs').forEach((bar) => bar.addEventListener('click', (e) => {
