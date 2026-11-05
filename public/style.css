@@ -3290,3 +3290,134 @@ html body #rList button.sm[data-menu]:hover {
 .modal-box .kv b a:hover {
   color: #ff8a50 !important;
 }
+
+/* --------------------------------
+   RESTAURANT DETAILS TABS
+   Branding / Business / Payment / Password
+-------------------------------- */
+
+body.owner-dashboard .settings-tabs button.active,
+body.owner-dashboard .settings-tabs button.on,
+body.owner-dashboard .subtabs button.active,
+body.owner-dashboard .subtabs button.on {
+  background: var(--theme) !important;
+  color: var(--theme-text, #ffffff) !important;
+  border-color: var(--theme) !important;
+}
+
+/* --------------------------------
+   HIGHLIGHTED HEADINGS
+-------------------------------- */
+
+body.owner-dashboard .card h3,
+body.owner-dashboard .section-title,
+body.owner-dashboard .accent-text,
+body.owner-dashboard .highlight-text {
+  color: var(--theme) !important;
+}
+
+/* --------------------------------
+   ADD MENU MODAL
+-------------------------------- */
+
+body.owner-dashboard .modal .close-btn,
+body.owner-dashboard .modal .modal-close,
+body.owner-dashboard .modal button.close,
+body.owner-dashboard .modal-header .close-btn {
+  background: var(--theme) !important;
+  color: var(--theme-text, #ffffff) !important;
+  border-color: var(--theme) !important;
+}
+
+/* Add menu category filters */
+body.owner-dashboard .modal .filter-btn.active,
+body.owner-dashboard .modal .filter-btn.on {
+  background: var(--theme) !important;
+  color: var(--theme-text, #ffffff) !important;
+  border-color: var(--theme) !important;
+}
+
+/* --------------------------------
+   QR CODE DOWNLOAD
+-------------------------------- */
+
+body.owner-dashboard .qr-download,
+body.owner-dashboard button[data-action="download-qr"] {
+  background: var(--theme) !important;
+  color: var(--theme-text, #ffffff) !important;
+  border-color: var(--theme) !important;
+}
+
+/* --------------------------------
+   THEME-COLORED TEXT AND ICONS
+-------------------------------- */
+
+body.owner-dashboard .tabs button.on,
+body.owner-dashboard .nav-item.active,
+body.owner-dashboard .accent,
+body.owner-dashboard .item-body .price,
+body.owner-dashboard .brand-text {
+  color: var(--theme) !important;
+}
+
+/* --------------------------------
+   CHECKBOXES AND SELECTIONS
+-------------------------------- */
+
+body.owner-dashboard input[type="checkbox"],
+body.owner-dashboard input[type="radio"] {
+  accent-color: var(--theme) !important;
+}
+
+/* --------------------------------
+   REMOVE HARDCODED ORANGE FROM
+   OWNER DASHBOARD HIGHLIGHTS
+-------------------------------- */
+
+body.owner-dashboard {
+  --accent: var(--theme);
+  --accent-hover: var(--theme-dark);
+  --accent-light: var(--theme-light);
+}
+
+
+/* =========================================
+   VIGNADIGITAL – REMOVE BUTTON BORDERS
+   Preserve existing button colours and behaviour.
+   ========================================= */
+
+button,
+.btn,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+a.btn,
+button:hover,
+.btn:hover,
+input[type="button"]:hover,
+input[type="submit"]:hover,
+input[type="reset"]:hover,
+a.btn:hover,
+button:active,
+.btn:active,
+button:focus,
+button:focus-visible,
+.btn:focus,
+.btn:focus-visible {
+    border: 0 !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+}
+
+/* Remove button focus outlines */
+button:focus,
+button:focus-visible,
+.btn:focus,
+.btn:focus-visible,
+input[type="button"]:focus,
+input[type="submit"]:focus,
+input[type="reset"]:focus,
+a.btn:focus,
+a.btn:focus-visible {
+    outline: none !important;
+}

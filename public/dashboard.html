@@ -5,56 +5,1457 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
 
-  <script>
-    (function () {
-      try {
-        const color = localStorage.getItem('vigna_dashboard_theme');
+  <style>
+    /* =====================================================
 
-        if (!color || !/^#[0-9a-fA-F]{6}$/.test(color)) return;
+   VIGNADIGITAL DASHBOARD - FINAL THEME CSS
 
-        function rgb(hex) {
-          return {
-            r: parseInt(hex.slice(1, 3), 16),
-            g: parseInt(hex.slice(3, 5), 16),
-            b: parseInt(hex.slice(5, 7), 16)
-          };
-        }
+\===================================================== */
 
-        function mix(hex, target, amount) {
-          const a = rgb(hex);
-          const b = rgb(target);
 
-          return '#' + [a.r, a.g, a.b].map((v, i) =>
-            Math.round(v + (b[['r', 'g', 'b'][i]] - v) * amount)
-              .toString(16).padStart(2, '0')
-          ).join('');
-        }
 
-        const c = rgb(color);
-        const luminance = (0.299 * c.r + 0.587 * c.g + 0.114 * c.b) / 255;
-        const text = luminance > 0.60 ? '#171717' : '#ffffff';
+    :root {
 
-        const root = document.documentElement;
+      --status-green: #16a34a;
 
-        root.style.setProperty('--theme', color);
-        root.style.setProperty('--theme-dark', mix(color, '#000000', 0.28));
-        root.style.setProperty('--theme-light', mix(color, '#ffffff', 0.88));
-        root.style.setProperty('--theme-soft', mix(color, '#000000', 0.78));
-        root.style.setProperty('--theme-border', mix(color, '#ffffff', 0.38));
-        root.style.setProperty('--theme-ink', text);
-        root.style.setProperty('--theme-rgb', `${c.r}, ${c.g}, ${c.b}`);
+      --status-green-hover: #15803d;
 
-        root.style.setProperty('--brand', color);
-        root.style.setProperty('--brand-600', mix(color, '#000000', 0.28));
-        root.style.setProperty('--brand-50', mix(color, '#ffffff', 0.88));
-        root.style.setProperty('--brand-ink', text);
-        root.style.setProperty('--ring', `0 0 0 3px rgba(${c.r}, ${c.g}, ${c.b}, .25)`);
 
-      } catch (error) {
-        console.warn('Theme restoration failed:', error);
+
+      --status-blue: #2563eb;
+
+      --status-blue-hover: #1d4ed8;
+
+
+
+      --status-red: #dc2626;
+
+      --status-red-hover: #b91c1c;
+
+
+
+      --logout-green: #15803d;
+
+      --logout-green-hover: #166534;
+
+    }
+
+
+
+    /* =====================================================
+
+   PAGE HEADER
+
+\===================================================== */
+
+
+
+    .page-head {
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      gap: 16px;
+
+      flex-wrap: wrap;
+
+    }
+
+
+
+    /* =====================================================
+
+   ORDERS HEADER BUTTON
+
+\===================================================== */
+
+
+
+    html body .orders-print-btn {
+
+      background: var(--brand, #d9480f) !important;
+
+      color: var(--brand-ink, #fff) !important;
+
+      border: 1px solid var(--brand, #d9480f) !important;
+
+      border-radius: 10px;
+
+      padding: 10px 18px;
+
+      font: inherit;
+
+      font-weight: 700;
+
+      cursor: pointer;
+
+      transition: .2s ease;
+
+    }
+
+
+
+    html body .orders-print-btn:hover {
+
+      background: var(--brand-600, #b9380c) !important;
+
+    }
+
+
+
+    .orders-new-dot {
+
+      position: absolute;
+
+      top: -7px;
+
+      right: -7px;
+
+      width: 13px;
+
+      height: 13px;
+
+      border: 2px solid #fff;
+
+      border-radius: 50%;
+
+      background: #ef2020;
+
+      display: none;
+
+      z-index: 5;
+
+      animation: ordersDotPulse 1.2s infinite;
+
+    }
+
+
+
+    .orders-new-dot.is-visible {
+
+      display: block;
+
+    }
+
+
+
+    @keyframes ordersDotPulse {
+
+
+
+      0%,
+
+      100% {
+
+        transform: scale(1);
+
       }
-    })();
-  </script>
+
+
+
+      50% {
+
+        transform: scale(1.2);
+
+      }
+
+    }
+
+
+
+    /* =====================================================
+
+   SIDEBAR
+
+\===================================================== */
+
+
+
+    html body .shell aside.side {
+
+      background: #0e0f11 !important;
+
+      color: #c4c6ce;
+
+    }
+
+
+
+    /* Sidebar navigation */
+
+
+
+    html body .shell aside.side nav#tabs {
+
+      display: flex !important;
+
+      flex-direction: column !important;
+
+      gap: 4px !important;
+
+    }
+
+
+
+    /* All unselected navigation buttons */
+
+
+
+    html body .shell aside.side nav#tabs>button {
+
+      width: 100%;
+
+      background: transparent !important;
+
+      background-color: transparent !important;
+
+      border: 1px solid transparent !important;
+
+      box-shadow: none !important;
+
+      border-radius: 11px !important;
+
+      color: #c4c6ce !important;
+
+      text-align: left;
+
+      transition: background .2s ease, color .2s ease;
+
+    }
+
+
+
+
+
+    /* Unselected hover */
+
+
+
+    html body .shell aside.side nav#tabs>button:not(.on):hover {
+
+      background: #191a1d !important;
+
+      border-color: transparent !important;
+
+      color: #ffffff !important;
+
+    }
+
+
+
+    /* =====================================================
+
+   LOGOUT BUTTON - GREEN
+
+\===================================================== */
+
+
+
+    html body .shell aside.side button.logout {
+
+      background: var(--logout-green) !important;
+
+      background-color: var(--logout-green) !important;
+
+      color: #ffffff !important;
+
+      border: 1px solid var(--logout-green) !important;
+
+      border-radius: 10px !important;
+
+      font-weight: 700 !important;
+
+      box-shadow: none !important;
+
+      transition: background .2s ease, transform .15s ease;
+
+    }
+
+
+
+    html body .shell aside.side button.logout:hover {
+
+      background: var(--logout-green-hover) !important;
+
+      background-color: var(--logout-green-hover) !important;
+
+      border-color: var(--logout-green-hover) !important;
+
+    }
+
+
+
+    /* =====================================================
+
+   ORDERS MODAL
+
+\===================================================== */
+
+
+
+    html body .orders-modal .modal-box {
+
+      background: #ffffff !important;
+
+      color: #172033 !important;
+
+      border-radius: 16px;
+
+      max-width: 900px;
+
+    }
+
+
+
+    html body .orders-modal .modal-head {
+
+      position: sticky;
+
+      top: -22px;
+
+      background: #ffffff !important;
+
+      z-index: 2;
+
+      padding: 6px 0 12px;
+
+    }
+
+
+
+    /* =====================================================
+
+   ORDER TOOLBAR
+
+\===================================================== */
+
+
+
+    .orders-tools {
+
+      display: flex;
+
+      gap: 8px;
+
+      flex-wrap: wrap;
+
+      margin: 12px 0;
+
+    }
+
+
+
+    html body .orders-modal .orders-tools button {
+
+      border-radius: 9px;
+
+      padding: 10px 13px;
+
+      font-weight: 700;
+
+      transition: .2s ease;
+
+    }
+
+
+
+    /* Refresh */
+
+
+
+    html body .orders-modal .orders-tools button:not(.ghost):not(.danger) {
+
+      background: var(--brand, #d9480f) !important;
+
+      color: var(--brand-ink, #fff) !important;
+
+      border: 1px solid var(--brand, #d9480f) !important;
+
+    }
+
+
+
+    html body .orders-modal .orders-tools button:not(.ghost):not(.danger):hover {
+
+      background: var(--brand-600, #b9380c) !important;
+
+    }
+
+
+
+    /* Download PDF */
+
+
+
+    html body .orders-modal .orders-tools button.ghost {
+
+      background: var(--brand-50, #fff1e8) !important;
+
+      color: var(--brand-600, #b9380c) !important;
+
+      border: 1px solid var(--theme-border, #e8c9b5) !important;
+
+    }
+
+
+
+    /* Delete */
+
+
+
+    html body .orders-modal .orders-tools button.danger {
+
+      background: #dc2626 !important;
+
+      color: #ffffff !important;
+
+      border: 1px solid #dc2626 !important;
+
+    }
+
+
+
+    html body .orders-modal .orders-tools button.danger:hover {
+
+      background: #b91c1c !important;
+
+    }
+
+
+
+    /* =====================================================
+
+   ORDER LIST
+
+\===================================================== */
+
+
+
+    .orders-list {
+
+      display: grid;
+
+      gap: 10px;
+
+      margin-top: 14px;
+
+    }
+
+
+
+    .order-row {
+
+      display: grid;
+
+      grid-template-columns: minmax(0, 1fr) 190px;
+
+      gap: 14px;
+
+      border: 1px solid #e5e7eb;
+
+      border-radius: 12px;
+
+      padding: 12px;
+
+      background: #ffffff;
+
+    }
+
+
+
+    .order-meta {
+
+      font-size: 13px;
+
+      line-height: 1.65;
+
+      color: #334155;
+
+    }
+
+
+
+    .order-title {
+
+      font-weight: 800;
+
+      color: #111827;
+
+    }
+
+
+
+    /* =====================================================
+
+   ACTIVE AND PREPARED BUTTONS
+
+   HIGH SPECIFICITY TO OVERRIDE style.css
+
+\===================================================== */
+
+
+
+    html body .orders-modal .order-actions>button.order-active,
+
+    html body .orders-modal button.order-active,
+
+    html body .orders-modal button[data-order-status="active"] {
+
+      background: #16a34a !important;
+
+      background-color: #16a34a !important;
+
+      color: #ffffff !important;
+
+      border: 1px solid #16a34a !important;
+
+      opacity: 1;
+
+    }
+
+
+
+    html body .orders-modal .order-actions>button.order-active:hover:not(:disabled),
+
+    html body .orders-modal button.order-active:hover:not(:disabled) {
+
+      background: #15803d !important;
+
+      background-color: #15803d !important;
+
+      border-color: #15803d !important;
+
+    }
+
+
+
+    /* Prepared - BLUE */
+
+
+
+    html body .orders-modal .order-actions>button.order-prepared,
+
+    html body .orders-modal button.order-prepared,
+
+    html body .orders-modal button[data-order-status="prepared"] {
+
+      background: #2563eb !important;
+
+      background-color: #2563eb !important;
+
+      color: #ffffff !important;
+
+      border: 1px solid #2563eb !important;
+
+      opacity: 1;
+
+    }
+
+
+
+    html body .orders-modal .order-actions>button.order-prepared:hover:not(:disabled),
+
+    html body .orders-modal button.order-prepared:hover:not(:disabled) {
+
+      background: #1d4ed8 !important;
+
+      background-color: #1d4ed8 !important;
+
+      border-color: #1d4ed8 !important;
+
+    }
+
+
+
+    /* Disabled buttons */
+
+
+
+    html body .orders-modal button.order-active:disabled,
+
+    html body .orders-modal button.order-prepared:disabled {
+
+      opacity: .45 !important;
+
+      cursor: not-allowed !important;
+
+      filter: grayscale(.3);
+
+    }
+
+
+
+    /* =====================================================
+
+   PRINT BILL BUTTON
+
+\===================================================== */
+
+
+
+    html body .orders-modal .order-actions>button.order-print,
+
+    html body .orders-modal button.order-print {
+
+      grid-column: 1 / -1;
+
+      background: var(--brand, #d9480f) !important;
+
+      background-color: var(--brand, #d9480f) !important;
+
+      color: var(--brand-ink, #ffffff) !important;
+
+      border: 1px solid var(--brand, #d9480f) !important;
+
+    }
+
+
+
+    html body .orders-modal button.order-print:hover {
+
+      background: var(--brand-600, #b9380c) !important;
+
+    }
+
+
+
+    /* Common action button styling */
+
+
+
+    html body .orders-modal .order-actions>button {
+
+      padding: 10px 8px;
+
+      border-radius: 9px;
+
+      font-size: 12px;
+
+      font-weight: 700;
+
+      cursor: pointer;
+
+      transition: .2s ease;
+
+    }
+
+
+
+    /* Button interactions */
+
+
+
+    html body .orders-modal button:active:not(:disabled) {
+
+      transform: translateY(1px);
+
+    }
+
+
+
+    html body .orders-modal button:focus-visible {
+
+      outline: 2px solid var(--brand, #d9480f);
+
+      outline-offset: 2px;
+
+    }
+
+
+
+    /* =====================================================
+
+   ORDER NOTIFICATIONS
+
+\===================================================== */
+
+
+
+    #orderNotifications {
+
+      position: fixed;
+
+      top: 18px;
+
+      right: 18px;
+
+      z-index: 100001;
+
+      display: flex;
+
+      flex-direction: column;
+
+      gap: 10px;
+
+      width: min(360px, calc(100vw - 36px));
+
+      pointer-events: none;
+
+    }
+
+
+
+    .order-notification {
+
+      position: relative;
+
+      display: flex;
+
+      align-items: flex-start;
+
+      padding: 12px 38px 12px 14px;
+
+      border: 1px solid #bbf7d0;
+
+      border-left: 4px solid #16a34a;
+
+      border-radius: 10px;
+
+      background: #f0fdf4;
+
+      color: #14532d;
+
+      box-shadow: 0 10px 24px #0002;
+
+      font: 600 14px/1.35 system-ui, sans-serif;
+
+      animation: orderNotificationIn .2s ease-out;
+
+      pointer-events: auto;
+
+    }
+
+
+
+    .order-notification.prepared {
+
+      border-color: #bfdbfe;
+
+      border-left-color: #2563eb;
+
+      background: #eff6ff;
+
+      color: #1e3a8a;
+
+    }
+
+
+
+    .order-notification-close {
+
+      position: absolute;
+
+      top: 4px;
+
+      right: 5px;
+
+      width: 28px;
+
+      height: 28px;
+
+      border: 0;
+
+      background: transparent !important;
+
+      color: inherit;
+
+      font-size: 20px;
+
+      line-height: 1;
+
+      cursor: pointer;
+
+    }
+
+
+
+    @keyframes orderNotificationIn {
+
+      from {
+
+        opacity: 0;
+
+        transform: translateX(18px);
+
+      }
+
+
+
+      to {
+
+        opacity: 1;
+
+        transform: translateX(0);
+
+      }
+
+    }
+
+
+
+    /* =====================================================
+
+   RESPONSIVE
+
+\===================================================== */
+
+
+
+    @media (max-width: 600px) {
+
+      .order-row {
+
+        grid-template-columns: 1fr;
+
+      }
+
+
+
+      .order-actions {
+
+        grid-template-columns: 1fr 1fr;
+
+      }
+
+
+
+      .order-actions button.order-print {
+
+        grid-column: 1 / -1;
+
+      }
+
+
+
+      .orders-tools {
+
+        gap: 7px;
+
+      }
+
+    }
+
+
+
+    /* =====================================================
+
+   PRINT
+
+\===================================================== */
+
+
+
+    @media print {
+
+      body \* {
+
+        visibility: hidden;
+
+      }
+
+
+
+      .receipt-print,
+
+      .receipt-print \* {
+
+        visibility: visible;
+
+      }
+
+
+
+      .receipt-print {
+
+        position: absolute;
+
+        inset: 0;
+
+        background: #ffffff;
+
+      }
+
+    }
+
+
+
+    /* =========================================
+
+   ORDER BUTTON ALIGNMENT
+
+\========================================= */
+
+
+
+    html body .orders-modal .order-actions {
+
+      display: grid !important;
+
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+
+      grid-template-rows: auto auto !important;
+
+      gap: 8px !important;
+
+      width: 100%;
+
+      align-items: stretch;
+
+    }
+
+
+
+    /* Active - first column */
+
+    html body .orders-modal .order-actions button.order-active {
+
+      grid-column: 1 !important;
+
+      grid-row: 1 !important;
+
+      width: 100% !important;
+
+    }
+
+
+
+    /* Prepared - second column */
+
+    html body .orders-modal .order-actions button.order-prepared {
+
+      grid-column: 2 !important;
+
+      grid-row: 1 !important;
+
+      width: 100% !important;
+
+    }
+
+
+
+    /* Print Bill - full width below */
+
+    html body .orders-modal .order-actions button.order-print {
+
+      grid-column: 1 / -1 !important;
+
+      grid-row: 2 !important;
+
+      width: 100% !important;
+
+      margin: 0 !important;
+
+    }
+
+
+
+    /* =========================================
+
+   COMPACT ORDER ACTION BUTTONS
+
+\========================================= */
+
+
+
+    html body .orders-modal .order-actions {
+
+      display: grid !important;
+
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+
+      gap: 5px !important;
+
+      width: 118px !important;
+
+      align-content: start;
+
+    }
+
+
+
+    /* Active and Prepared */
+
+    html body .orders-modal .order-actions button.order-active,
+
+    html body .orders-modal .order-actions button.order-prepared {
+
+      width: 100% !important;
+
+      height: 27px !important;
+
+      min-height: 27px !important;
+
+      padding: 4px 5px !important;
+
+      margin: 0 !important;
+
+      font-size: 10px !important;
+
+      line-height: 1 !important;
+
+      border-radius: 7px !important;
+
+    }
+
+
+
+    /* Print Bill */
+
+    html body .orders-modal .order-actions button.order-print {
+
+      grid-column: 1 / -1 !important;
+
+      width: 100% !important;
+
+      height: 27px !important;
+
+      min-height: 27px !important;
+
+      padding: 4px 5px !important;
+
+      margin: 0 !important;
+
+      font-size: 10px !important;
+
+      line-height: 1 !important;
+
+      border-radius: 7px !important;
+
+    }
+
+
+
+
+
+
+
+    /* EXTRA-MEDIUM ORDER BUTTONS */
+
+
+
+    html body .orders-modal .order-actions {
+
+      display: grid !important;
+
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+
+      gap: 7px !important;
+
+      width: 145px !important;
+
+      align-content: start;
+
+    }
+
+
+
+    html body .orders-modal .order-actions button.order-active,
+
+    html body .orders-modal .order-actions button.order-prepared {
+
+      width: 100% !important;
+
+      height: 35px !important;
+
+      min-height: 35px !important;
+
+      padding: 6px 7px !important;
+
+      margin: 0 !important;
+
+      font-size: 11px !important;
+
+      font-weight: 700 !important;
+
+      border-radius: 8px !important;
+
+    }
+
+
+
+    html body .orders-modal .order-actions button.order-print {
+
+      grid-column: 1 / -1 !important;
+
+      width: 100% !important;
+
+      height: 35px !important;
+
+      min-height: 35px !important;
+
+      padding: 6px 7px !important;
+
+      margin: 0 !important;
+
+      font-size: 11px !important;
+
+      font-weight: 700 !important;
+
+      border-radius: 8px !important;
+
+    }
+
+
+
+    /* =========================================
+
+   FINAL RESTAURANT THEME OVERRIDE
+
+   Uses the saved restaurant theme colour
+
+\========================================= */
+
+
+
+    /* Orders / Print Bills main button */
+
+    html body #ordersPrintBills.orders-print-btn {
+
+      background: var(--theme) !important;
+
+      background-color: var(--theme) !important;
+
+      color: var(--theme-ink) !important;
+
+      border: 1px solid var(--theme) !important;
+
+    }
+
+
+
+    html body #ordersPrintBills.orders-print-btn:hover {
+
+      background: var(--theme-dark) !important;
+
+      background-color: var(--theme-dark) !important;
+
+      border-color: var(--theme-dark) !important;
+
+    }
+
+
+
+    /* Active sidebar navigation */
+
+    html body #tabs>button.on {
+
+      background: var(--theme) !important;
+
+      background-color: var(--theme) !important;
+
+      color: var(--theme-ink) !important;
+
+      border-color: var(--theme) !important;
+
+    }
+
+
+
+    /* Active sidebar hover */
+
+    html body #tabs>button.on:hover {
+
+      background: var(--theme-dark) !important;
+
+      background-color: var(--theme-dark) !important;
+
+      border-color: var(--theme-dark) !important;
+
+    }
+
+
+
+    /* Sidebar icon */
+
+    html body #tabs>button.on svg {
+
+      color: var(--theme-ink) !important;
+
+    }
+
+
+
+    /* ==========================================
+
+   FORCE ORDER BUTTON COLORS
+
+   Higher priority than general dashboard CSS
+
+\========================================== */
+
+
+
+    /* ACTIVE - ORANGE */
+
+    html body .orders-modal #ordersList button.order-active {
+
+      background: #d97706 !important;
+
+      background-color: #d97706 !important;
+
+      color: #ffffff !important;
+
+      border: 1px solid #d97706 !important;
+
+      opacity: 1 !important;
+
+    }
+
+
+
+    html body .orders-modal #ordersList button.order-active:hover {
+
+      background: #b45309 !important;
+
+      background-color: #b45309 !important;
+
+    }
+
+
+
+
+
+    /* PREPARED - GREEN */
+
+    html body .orders-modal #ordersList button.order-prepared {
+
+      background: #15803d !important;
+
+      background-color: #15803d !important;
+
+      color: #ffffff !important;
+
+      border: none !important;
+
+      opacity: 1 !important;
+
+    }
+
+
+
+    html body .orders-modal #ordersList button.order-prepared:hover {
+
+      background: #166534 !important;
+
+      background-color: #166534 !important;
+
+    }
+
+
+
+
+
+    /* PRINT BILL - DARK NAVY */
+
+    html body .orders-modal #ordersList button.order-print {
+
+      background: #334155 !important;
+
+      background-color: #334155 !important;
+
+      color: #ffffff !important;
+
+      border: 1px solid #334155 !important;
+
+      opacity: 1 !important;
+
+    }
+
+
+
+    html body .orders-modal #ordersList button.order-print:hover {
+
+      background: #1e293b !important;
+
+      background-color: #1e293b !important;
+
+    }
+
+
+
+    /* =====================================================
+
+
+/* =====================================================
+   VIGNADIGITAL – AUTHORITATIVE RESTAURANT THEME
+   The selected restaurant colour is used only on the
+   designated dashboard highlights and primary actions.
+===================================================== */
+
+    /* Bind the existing theme variables to the dashboard. */
+    html body {
+      --brand: var(--theme, #64748b);
+      --brand-600: var(--theme-dark, #475569);
+      --brand-50: var(--theme-light, #1e293b);
+      --brand-ink: var(--theme-ink, #ffffff);
+    }
+
+    /* 1. Active sidebar item */
+    html body #tabs>button.on {
+      background: var(--theme) !important;
+      background-color: var(--theme) !important;
+      color: var(--theme-ink, #ffffff) !important;
+      border: 1px solid var(--theme) !important;
+    }
+
+    html body #tabs>button.on:hover {
+      background: var(--theme-dark) !important;
+      border-color: var(--theme-dark) !important;
+    }
+
+    /* 2. Orders / Print Bills header button */
+    html body #ordersPrintBills.orders-print-btn,
+    html body #ordersPrintBillsSidebar {
+      background: var(--theme) !important;
+      background-color: var(--theme) !important;
+      color: var(--theme-ink, #ffffff) !important;
+      border: 1px solid var(--theme) !important;
+    }
+
+    html body #ordersPrintBills.orders-print-btn:hover,
+    html body #ordersPrintBillsSidebar:hover {
+      background: var(--theme-dark) !important;
+      border-color: var(--theme-dark) !important;
+    }
+
+    /* 3. Primary menu actions */
+    html body #addMenu,
+    html body #addItem,
+    html body #catForm button.lg,
+    html body #pf button.lg,
+    html body #upiForm button.lg,
+    html body #pwf button[type="submit"] {
+      background: var(--theme) !important;
+      color: var(--theme-ink, #ffffff) !important;
+      border: 1px solid var(--theme) !important;
+    }
+
+    html body #addMenu:hover,
+    html body #addItem:hover,
+    html body #catForm button.lg:hover,
+    html body #pf button.lg:hover,
+    html body #upiForm button.lg:hover,
+    html body #pwf button[type="submit"]:hover {
+      background: var(--theme-dark) !important;
+      border-color: var(--theme-dark) !important;
+    }
+
+    /* 4. QR download */
+    html body #dlQr {
+      background: var(--theme) !important;
+      color: var(--theme-ink, #ffffff) !important;
+      border: 1px solid var(--theme) !important;
+    }
+
+    html body #dlQr:hover {
+      background: var(--theme-dark) !important;
+      border-color: var(--theme-dark) !important;
+    }
+
+    /* 5. Selected grid/list view */
+    html body #itemView button.active,
+    html body #itemView button.on,
+    html body #itemView button.active-view,
+    html body #itemView button[aria-pressed="true"] {
+      background: var(--theme) !important;
+      color: var(--theme-ink, #ffffff) !important;
+      border-color: var(--theme) !important;
+    }
+
+    /* 6. Active restaurant-details subtab */
+    html body .subtabs button.on,
+    html body .subtabs button.active {
+      background: var(--theme) !important;
+      color: var(--theme-ink, #ffffff) !important;
+      border-color: var(--theme) !important;
+    }
+
+    /* 7. Highlighted total-items statistic */
+    html body .stat.hl,
+    html body .stat.big {
+      background: var(--theme-light) !important;
+      border-color: var(--theme) !important;
+    }
+
+    html body .stat.hl b,
+    html body .stat.big b {
+      color: var(--theme) !important;
+    }
+
+    /* 8. Theme-coloured section headings */
+    html body .card h3,
+    html body [data-subpanel]>h3 {
+      color: var(--theme) !important;
+    }
+
+    /* 9. Orders toolbar primary/refresh action */
+    html body .orders-modal .orders-tools button:not(.ghost):not(.danger) {
+      background: var(--theme) !important;
+      color: var(--theme-ink, #ffffff) !important;
+      border: 1px solid var(--theme) !important;
+    }
+
+    html body .orders-modal .orders-tools button:not(.ghost):not(.danger):hover {
+      background: var(--theme-dark) !important;
+      border-color: var(--theme-dark) !important;
+    }
+
+    /* Preserve the specified independent status/action colours. */
+    html body .orders-modal #ordersList button.order-active {
+      background: #d97706 !important;
+      color: #ffffff !important;
+      border: 1px solid #d97706 !important;
+    }
+
+    html body .orders-modal #ordersList button.order-active:hover {
+      background: #b45309 !important;
+    }
+
+    html body .orders-modal #ordersList button.order-prepared {
+      background: #15803d !important;
+      color: #ffffff !important;
+      border: 1px solid #15803d !important;
+    }
+
+    html body .orders-modal #ordersList button.order-prepared:hover {
+      background: #166534 !important;
+    }
+
+    html body .orders-modal #ordersList button.order-print {
+      background: #334155 !important;
+      color: #ffffff !important;
+      border: 1px solid #334155 !important;
+    }
+
+    html body .orders-modal #ordersList button.order-print:hover {
+      background: #1e293b !important;
+    }
+
+    /* Preserve green logout button. */
+    html body .shell aside.side button.logout {
+      background: #15803d !important;
+      color: #ffffff !important;
+      border: 1px solid #15803d !important;
+    }
+
+    html body .shell aside.side button.logout:hover {
+      background: #166534 !important;
+    }
+
+    /* Keep focus visible and accessible; remove orange focus glow only. */
+    html body button:focus-visible,
+    html body a.btn:focus-visible,
+    html body input:focus-visible,
+    html body select:focus-visible,
+    html body textarea:focus-visible {
+      outline-color: var(--theme) !important;
+      box-shadow: none !important;
+    }
+  </style>
+
   <link rel="stylesheet" href="/style.css">
   <title>Dashboard · Digital Menu Card</title>
   <style>
@@ -669,7 +2070,7 @@
       background: #15803d !important;
       background-color: #15803d !important;
       color: #ffffff !important;
-      border: 1px solid #15803d !important;
+      border: none !important;
       opacity: 1 !important;
     }
 
@@ -691,6 +2092,320 @@
     html body .orders-modal #ordersList button.order-print:hover {
       background: #1e293b !important;
       background-color: #1e293b !important;
+    }
+
+    /* =====================================================
+       VIGNADIGITAL DASHBOARD – REMOVE BUTTON OUTLINES
+       Keep each button's existing background and text colour.
+       ===================================================== */
+
+    html body button,
+    html body .btn,
+    html body a.btn,
+    html body input[type="button"],
+    html body input[type="submit"],
+    html body input[type="reset"],
+    html body button:hover,
+    html body .btn:hover,
+    html body a.btn:hover,
+    html body button:active,
+    html body .btn:active,
+    html body button:focus,
+    html body button:focus-visible,
+    html body .btn:focus,
+    html body .btn:focus-visible {
+      border: 0 !important;
+      border-width: 0 !important;
+      border-color: transparent !important;
+      outline: none !important;
+      box-shadow: none !important;
+    }
+
+    /* Preserve the visual shape without a coloured stroke */
+    html body button,
+    html body .btn,
+    html body a.btn {
+      background-clip: padding-box;
+    }
+
+    /* =====================================================
+   VIGNADIGITAL – SELECTED RESTAURANT THEME
+   Apply theme ONLY to specified dashboard elements
+===================================================== */
+
+    /* -----------------------------------------
+   1. ORDERS / PRINT BILLS – MAIN BUTTON
+----------------------------------------- */
+
+    html body #ordersPrintBills.orders-print-btn {
+      background: var(--theme) !important;
+      background-color: var(--theme) !important;
+      color: var(--theme-ink, #ffffff) !important;
+      border: none !important;
+    }
+
+    html body #ordersPrintBills.orders-print-btn:hover {
+      background: var(--theme-dark) !important;
+      background-color: var(--theme-dark) !important;
+      border: none !important;
+    }
+
+
+    /* -----------------------------------------
+   2. ACTIVE SIDEBAR NAVIGATION
+----------------------------------------- */
+
+    html body #tabs>button.on {
+      background: var(--theme) !important;
+      background-color: var(--theme) !important;
+      color: var(--theme-ink, #ffffff) !important;
+      border: none !important;
+    }
+
+    html body #tabs>button.on:hover {
+      background: var(--theme-dark) !important;
+      background-color: var(--theme-dark) !important;
+      border: none !important;
+    }
+
+    html body #tabs>button.on svg {
+      color: var(--theme-ink, #ffffff) !important;
+    }
+
+
+    /* -----------------------------------------
+   3. PRIMARY ACTION BUTTONS
+----------------------------------------- */
+
+    html body #addItem,
+    html body #catForm button.lg,
+    html body #pf button.lg,
+    html body #upiForm button.lg,
+    html body #pwf button[type="submit"] {
+      background: var(--theme) !important;
+      color: var(--theme-ink, #ffffff) !important;
+      border: none !important;
+    }
+
+    html body #addItem:hover,
+    html body #catForm button.lg:hover,
+    html body #pf button.lg:hover,
+    html body #upiForm button.lg:hover,
+    html body #pwf button[type="submit"]:hover {
+      background: var(--theme-dark) !important;
+      color: var(--theme-ink, #ffffff) !important;
+      border: none !important;
+    }
+
+
+    /* -----------------------------------------
+   4. ACTIVE DETAILS TABS
+----------------------------------------- */
+
+    html body .subtabs button.on,
+    html body .subtabs button.active {
+      background: var(--theme) !important;
+      color: var(--theme-ink, #ffffff) !important;
+      border: none !important;
+    }
+
+
+    /* GRID / LIST BUTTONS – MATCH PROVIDED BACKGROUND */
+
+    html body #itemView button,
+    html body #itemView button.active,
+    html body #itemView button.on,
+    html body #itemView button.active-view,
+    html body #itemView button[aria-pressed="true"] {
+      background: #131316 !important;
+      background-color: #131316 !important;
+      color: #ffffff !important;
+      border: 1px solid #303038 !important;
+      box-shadow: none !important;
+    }
+
+    html body #itemView button:hover {
+      background: #1b1b20 !important;
+      background-color: #1b1b20 !important;
+      color: #ffffff !important;
+      border-color: #303038 !important;
+    }
+
+    html body #itemView button svg {
+      color: #ffffff !important;
+      stroke: currentColor !important;
+    }
+
+    /* -----------------------------------------
+   6. ORDERS TOOLBAR – REFRESH
+----------------------------------------- */
+
+    html body .orders-modal .orders-tools button:not(.ghost):not(.danger) {
+      background: var(--theme) !important;
+      color: var(--theme-ink, #ffffff) !important;
+      border: none !important;
+    }
+
+    html body .orders-modal .orders-tools button:not(.ghost):not(.danger):hover {
+      background: var(--theme-dark) !important;
+      border: none !important;
+    }
+
+
+    /* -----------------------------------------
+   7. PRINT BILL BUTTON
+----------------------------------------- */
+
+    html body .orders-modal #ordersList button.order-print {
+      background: #334155 !important;
+      color: #ffffff !important;
+      border: none !important;
+    }
+
+
+    /* -----------------------------------------
+   8. ACTIVE ORDER – KEEP ORANGE
+----------------------------------------- */
+
+    html body .orders-modal #ordersList button.order-active {
+      background: #d97706 !important;
+      color: #ffffff !important;
+      border: none !important;
+    }
+
+
+    /* -----------------------------------------
+   9. PREPARED ORDER – KEEP GREEN
+----------------------------------------- */
+
+    html body .orders-modal #ordersList button.order-prepared {
+      background: #15803d !important;
+      color: #ffffff !important;
+      border: none !important;
+    }
+
+
+    /* -----------------------------------------
+   10. LOGOUT – KEEP GREEN
+----------------------------------------- */
+
+    html body .shell aside.side button.logout {
+      background: #15803d !important;
+      color: #ffffff !important;
+      border: none !important;
+    }
+
+    html body .shell aside.side button.logout:hover {
+      background: #166534 !important;
+      border: none !important;
+    }
+
+
+    /* -----------------------------------------
+   11. REMOVE UNWANTED ORANGE OUTLINES
+   Do not change button backgrounds.
+----------------------------------------- */
+
+    html body button:focus,
+    html body button:focus-visible {
+      outline: none !important;
+      box-shadow: none !important;
+    }
+
+    /* =====================================================
+   VIGNADIGITAL – FINAL DYNAMIC THEME TAB FIX
+===================================================== */
+
+    /* ---------------------------------------------
+   A. SIDEBAR NAVIGATION – ACTIVE TAB
+--------------------------------------------- */
+
+    html body .shell aside.side nav#tabs>button.on,
+    html body .shell aside.side nav#tabs>button.active,
+    html body .shell aside.side nav#tabs>button[aria-current="page"],
+    html body .shell aside.side nav#tabs>button[aria-selected="true"] {
+      background: var(--theme, #d97706) !important;
+      background-color: var(--theme, #d97706) !important;
+      color: var(--theme-ink, #ffffff) !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
+
+    html body .shell aside.side nav#tabs>button.on:hover,
+    html body .shell aside.side nav#tabs>button.active:hover {
+      background: var(--theme-dark, #b45309) !important;
+      background-color: var(--theme-dark, #b45309) !important;
+      color: var(--theme-ink, #ffffff) !important;
+    }
+
+    html body .shell aside.side nav#tabs>button.on svg,
+    html body .shell aside.side nav#tabs>button.active svg {
+      color: var(--theme-ink, #ffffff) !important;
+      stroke: currentColor !important;
+    }
+
+    /* =========================================
+   RESTAURANT DETAILS – NO ORANGE
+========================================= */
+
+    /* ALL INACTIVE TABS – DARK BACKGROUND */
+
+    html body .shell main .subtabs button[data-subtab]:not(.on):not(.active) {
+      background: #1b1b20 !important;
+      background-color: #1b1b20 !important;
+      color: #ffffff !important;
+      border: 1px solid #303038 !important;
+      box-shadow: none !important;
+    }
+
+    /* INACTIVE HOVER – DARK GREY */
+
+    html body .shell main .subtabs button[data-subtab]:not(.on):not(.active):hover {
+      background: #292930 !important;
+      background-color: #292930 !important;
+      color: #ffffff !important;
+      border-color: #44444d !important;
+    }
+
+    /* ONLY SELECTED TAB – OWNER'S THEME */
+
+    html body .shell main .subtabs button[data-subtab].on,
+    html body .shell main .subtabs button[data-subtab].active {
+      background: var(--theme) !important;
+      background-color: var(--theme) !important;
+      color: var(--theme-ink, #ffffff) !important;
+      border: 1px solid var(--theme) !important;
+      box-shadow: none !important;
+    }
+
+    /* SELECTED TAB HOVER */
+
+    html body .shell main .subtabs button[data-subtab].on:hover,
+    html body .shell main .subtabs button[data-subtab].active:hover {
+      background: var(--theme-dark) !important;
+      background-color: var(--theme-dark) !important;
+      border-color: var(--theme-dark) !important;
+    }
+
+    /* ---------------------------------------------
+   C. REMOVE OLD ORANGE ACTIVE ICON COLOURS
+--------------------------------------------- */
+
+    html body .shell aside.side nav#tabs>button.on svg,
+    html body .shell aside.side nav#tabs>button.active svg,
+    html body .shell aside.side nav#tabs>button[aria-current="page"] svg {
+      color: var(--theme-ink, #ffffff) !important;
+      stroke: currentColor !important;
+    }
+
+
+    /* ---------------------------------------------
+   D. PRESERVE THE SELECTED THEME ON HOVER
+--------------------------------------------- */
+
+    html body .shell aside.side nav#tabs>button.on:hover,
+    html body .shell .subtabs button[data-subtab]:hover {
+      transition: background .2s ease;
     }
   </style>
 </head>
@@ -718,7 +2433,6 @@
         background: #15803d !important;
         background-color: #15803d !important;
         color: #ffffff !important;
-        border: 1px solid #15803d !important;
         border-radius: 10px !important;
         width: 100%;
         font-weight: 700;
@@ -856,13 +2570,14 @@
         </form>
         <form id="upiForm" class="card hidden" data-subpanel="payment">
           <h3>Payment details</h3>
-          <p class="small muted">Add your restaurant's UPI ID and payment QR code. These details can be displayed on customer receipts.</p>
+          <p class="small muted">Add your restaurant's UPI ID and payment QR code. These details can be displayed on
+            customer receipts.</p>
 
           <div class="row">
             <div>
               <label for="upiId">UPI ID</label>
-              <input type="text" id="upiId" name="upi_id" maxlength="100"
-                placeholder="restaurant@upi" autocomplete="off">
+              <input type="text" id="upiId" name="upi_id" maxlength="100" placeholder="restaurant@upi"
+                autocomplete="off">
               <p class="small muted">Example: restaurant@okaxis</p>
             </div>
             <div>
@@ -874,7 +2589,8 @@
 
           <div style="margin-top:14px">
             <label>QR code preview</label>
-            <div id="upiQrPreview" style="width:180px;min-height:100px;padding:10px;border:1px dashed #cbd5e1;border-radius:12px;display:flex;align-items:center;justify-content:center;background:#fff;color:#64748b">
+            <div id="upiQrPreview"
+              style="width:180px;min-height:100px;padding:10px;border:1px dashed #cbd5e1;border-radius:12px;display:flex;align-items:center;justify-content:center;background:#fff;color:#64748b">
               No QR image uploaded
             </div>
           </div>
@@ -2117,6 +3833,56 @@
       subTabs(); await loadAll();
       showTab = tabs($('#tabs'), (n) => { if (n === 'qr') renderQr(); });
     })();
+
+
+    (function () {
+      const tabs = document.querySelector('#tabs');
+      if (!tabs) return;
+
+      const navButtons = tabs.querySelectorAll('button[data-tab]');
+      const panels = document.querySelectorAll('[data-panel]');
+
+      function syncActiveThemeTab() {
+        let activePanel = null;
+
+        panels.forEach(panel => {
+          if (!panel.classList.contains('hidden')) {
+            activePanel = panel.dataset.panel;
+          }
+        });
+
+        if (!activePanel) return;
+
+        navButtons.forEach(button => {
+          const isActive = button.dataset.tab === activePanel;
+
+          button.classList.toggle('on', isActive);
+          button.setAttribute(
+            'aria-current',
+            isActive ? 'page' : 'false'
+          );
+        });
+      }
+
+      // Update immediately when a navigation tab is clicked.
+      tabs.addEventListener('click', () => {
+        setTimeout(syncActiveThemeTab, 0);
+      });
+
+      // Detect dashboard panel changes.
+      const observer = new MutationObserver(syncActiveThemeTab);
+
+      panels.forEach(panel => {
+        observer.observe(panel, {
+          attributes: true,
+          attributeFilter: ['class']
+        });
+      });
+
+      syncActiveThemeTab();
+    })();
+
+
   </script>
 </body>
 
