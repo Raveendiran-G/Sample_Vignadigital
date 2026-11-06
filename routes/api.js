@@ -776,7 +776,7 @@ function menuRoutes(route, restaurantOf) {
         res.status(204).end();
     });
     // ======================================================
-    // BULK UPLOAD IMAGES FOR EXISTING MENU ITEMS
+    // BULK UPLOAD IMAGES - GLOBAL DISH SYNCHRONIZATION
     // ======================================================
 
     route.post(
@@ -799,6 +799,7 @@ function menuRoutes(route, restaurantOf) {
                     .toLowerCase()
                     .replace(/[^a-z0-9]/g, '');
 
+            // Get this restaurant's items for matching uploaded filenames.
             const existingItems = await cols.items
                 .find({ restaurant_id: rid })
                 .toArray();
@@ -806,7 +807,6 @@ function menuRoutes(route, restaurantOf) {
             const itemMap = new Map();
 
             for (const item of existingItems) {
-
                 const key = normalize(item.name);
 
                 if (!itemMap.has(key)) {
@@ -819,6 +819,7 @@ function menuRoutes(route, restaurantOf) {
             const report = {
                 total: files.length,
                 updated: 0,
+                synchronized_items: 0,
                 unmatched: [],
                 ambiguous: [],
                 failed: []
@@ -835,7 +836,7 @@ function menuRoutes(route, restaurantOf) {
 
                 const matches = itemMap.get(key) || [];
 
-                if (matches.length === 0) {
+                if (!matches.length) {
                     report.unmatched.push(filename);
                     continue;
                 }
@@ -845,6 +846,7 @@ function menuRoutes(route, restaurantOf) {
                         filename,
                         matching_items: matches.map(item => item.name)
                     });
+
                     continue;
                 }
 
@@ -852,38 +854,31 @@ function menuRoutes(route, restaurantOf) {
 
                 try {
 
+                    // Upload image once.
                     const image = await saveUploadedFile(file);
 
                     if (!image) {
                         throw new Error('Image upload returned an empty path.');
                     }
 
-                    const result = await cols.items.updateOne(
-                        {
-                            _id: item._id,
-                            restaurant_id: rid
-                        },
-                        {
-                            $set: {
-                                image
-                            }
-                        }
+                    // Synchronize this dish image across ALL restaurants.
+                    const syncResult = await svc.syncDishImageEverywhere(
+                        item.name,
+                        image
                     );
 
-                    if (!result.matchedCount) {
-                        report.failed.push({
-                            filename,
-                            reason: 'Menu item no longer exists.'
-                        });
-                        continue;
+                    if (!syncResult.matched) {
+                        throw new Error('No matching dishes found.');
                     }
 
                     report.updated++;
 
+                    report.synchronized_items += syncResult.updated;
+
                 } catch (error) {
 
                     console.error(
-                        'Bulk menu image upload failed:',
+                        'Global dish image synchronization failed:',
                         filename,
                         error
                     );
@@ -897,627 +892,507 @@ function menuRoutes(route, restaurantOf) {
 
             res.json({
                 success: true,
-                message: 'Bulk image upload completed.',
+                message: 'Global image synchronization completed.',
                 report
             });
-
         }
     );
-    route.get('/items', async (req, res) => {
-        res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+    // ======================================================
+    // SUPER ADMIN
+    // ======================================================
 
-        const items = await svc.listItems(
-            restaurantOf(req),
-            Number(req.query.category_id) || null
-        );
+    const admin = express.Router();
+
+    admin.use(auth('admin'));
+
+    admin.get('/summary', async (req, res) => {
+        res.json(await svc.summary());
+    });
+
+    admin.get('/restaurants', async (req, res) => {
+        const restaurants = await svc.listRestaurants();
 
         res.json({
-            items: items.map(item => ({
-                ...svc.itemOut(item),
-                category: item.category
-            }))
+            restaurants: restaurants.map(svc.restaurantOut)
         });
     });
 
-    route.post(
-        '/items',
-        upload.single('image'),
-        async (req, res) => {
-            res.status(201).json(
-                svc.itemOut(
-                    await svc.saveItem(
-                        restaurantOf(req),
-                        req.body,
-                        await photo(req)
-                    )
-                )
-            );
-        }
-    );
+    admin.post('/restaurants', async (req, res) => {
+        res.status(201).json(
+            svc.restaurantOut(
+                await svc.createRestaurant(req.body)
+            )
+        );
+    });
 
-    route.get('/items/:ref', async (req, res) => {
+    admin.get('/restaurants/:id', async (req, res) => {
         res.json(
-            svc.itemOut(
-                await svc.getItem(
-                    restaurantOf(req),
-                    ref(req)
+            svc.restaurantOut(
+                await svc.getRestaurant(id(req))
+            )
+        );
+    });
+
+    admin.patch('/restaurants/:id', async (req, res) => {
+        res.json(
+            svc.restaurantOut(
+                await svc.updateRestaurant(
+                    id(req),
+                    req.body
                 )
             )
         );
     });
 
-    route.put(
-        '/items/:ref',
-        upload.single('image'),
-        async (req, res) => {
-            res.json(
-                svc.itemOut(
-                    await svc.saveItem(
-                        restaurantOf(req),
-                        {
-                            ...req.body,
-                            id: ref(req)
-                        },
-                        await photo(req)
-                    )
-                )
-            );
-        }
-    );
-
-    route.patch('/items/:ref/availability', async (req, res) => {
-        const available = req.body.available;
-
-        res.json(
-            svc.itemOut(
-                await svc.setItemAvailable(
-                    restaurantOf(req),
-                    ref(req),
-                    available === undefined
-                        ? undefined
-                        : (
-                            available === true ||
-                            available === 'true' ||
-                            available === 1 ||
-                            available === '1'
-                        )
-                )
-            )
-        );
-    });
-
-    route.delete('/items/:ref', async (req, res) => {
-        await svc.deleteItem(
-            restaurantOf(req),
-            ref(req)
+    admin.post('/restaurants/:id/password', async (req, res) => {
+        await svc.resetOwnerPassword(
+            id(req),
+            req.body.password
         );
 
         res.status(204).end();
     });
 
-    route.get('/library/categories', async (req, res) => {
+    admin.post('/restaurants/:id/reset-password', async (req, res) => {
+        const restaurant = await svc.getRestaurant(id(req));
+        const password = svc.generatePassword();
+
+        await svc.resetOwnerPassword(
+            restaurant.id,
+            password
+        );
+
         res.json({
-            categories: await svc.libraryCategories(
-                restaurantOf(req)
-            )
+            mobile: restaurant.mobile,
+            email: restaurant.email,
+            password
         });
     });
 
-    route.get('/library/items', async (req, res) => {
-        res.json(
-            await svc.libraryItems(
-                restaurantOf(req),
-                req.query
-            )
-        );
+    admin.post('/restaurants/:id/reveal-password', async (req, res) => {
+        res.set('Cache-Control', 'no-store');
+
+        res.json({
+            password: await svc.revealOwnerPassword(id(req))
+        });
     });
 
-    route.post('/library/import', async (req, res) => {
-        res.json(
-            await svc.importFromLibrary(
-                restaurantOf(req),
-                req.body
-            )
-        );
+    admin.delete('/restaurants/:id', async (req, res) => {
+        await svc.deleteRestaurant(id(req));
+
+        res.status(204).end();
     });
-}
 
-// ======================================================
-// SUPER ADMIN
-// ======================================================
+    // ======================================================
+    // CUSTOM HTML MENU SYSTEM
+    // ======================================================
 
-const admin = express.Router();
+    const CUSTOM_MENU_MAX_SIZE = 1024 * 1024;
 
-admin.use(auth('admin'));
+    // GET CUSTOM MENU STATUS
 
-admin.get('/summary', async (req, res) => {
-    res.json(await svc.summary());
-});
+    admin.get('/restaurants/:id/custom-menu', async (req, res) => {
+        const restaurant = await svc.getRestaurant(id(req));
 
-admin.get('/restaurants', async (req, res) => {
-    const restaurants = await svc.listRestaurants();
+        res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
 
-    res.json({
-        restaurants: restaurants.map(svc.restaurantOut)
+        res.json({
+            exists: !!restaurant.custom_menu_html,
+            enabled: restaurant.custom_menu_enabled === true,
+            updated_at: restaurant.custom_menu_updated_at || null,
+            html: restaurant.custom_menu_html || ''
+        });
     });
-});
 
-admin.post('/restaurants', async (req, res) => {
-    res.status(201).json(
-        svc.restaurantOut(
-            await svc.createRestaurant(req.body)
-        )
-    );
-});
+    // UPLOAD HTML AND SYNCHRONIZE DATABASE
 
-admin.get('/restaurants/:id', async (req, res) => {
-    res.json(
-        svc.restaurantOut(
-            await svc.getRestaurant(id(req))
-        )
-    );
-});
+    admin.put('/restaurants/:id/custom-menu', async (req, res) => {
+        const restaurant = await svc.getRestaurant(id(req));
+        const html = req.body?.html;
 
-admin.patch('/restaurants/:id', async (req, res) => {
-    res.json(
-        svc.restaurantOut(
-            await svc.updateRestaurant(
-                id(req),
-                req.body
-            )
-        )
-    );
-});
-
-admin.post('/restaurants/:id/password', async (req, res) => {
-    await svc.resetOwnerPassword(
-        id(req),
-        req.body.password
-    );
-
-    res.status(204).end();
-});
-
-admin.post('/restaurants/:id/reset-password', async (req, res) => {
-    const restaurant = await svc.getRestaurant(id(req));
-    const password = svc.generatePassword();
-
-    await svc.resetOwnerPassword(
-        restaurant.id,
-        password
-    );
-
-    res.json({
-        mobile: restaurant.mobile,
-        email: restaurant.email,
-        password
-    });
-});
-
-admin.post('/restaurants/:id/reveal-password', async (req, res) => {
-    res.set('Cache-Control', 'no-store');
-
-    res.json({
-        password: await svc.revealOwnerPassword(id(req))
-    });
-});
-
-admin.delete('/restaurants/:id', async (req, res) => {
-    await svc.deleteRestaurant(id(req));
-
-    res.status(204).end();
-});
-
-// ======================================================
-// CUSTOM HTML MENU SYSTEM
-// ======================================================
-
-const CUSTOM_MENU_MAX_SIZE = 1024 * 1024;
-
-// GET CUSTOM MENU STATUS
-
-admin.get('/restaurants/:id/custom-menu', async (req, res) => {
-    const restaurant = await svc.getRestaurant(id(req));
-
-    res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
-
-    res.json({
-        exists: !!restaurant.custom_menu_html,
-        enabled: restaurant.custom_menu_enabled === true,
-        updated_at: restaurant.custom_menu_updated_at || null,
-        html: restaurant.custom_menu_html || ''
-    });
-});
-
-// UPLOAD HTML AND SYNCHRONIZE DATABASE
-
-admin.put('/restaurants/:id/custom-menu', async (req, res) => {
-    const restaurant = await svc.getRestaurant(id(req));
-    const html = req.body?.html;
-
-    if (typeof html !== 'string' || !html.trim()) {
-        throw new HttpError(400, 'HTML file is required.');
-    }
-
-    if (Buffer.byteLength(html, 'utf8') > CUSTOM_MENU_MAX_SIZE) {
-        throw new HttpError(
-            413,
-            'HTML file must be smaller than 1 MB.'
-        );
-    }
-
-    if (
-        !/<html[\s>]/i.test(html) ||
-        !/<\/html>/i.test(html)
-    ) {
-        throw new HttpError(400, 'Invalid HTML document.');
-    }
-
-    let menuData;
-
-    try {
-        menuData = extractMenuData(html);
-    } catch (error) {
-        throw new HttpError(
-            400,
-            error.message || 'Could not read menu data from HTML.'
-        );
-    }
-
-    if (
-        !menuData ||
-        !Array.isArray(menuData.categories) ||
-        menuData.categories.length === 0
-    ) {
-        throw new HttpError(
-            400,
-            'No menu categories or items were found in the uploaded HTML.'
-        );
-    }
-
-    const totalItems = menuData.categories.reduce(
-        (total, category) =>
-            total + (Array.isArray(category.items) ? category.items.length : 0),
-        0
-    );
-
-    if (totalItems === 0) {
-        throw new HttpError(
-            400,
-            'The uploaded HTML does not contain any menu items.'
-        );
-    }
-
-    let sync;
-
-    try {
-        sync = await synchronizeMenu(
-            restaurant.id,
-            menuData
-        );
-    } catch (error) {
-        console.error(
-            'Custom menu synchronization failed:',
-            error
-        );
-
-        if (error.status && error.status < 500) {
-            throw new HttpError(error.status, error.message);
+        if (typeof html !== 'string' || !html.trim()) {
+            throw new HttpError(400, 'HTML file is required.');
         }
 
-        throw error;
-    }
+        if (Buffer.byteLength(html, 'utf8') > CUSTOM_MENU_MAX_SIZE) {
+            throw new HttpError(
+                413,
+                'HTML file must be smaller than 1 MB.'
+            );
+        }
 
-    // Activate the uploaded custom design immediately.
-    // This makes the uploaded HTML replace the default menu page.
-    await cols.restaurants.updateOne(
-        { _id: restaurant.id },
-        {
-            $set: {
-                custom_menu_html: html,
-                custom_menu_enabled: true,
-                custom_menu_updated_at: new Date()
+        if (
+            !/<html[\s>]/i.test(html) ||
+            !/<\/html>/i.test(html)
+        ) {
+            throw new HttpError(400, 'Invalid HTML document.');
+        }
+
+        let menuData;
+
+        try {
+            menuData = extractMenuData(html);
+        } catch (error) {
+            throw new HttpError(
+                400,
+                error.message || 'Could not read menu data from HTML.'
+            );
+        }
+
+        if (
+            !menuData ||
+            !Array.isArray(menuData.categories) ||
+            menuData.categories.length === 0
+        ) {
+            throw new HttpError(
+                400,
+                'No menu categories or items were found in the uploaded HTML.'
+            );
+        }
+
+        const totalItems = menuData.categories.reduce(
+            (total, category) =>
+                total + (Array.isArray(category.items) ? category.items.length : 0),
+            0
+        );
+
+        if (totalItems === 0) {
+            throw new HttpError(
+                400,
+                'The uploaded HTML does not contain any menu items.'
+            );
+        }
+
+        let sync;
+
+        try {
+            sync = await synchronizeMenu(
+                restaurant.id,
+                menuData
+            );
+        } catch (error) {
+            console.error(
+                'Custom menu synchronization failed:',
+                error
+            );
+
+            if (error.status && error.status < 500) {
+                throw new HttpError(error.status, error.message);
             }
+
+            throw error;
         }
-    );
 
-    res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
-
-    res.json({
-        success: true,
-        message: 'Custom menu uploaded, activated and database synchronized.',
-        enabled: true,
-        synchronization: {
-            ...sync,
-            uploaded_categories: menuData.categories.length,
-            uploaded_items: totalItems
-        }
-    });
-});
-
-// ACTIVATE OR DEACTIVATE CUSTOM MENU
-
-admin.patch('/restaurants/:id/custom-menu', async (req, res) => {
-    const restaurant = await svc.getRestaurant(id(req));
-
-    const enabled =
-        req.body?.enabled === true ||
-        req.body?.enabled === 'true' ||
-        req.body?.enabled === 1;
-
-    if (enabled && !restaurant.custom_menu_html) {
-        throw new HttpError(
-            400,
-            'Upload a custom menu first.'
-        );
-    }
-
-    await cols.restaurants.updateOne(
-        { _id: restaurant.id },
-        {
-            $set: {
-                custom_menu_enabled: enabled,
-                custom_menu_updated_at: new Date()
-            }
-        }
-    );
-
-    res.set('Cache-Control', 'no-store');
-
-    res.json({
-        success: true,
-        enabled
-    });
-});
-
-// RESTORE DEFAULT MENU
-
-admin.delete('/restaurants/:id/custom-menu', async (req, res) => {
-    const restaurant = await svc.getRestaurant(id(req));
-
-    await cols.restaurants.updateOne(
-        { _id: restaurant.id },
-        {
-            $unset: {
-                custom_menu_html: '',
-                custom_menu_enabled: '',
-                custom_menu_updated_at: ''
-            }
-        }
-    );
-
-    res.json({
-        success: true,
-        message: 'Default menu restored.',
-        enabled: false
-    });
-});
-
-// ======================================================
-// ADMIN ORDERS
-// ======================================================
-
-admin.get('/restaurants/:id/orders', async (req, res) => {
-    const restaurant = await svc.getRestaurant(id(req));
-
-    const orders = await cols.orders
-        .find({ restaurant_id: restaurant.id })
-        .sort({ created_at: -1 })
-        .limit(500)
-        .toArray();
-
-    res.json({
-        orders: orders.map(order => ({
-            ...order,
-            id: String(order._id),
-            _id: undefined
-        }))
-    });
-});
-
-// ADMIN RESTAURANT MENU ROUTES
-
-const adminMenu = express.Router({ mergeParams: true });
-
-adminMenu.use(async (req, res, next) => {
-    await svc.getRestaurant(Number(req.params.id));
-    next();
-});
-
-menuRoutes(adminMenu, req => Number(req.params.id));
-
-admin.use('/restaurants/:id', adminMenu);
-
-// MOUNT ADMIN ROUTER
-
-router.use('/admin', admin);
-
-// ======================================================
-// RESTAURANT OWNER
-// ======================================================
-
-const owner = express.Router();
-
-owner.use(auth('owner'));
-
-// ======================================================
-// LIVE ORDER EVENTS
-// ======================================================
-
-owner.get('/orders/events', (req, res) =>
-    streamEvents(
-        req,
-        res,
-        listener => subscribeRestaurant(rid(req), listener),
-        'new-order'
-    )
-);
-
-// ======================================================
-// RESTAURANT PROFILE
-// ======================================================
-
-owner.get('/restaurant', async (req, res) => {
-    res.json(
-        svc.restaurantOut(
-            await svc.getRestaurant(rid(req))
-        )
-    );
-});
-
-owner.patch('/restaurant', async (req, res) => {
-    res.json(
-        svc.restaurantOut(
-            await svc.updateProfile(
-                rid(req),
-                req.body
-            )
-        )
-    );
-});
-
-// ======================================================
-// OWNER CATEGORY AND ITEM ROUTES
-// ======================================================
-
-menuRoutes(owner, rid);
-
-// ======================================================
-// GET ORDERS
-// ======================================================
-
-owner.get('/orders', async (req, res) => {
-    const orders = await cols.orders
-        .find({
-            restaurant_id: rid(req)
-        })
-        .sort({
-            created_at: -1
-        })
-        .limit(500)
-        .toArray();
-
-    res.json({
-        orders: orders.map(order => ({
-            ...order,
-            id: String(order._id),
-            _id: undefined
-        }))
-    });
-});
-
-// ======================================================
-// UPDATE ORDER STATUS
-// ======================================================
-
-owner.patch('/orders/:orderId/status', async (req, res) => {
-    const allowed = new Set([
-        'Pending',
-        'Accepted',
-        'Preparing',
-        'Ready',
-        'Completed',
-        'Rejected',
-        'Cancelled'
-    ]);
-
-    const status = cleanText(req.body.status, 30);
-
-    if (!allowed.has(status)) {
-        throw new HttpError(400, 'Invalid order status');
-    }
-
-    let orderId;
-
-    try {
-        orderId = new ObjectId(req.params.orderId);
-    } catch {
-        throw new HttpError(400, 'Invalid order ID');
-    }
-
-    const updatedAt = new Date();
-
-    const result = await cols.orders.updateOne(
-        {
-            _id: orderId,
-            restaurant_id: rid(req)
-        },
-        {
-            $set: {
-                status,
-                updated_at: updatedAt
-            }
-        }
-    );
-
-    if (!result.matchedCount) {
-        throw new HttpError(404, 'Order not found');
-    }
-
-    publishOrderStatus(orderId, {
-        id: String(orderId),
-        status,
-        updated_at: updatedAt
-    });
-
-    res.json({
-        success: true,
-        status,
-        updated_at: updatedAt
-    });
-});
-
-// ======================================================
-// QR CODE
-// ======================================================
-
-owner.get('/qr.png', async (req, res) => {
-    const restaurant = await svc.getRestaurant(rid(req));
-
-    res.type('png').set(
-        'Content-Disposition',
-        req.query.download
-            ? `attachment; filename="${restaurant.slug}-menu-qr.png"`
-            : 'inline'
-    );
-
-    const requestedLevel = String(
-        req.query.level || 'M'
-    ).toUpperCase();
-
-    const level = ['L', 'M', 'Q', 'H'].includes(requestedLevel)
-        ? requestedLevel
-        : 'M';
-
-    res.send(
-        await QRCode.toBuffer(
-            `${BASE_URL}/m/${restaurant.slug}`,
+        // Activate the uploaded custom design immediately.
+        // This makes the uploaded HTML replace the default menu page.
+        await cols.restaurants.updateOne(
+            { _id: restaurant.id },
             {
-                width: Math.min(
-                    Math.max(Number(req.query.size) || 800, 128),
-                    2048
-                ),
-                margin: 4,
-                errorCorrectionLevel: level
+                $set: {
+                    custom_menu_html: html,
+                    custom_menu_enabled: true,
+                    custom_menu_updated_at: new Date()
+                }
             }
+        );
+
+        res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+
+        res.json({
+            success: true,
+            message: 'Custom menu uploaded, activated and database synchronized.',
+            enabled: true,
+            synchronization: {
+                ...sync,
+                uploaded_categories: menuData.categories.length,
+                uploaded_items: totalItems
+            }
+        });
+    });
+
+    // ACTIVATE OR DEACTIVATE CUSTOM MENU
+
+    admin.patch('/restaurants/:id/custom-menu', async (req, res) => {
+        const restaurant = await svc.getRestaurant(id(req));
+
+        const enabled =
+            req.body?.enabled === true ||
+            req.body?.enabled === 'true' ||
+            req.body?.enabled === 1;
+
+        if (enabled && !restaurant.custom_menu_html) {
+            throw new HttpError(
+                400,
+                'Upload a custom menu first.'
+            );
+        }
+
+        await cols.restaurants.updateOne(
+            { _id: restaurant.id },
+            {
+                $set: {
+                    custom_menu_enabled: enabled,
+                    custom_menu_updated_at: new Date()
+                }
+            }
+        );
+
+        res.set('Cache-Control', 'no-store');
+
+        res.json({
+            success: true,
+            enabled
+        });
+    });
+
+    // RESTORE DEFAULT MENU
+
+    admin.delete('/restaurants/:id/custom-menu', async (req, res) => {
+        const restaurant = await svc.getRestaurant(id(req));
+
+        await cols.restaurants.updateOne(
+            { _id: restaurant.id },
+            {
+                $unset: {
+                    custom_menu_html: '',
+                    custom_menu_enabled: '',
+                    custom_menu_updated_at: ''
+                }
+            }
+        );
+
+        res.json({
+            success: true,
+            message: 'Default menu restored.',
+            enabled: false
+        });
+    });
+
+    // ======================================================
+    // ADMIN ORDERS
+    // ======================================================
+
+    admin.get('/restaurants/:id/orders', async (req, res) => {
+        const restaurant = await svc.getRestaurant(id(req));
+
+        const orders = await cols.orders
+            .find({ restaurant_id: restaurant.id })
+            .sort({ created_at: -1 })
+            .limit(500)
+            .toArray();
+
+        res.json({
+            orders: orders.map(order => ({
+                ...order,
+                id: String(order._id),
+                _id: undefined
+            }))
+        });
+    });
+
+    // ADMIN RESTAURANT MENU ROUTES
+
+    const adminMenu = express.Router({ mergeParams: true });
+
+    adminMenu.use(async (req, res, next) => {
+        await svc.getRestaurant(Number(req.params.id));
+        next();
+    });
+
+    menuRoutes(adminMenu, req => Number(req.params.id));
+
+    admin.use('/restaurants/:id', adminMenu);
+
+    // MOUNT ADMIN ROUTER
+
+    router.use('/admin', admin);
+
+    // ======================================================
+    // RESTAURANT OWNER
+    // ======================================================
+
+    const owner = express.Router();
+
+    owner.use(auth('owner'));
+
+    // ======================================================
+    // LIVE ORDER EVENTS
+    // ======================================================
+
+    owner.get('/orders/events', (req, res) =>
+        streamEvents(
+            req,
+            res,
+            listener => subscribeRestaurant(rid(req), listener),
+            'new-order'
         )
     );
-});
 
-// ======================================================
-// REGISTER OWNER ROUTES
-// ======================================================
+    // ======================================================
+    // RESTAURANT PROFILE
+    // ======================================================
 
-router.use('/', owner);
-
-// ======================================================
-// 404
-// ======================================================
-
-router.use((req, res) => {
-    res.status(404).json({
-        error: 'Not found'
+    owner.get('/restaurant', async (req, res) => {
+        res.json(
+            svc.restaurantOut(
+                await svc.getRestaurant(rid(req))
+            )
+        );
     });
-});
 
-module.exports = router;
+    owner.patch('/restaurant', async (req, res) => {
+        res.json(
+            svc.restaurantOut(
+                await svc.updateProfile(
+                    rid(req),
+                    req.body
+                )
+            )
+        );
+    });
+
+    // ======================================================
+    // OWNER CATEGORY AND ITEM ROUTES
+    // ======================================================
+
+    menuRoutes(owner, rid);
+
+    // ======================================================
+    // GET ORDERS
+    // ======================================================
+
+    owner.get('/orders', async (req, res) => {
+        const orders = await cols.orders
+            .find({
+                restaurant_id: rid(req)
+            })
+            .sort({
+                created_at: -1
+            })
+            .limit(500)
+            .toArray();
+
+        res.json({
+            orders: orders.map(order => ({
+                ...order,
+                id: String(order._id),
+                _id: undefined
+            }))
+        });
+    });
+
+    // ======================================================
+    // UPDATE ORDER STATUS
+    // ======================================================
+
+    owner.patch('/orders/:orderId/status', async (req, res) => {
+        const allowed = new Set([
+            'Pending',
+            'Accepted',
+            'Preparing',
+            'Ready',
+            'Completed',
+            'Rejected',
+            'Cancelled'
+        ]);
+
+        const status = cleanText(req.body.status, 30);
+
+        if (!allowed.has(status)) {
+            throw new HttpError(400, 'Invalid order status');
+        }
+
+        let orderId;
+
+        try {
+            orderId = new ObjectId(req.params.orderId);
+        } catch {
+            throw new HttpError(400, 'Invalid order ID');
+        }
+
+        const updatedAt = new Date();
+
+        const result = await cols.orders.updateOne(
+            {
+                _id: orderId,
+                restaurant_id: rid(req)
+            },
+            {
+                $set: {
+                    status,
+                    updated_at: updatedAt
+                }
+            }
+        );
+
+        if (!result.matchedCount) {
+            throw new HttpError(404, 'Order not found');
+        }
+
+        publishOrderStatus(orderId, {
+            id: String(orderId),
+            status,
+            updated_at: updatedAt
+        });
+
+        res.json({
+            success: true,
+            status,
+            updated_at: updatedAt
+        });
+    });
+
+    // ======================================================
+    // QR CODE
+    // ======================================================
+
+    owner.get('/qr.png', async (req, res) => {
+        const restaurant = await svc.getRestaurant(rid(req));
+
+        res.type('png').set(
+            'Content-Disposition',
+            req.query.download
+                ? `attachment; filename="${restaurant.slug}-menu-qr.png"`
+                : 'inline'
+        );
+
+        const requestedLevel = String(
+            req.query.level || 'M'
+        ).toUpperCase();
+
+        const level = ['L', 'M', 'Q', 'H'].includes(requestedLevel)
+            ? requestedLevel
+            : 'M';
+
+        res.send(
+            await QRCode.toBuffer(
+                `${BASE_URL}/m/${restaurant.slug}`,
+                {
+                    width: Math.min(
+                        Math.max(Number(req.query.size) || 800, 128),
+                        2048
+                    ),
+                    margin: 4,
+                    errorCorrectionLevel: level
+                }
+            )
+        );
+    });
+
+    // ======================================================
+    // REGISTER OWNER ROUTES
+    // ======================================================
+
+    router.use('/', owner);
+
+    // ======================================================
+    // 404
+    // ======================================================
+
+    router.use((req, res) => {
+        res.status(404).json({
+            error: 'Not found'
+        });
+    });
+
+    module.exports = router;

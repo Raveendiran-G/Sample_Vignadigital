@@ -4026,6 +4026,49 @@
         #cartBar.cart-bar.cart-visible {
             display: flex !important;
         }
+
+        /* Restaurant logo — transparent background with soft corners */
+        .m-hero .hero-content .hero-logo {
+            width: 90px !important;
+            height: 90px !important;
+            min-width: 90px !important;
+            min-height: 90px !important;
+            flex: 0 0 90px !important;
+
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            border-radius: 16px !important;
+            padding: 0 !important;
+            overflow: hidden !important;
+        }
+
+        .m-hero .hero-content .hero-logo img {
+            display: block !important;
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: contain !important;
+
+            background: transparent !important;
+            border: none !important;
+            border-radius: 16px !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+        }
+
+        @media (max-width: 760px) {
+            .m-hero .hero-content .hero-logo {
+                width: 60px !important;
+                height: 60px !important;
+                min-width: 60px !important;
+                min-height: 60px !important;
+                flex-basis: 60px !important;
+            }
+        }
     </style>
 
 </head>
