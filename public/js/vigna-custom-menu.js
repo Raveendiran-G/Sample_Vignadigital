@@ -1565,34 +1565,63 @@ body.menu-page {
     max-height: 92vh !important;
     overflow-y: auto !important;
 }
-
 /* =========================================
-   FLOATING CART
+   FLOATING VIEW CART — GRADIENT THEME
    ========================================= */
 
-body.menu-page #cartBar.cart-bar {
-    background: #ffffff !important;
-    color: #292929 !important;
+body.menu-page #cartBar,
+#cartBar.cart-bar {
+    position: fixed !important;
+    z-index: 999999 !important;
 
-    border: 1px solid #e1e1e1 !important;
+    left: 50% !important;
+    right: auto !important;
+    bottom: max(12px, env(safe-area-inset-bottom)) !important;
+    transform: translateX(-50%) !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+
+    width: calc(100% - 30px) !important;
+    max-width: 520px !important;
+    min-height: 52px !important;
+
+    padding: 10px 16px !important;
+
+    background: linear-gradient(
+        135deg,
+        var(--theme, #f06423),
+        var(--theme-dark, #bd4314)
+    ) !important;
+
+    color: #ffffff !important;
+    border: none !important;
     border-radius: 12px !important;
 
-    box-shadow: 0 8px 25px rgba(0,0,0,.12) !important;
+    box-shadow: 0 6px 22px rgba(var(--theme-rgb,240,100,35),.30) !important;
+
+    font-weight: 800 !important;
 }
 
-#cartBar .cart-bar-summary {
-    color: #292929 !important;
-}
-
+#cartBar .cart-bar-summary,
+#cartBar .cart-bar-summary b,
 #cartBar .cart-bar-summary small {
-    color: #777777 !important;
-}
-
-#cartBar > strong {
-    background: #87564b !important;
     color: #ffffff !important;
 }
 
+#cartBar > strong {
+    background: rgba(255,255,255,.20) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255,255,255,.25) !important;
+    border-radius: 8px !important;
+    padding: 8px 12px !important;
+}
+
+#cartBar[hidden],
+#cartBar.cart-bar[hidden] {
+    display: none !important;
+}
 /* =========================================
    MOBILE
    ========================================= */
