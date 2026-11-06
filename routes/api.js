@@ -740,6 +740,64 @@ function menuRoutes(route, restaurantOf) {
     const ref = req => Number(req.params.ref);
 
     // --------------------------------------------------
+    // GET MENU ITEMS
+    // Works for Super Admin and Restaurant Owner
+    // --------------------------------------------------
+
+    route.get('/items', async (req, res) => {
+        try {
+            const restaurantId = restaurantOf(req);
+
+            if (
+                restaurantId === undefined ||
+                restaurantId === null ||
+                !Number.isFinite(Number(restaurantId))
+            ) {
+                throw new HttpError(
+                    400,
+                    'Invalid restaurant ID'
+                );
+            }
+
+            const categoryId = req.query.category_id
+                ? Number(req.query.category_id)
+                : null;
+
+            if (
+                categoryId !== null &&
+                (!Number.isSafeInteger(categoryId) || categoryId <= 0)
+            ) {
+                throw new HttpError(
+                    400,
+                    'Invalid category ID'
+                );
+            }
+
+            const items = await svc.listItems(
+                Number(restaurantId),
+                categoryId
+            );
+
+            res.set({
+                'Cache-Control': 'private, no-store, no-cache, must-revalidate',
+                'Pragma': 'no-cache',
+                'Expires': '0'
+            });
+
+            return res.json({
+                items
+            });
+
+        } catch (error) {
+            console.error(
+                '[GET ITEMS ERROR]',
+                error
+            );
+
+            throw error;
+        }
+    });
+    // --------------------------------------------------
     // GET CATEGORIES
     // --------------------------------------------------
 
