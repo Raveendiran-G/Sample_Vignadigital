@@ -191,7 +191,7 @@ svg.i {
   color: #fff;
 }
 
-.brand .mark > img {
+.brand .mark>img {
   width: 100%;
   height: 100%;
   object-fit: contain;
@@ -1325,7 +1325,7 @@ th {
   min-height: 100dvh;
 }
 
-.shell > .side {
+.shell>.side {
   position: fixed !important;
   inset: 0 auto 0 0;
   z-index: 100;
@@ -1338,22 +1338,22 @@ th {
   overflow: hidden;
 }
 
-.shell > .side.is-open {
+.shell>.side.is-open {
   transform: translateX(0) !important;
 }
 
-.shell > .side > .tabs {
+.shell>.side>.tabs {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
 }
 
-.shell > .side > .spacer {
+.shell>.side>.spacer {
   display: none;
 }
 
-.shell > .side > .logout {
+.shell>.side>.logout {
   flex: 0 0 auto;
   margin-top: auto;
 }
@@ -1410,6 +1410,7 @@ main.main.wide {
 }
 
 @media (max-width: 860px) {
+
   main.main,
   main.main.wide {
     padding: 20px 16px 48px;
@@ -1419,13 +1420,14 @@ main.main.wide {
     margin-bottom: 16px;
   }
 
-  .shell > .side {
+  .shell>.side {
     width: min(260px, calc(100vw - 24px));
     padding-bottom: max(20px, env(safe-area-inset-bottom));
   }
 }
 
 @media (max-width: 480px) {
+
   main.main,
   main.main.wide {
     padding-left: 12px;
@@ -1438,7 +1440,7 @@ main.main.wide {
   display: block !important;
 }
 
-.shell > .side {
+.shell>.side {
   position: fixed !important;
   inset: 0 auto 0 0 !important;
   z-index: 100 !important;
@@ -1451,18 +1453,18 @@ main.main.wide {
   overflow: hidden !important;
 }
 
-.shell > .side.is-open {
+.shell>.side.is-open {
   transform: translateX(0) !important;
 }
 
-.shell > .side > .tabs {
+.shell>.side>.tabs {
   flex: 1 1 auto !important;
   min-height: 0 !important;
   overflow-y: auto !important;
   overflow-x: hidden !important;
 }
 
-.shell > .side > .logout {
+.shell>.side>.logout {
   flex: 0 0 auto !important;
   margin-top: auto !important;
 }
@@ -1519,18 +1521,20 @@ main.main.wide {
 }
 
 @media (max-width: 860px) {
+
   main.main,
   main.main.wide {
     padding: 20px 16px 48px !important;
   }
 
-  .shell > .side {
+  .shell>.side {
     width: min(260px, calc(100vw - 24px)) !important;
     padding-bottom: max(20px, env(safe-area-inset-bottom)) !important;
   }
 }
 
 @media (max-width: 480px) {
+
   main.main,
   main.main.wide {
     padding-left: 12px !important;
@@ -1538,11 +1542,11 @@ main.main.wide {
   }
 }
 
-html body .shell > aside.side:not(.is-open) {
+html body .shell>aside.side:not(.is-open) {
   transform: translateX(-100%) !important;
 }
 
-html body .shell > aside.side.is-open {
+html body .shell>aside.side.is-open {
   transform: translateX(0) !important;
 }
 
@@ -3979,9 +3983,9 @@ button:focus,
 button:focus-visible,
 .btn:focus,
 .btn:focus-visible {
-    border: 0 !important;
-    border-color: transparent !important;
-    box-shadow: none !important;
+  border: 0 !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
 }
 
 /* Remove button focus outlines */
@@ -3994,7 +3998,7 @@ input[type="submit"]:focus,
 input[type="reset"]:focus,
 a.btn:focus,
 a.btn:focus-visible {
-    outline: none !important;
+  outline: none !important;
 }
 
 body.owner-dashboard .side .tabs button:hover {
@@ -4116,13 +4120,13 @@ body.owner-dashboard .orders-modal #ordersList button.order-active:hover {
   min-width: 0;
 }
 
-.shell > .side {
+.shell>.side {
   min-height: 100dvh;
   min-width: 0;
   overflow: hidden;
 }
 
-.shell > .side > .tabs {
+.shell>.side>.tabs {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
@@ -4130,11 +4134,11 @@ body.owner-dashboard .orders-modal #ordersList button.order-active:hover {
   scrollbar-width: thin;
 }
 
-.shell > .side > .spacer {
+.shell>.side>.spacer {
   display: none;
 }
 
-.shell > .side > .logout {
+.shell>.side>.logout {
   flex: 0 0 auto;
   margin-top: auto;
   padding-bottom: max(10px, env(safe-area-inset-bottom));
@@ -4150,6 +4154,7 @@ body.owner-dashboard .orders-modal #ordersList button.order-active:hover {
 }
 
 @media (max-width: 860px) {
+
   html,
   body {
     max-width: 100%;
@@ -4165,7 +4170,7 @@ body.owner-dashboard .orders-modal #ordersList button.order-active:hover {
     min-height: 100dvh;
   }
 
-  .shell > .side {
+  .shell>.side {
     position: fixed;
     inset: 0 auto 0 0;
     z-index: 60;
@@ -4177,28 +4182,28 @@ body.owner-dashboard .orders-modal #ordersList button.order-active:hover {
     padding: 20px 14px max(20px, env(safe-area-inset-bottom));
   }
 
-  .shell > .side.mobile-open {
+  .shell>.side.mobile-open {
     transform: translateX(0);
   }
 
-  .shell > .side > .tabs {
+  .shell>.side>.tabs {
     display: flex;
     flex-direction: column;
     align-items: stretch;
     overflow-y: auto;
   }
 
-  .shell > .side > .tabs button {
+  .shell>.side>.tabs button {
     flex: none;
     width: 100%;
     white-space: normal;
   }
 
-  .shell > .side > .tabs button span {
+  .shell>.side>.tabs button span {
     display: inline;
   }
 
-  .shell > .side > .logout {
+  .shell>.side>.logout {
     width: 100%;
     padding: 10px 12px;
   }
@@ -4254,7 +4259,7 @@ body.owner-dashboard .orders-modal #ordersList button.order-active:hover {
     margin-bottom: 18px;
   }
 
-  .page-head > * {
+  .page-head>* {
     min-width: 0;
   }
 
@@ -4287,9 +4292,9 @@ body.owner-dashboard .orders-modal #ordersList button.order-active:hover {
     align-items: stretch;
   }
 
-  .toolbar > *,
-  .actions > *,
-  .card-foot > * {
+  .toolbar>*,
+  .actions>*,
+  .card-foot>* {
     max-width: 100%;
   }
 
@@ -4314,8 +4319,7 @@ body.owner-dashboard .orders-modal #ordersList button.order-active:hover {
   }
 
   .modal {
-    padding: max(10px, env(safe-area-inset-top)) 10px
-      max(10px, env(safe-area-inset-bottom));
+    padding: max(10px, env(safe-area-inset-top)) 10px max(10px, env(safe-area-inset-bottom));
   }
 
   .modal-box {
@@ -4333,6 +4337,7 @@ body.owner-dashboard .orders-modal #ordersList button.order-active:hover {
 }
 
 @media (max-width: 480px) {
+
   main.main,
   main.main.wide {
     padding-left: 12px;
@@ -4375,7 +4380,7 @@ body.owner-dashboard .orders-modal #ordersList button.order-active:hover {
   display: block !important;
 }
 
-.shell > .side {
+.shell>.side {
   position: fixed !important;
   inset: 0 auto 0 0 !important;
   z-index: 100 !important;
@@ -4388,18 +4393,18 @@ body.owner-dashboard .orders-modal #ordersList button.order-active:hover {
   overflow: hidden !important;
 }
 
-.shell > .side.is-open {
+.shell>.side.is-open {
   transform: translateX(0) !important;
 }
 
-.shell > .side > .tabs {
+.shell>.side>.tabs {
   flex: 1 1 auto !important;
   min-height: 0 !important;
   overflow-y: auto !important;
   overflow-x: hidden !important;
 }
 
-.shell > .side > .logout {
+.shell>.side>.logout {
   flex: 0 0 auto !important;
   margin-top: auto !important;
 }
@@ -4456,21 +4461,289 @@ main.main.wide {
 }
 
 @media (max-width: 860px) {
+
   main.main,
   main.main.wide {
     padding: 20px 16px 48px !important;
   }
 
-  .shell > .side {
+  .shell>.side {
     width: min(260px, calc(100vw - 24px)) !important;
     padding-bottom: max(20px, env(safe-area-inset-bottom)) !important;
   }
 }
 
 @media (max-width: 480px) {
+
   main.main,
   main.main.wide {
     padding-left: 12px !important;
     padding-right: 12px !important;
+  }
+}
+
+
+/* =====================================================
+   VIGNADIGITAL - UNIVERSAL DARK MODE
+   Identical appearance in Light Mode and Dark Mode
+   Applies to Super Admin, Owner Dashboard and Menu Manage
+   ===================================================== */
+
+:root {
+  color-scheme: dark !important;
+
+  --vd-bg: #111113;
+  --vd-panel: #1b1b20;
+  --vd-card: #202026;
+  --vd-card-hover: #292930;
+  --vd-input: #25252c;
+  --vd-border: #34343c;
+  --vd-text: #ffffff;
+  --vd-muted: #a1a1aa;
+  --vd-orange: #ff6426;
+}
+
+/* Main page */
+html,
+body {
+  background: var(--vd-bg) !important;
+  background-color: var(--vd-bg) !important;
+  color: var(--vd-text) !important;
+  color-scheme: dark !important;
+}
+
+/* Main layout */
+.shell,
+.main,
+.page,
+.content,
+main {
+  background-color: var(--vd-bg) !important;
+  color: var(--vd-text) !important;
+}
+
+/* Dashboard cards and panels */
+.card,
+.panel,
+.stat,
+.modal,
+.modal-content,
+.modal-box,
+.dialog,
+.dialog-content,
+.popup,
+.popup-content,
+[role="dialog"] {
+  background-color: var(--vd-panel) !important;
+  color: var(--vd-text) !important;
+  border-color: var(--vd-border) !important;
+}
+
+/* Modal content and details */
+.modal *,
+.modal-content *,
+.modal-box *,
+.dialog *,
+.dialog-content *,
+.popup *,
+.popup-content *,
+[role="dialog"] * {
+  color: inherit;
+}
+
+/* Modal headings */
+.modal h1,
+.modal h2,
+.modal h3,
+.modal strong,
+.dialog h1,
+.dialog h2,
+.dialog h3,
+[role="dialog"] h1,
+[role="dialog"] h2,
+[role="dialog"] h3 {
+  color: #ffffff !important;
+}
+
+/* Modal labels and descriptions */
+.modal p,
+.modal label,
+.modal span,
+.dialog p,
+.dialog label,
+.dialog span,
+[role="dialog"] p,
+[role="dialog"] label,
+[role="dialog"] span {
+  color: var(--vd-muted);
+}
+
+/* Modal values */
+.modal b,
+.modal strong,
+.dialog b,
+.dialog strong,
+[role="dialog"] b,
+[role="dialog"] strong {
+  color: #ffffff !important;
+}
+
+/* Modal separators */
+.modal hr,
+.modal .kv,
+.modal .kv-grid>div,
+.dialog hr,
+[role="dialog"] hr {
+  border-color: var(--vd-border) !important;
+}
+
+/* Menu Manage item cards */
+#menuMount .item-card,
+#menuMount .menu-item,
+#menuMount .menu-card,
+#menuMount .food-card,
+#menuMount .card,
+#menuMount article,
+#menuMount .item {
+  background: var(--vd-card) !important;
+  background-color: var(--vd-card) !important;
+  color: var(--vd-text) !important;
+  border-color: var(--vd-border) !important;
+}
+
+/* Menu item names */
+#menuMount h1,
+#menuMount h2,
+#menuMount h3,
+#menuMount h4,
+#menuMount .item-name,
+#menuMount .item-title,
+#menuMount .name,
+#menuMount .title {
+  color: #ffffff !important;
+}
+
+/* Menu item descriptions */
+#menuMount p,
+#menuMount small,
+#menuMount .muted,
+#menuMount .description {
+  color: var(--vd-muted) !important;
+}
+
+/* Menu item prices */
+#menuMount .price,
+#menuMount .item-price {
+  color: var(--vd-orange) !important;
+}
+
+/* Menu Manage toolbar */
+#menuMount .toolbar,
+#menuMount .filters,
+#menuMount .view-toggle,
+#menuMount .view-switch {
+  color: var(--vd-text) !important;
+}
+
+/* Search, dropdowns and form controls */
+input,
+select,
+textarea {
+  background-color: var(--vd-input) !important;
+  color: #ffffff !important;
+  border-color: var(--vd-border) !important;
+  color-scheme: dark !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #85858f !important;
+}
+
+/* Dropdown options */
+select option {
+  background: var(--vd-panel) !important;
+  color: #ffffff !important;
+}
+
+/* Table */
+table,
+thead,
+tbody {
+  background: var(--vd-panel) !important;
+  color: var(--vd-text) !important;
+}
+
+th {
+  color: var(--vd-muted) !important;
+}
+
+td {
+  color: var(--vd-text) !important;
+  border-color: var(--vd-border) !important;
+}
+
+tbody tr,
+tbody tr:nth-child(even),
+tbody tr:nth-child(odd) {
+  background: var(--vd-card) !important;
+}
+
+tbody tr:hover,
+tbody tr:hover td {
+  background: var(--vd-card-hover) !important;
+}
+
+/* Preserve orange buttons */
+button:not(.ghost):not(.danger),
+.btn:not(.ghost):not(.danger) {
+  color: #ffffff;
+}
+
+/* Preserve orange theme */
+button.lg,
+button.primary,
+#copyCreds,
+[data-menu],
+[data-add],
+#menuMount button:not(.ghost):not(.danger) {
+  background-color: var(--vd-orange) !important;
+  border-color: var(--vd-orange) !important;
+  color: #ffffff !important;
+}
+
+/* Ghost buttons */
+button.ghost {
+  background: transparent !important;
+  color: #ffffff !important;
+  border-color: var(--vd-border) !important;
+}
+
+/* Close buttons */
+.modal button[data-close],
+.modal .close,
+.dialog .close,
+[role="dialog"] .close {
+  color: #ffffff !important;
+}
+
+/* Dark backdrop */
+.modal-backdrop,
+.modal-overlay,
+.dialog-backdrop,
+.popup-backdrop {
+  background: rgba(0, 0, 0, 0.78) !important;
+}
+
+/* Device Light Mode must not change the website */
+@media (prefers-color-scheme: light) {
+  :root {
+    color-scheme: dark !important;
+  }
+
+  html,
+  body {
+    background: #111113 !important;
+    color: #ffffff !important;
   }
 }
