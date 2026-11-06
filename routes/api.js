@@ -1485,6 +1485,8 @@ admin.get('/restaurants/:id/orders', async (req, res) => {
 
 const adminLibrary = express.Router({ mergeParams: true });
 
+adminLibrary.use(auth('admin'));
+
 adminLibrary.use(async (req, res, next) => {
     await svc.getRestaurant(Number(req.params.id));
     next();

@@ -38,7 +38,7 @@ window.MenuLibrary = (() => {
   const request = async (url, method = 'GET', body = null) => {
     const options = {
       method,
-      credentials: 'same-origin',
+      credentials: 'include',
       cache: 'no-store',
       headers: {
         Accept: 'application/json'
@@ -76,11 +76,13 @@ window.MenuLibrary = (() => {
     }
 
     if (!response.ok) {
-      throw new Error(
+      const error = new Error(
         data.error ||
         data.message ||
         `Menu Library request failed: HTTP ${response.status}`
       );
+      error.status = response.status;
+      throw error;
     }
 
     return data;

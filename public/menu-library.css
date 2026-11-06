@@ -273,11 +273,9 @@
 
 .ml-category-card:has(input:checked),
 .ml-item-card.selected {
-    background: color-mix(
-        in srgb,
-        var(--theme-color, #d9480f) 10%,
-        var(--surface, #ffffff)
-    );
+    background: color-mix(in srgb,
+            var(--theme-color, #d9480f) 10%,
+            var(--surface, #ffffff));
 }
 
 .ml-error-state,
@@ -301,5 +299,238 @@
 
     .ml-wrap {
         max-height: 70vh;
+    }
+}
+
+/* =========================================================
+   VIGNA DIGITAL - MENU LIBRARY
+   FORCE DARK THEME IN BOTH LIGHT AND DARK MODES
+   ========================================================= */
+
+/* Fixed dark theme variables */
+:root {
+    --ml-bg: #1b1b20;
+    --ml-panel: #202026;
+    --ml-card: #1b1b20;
+    --ml-input: #24242a;
+    --ml-border: #303038;
+    --ml-text: #ffffff;
+    --ml-muted: #a9a9b5;
+    --ml-accent: #ff6426;
+    --ml-button: #905747;
+}
+
+/* Main library wrapper */
+.ml-wrap {
+    background: var(--ml-bg) !important;
+    color: var(--ml-text) !important;
+    color-scheme: dark !important;
+    padding: 0 !important;
+}
+
+/* Fix parent modal background in both themes */
+body:has(.ml-wrap) .modal,
+body:has(.ml-wrap) .modal-box,
+body:has(.ml-wrap) .modal-content,
+body:has(.ml-wrap) .modal-body,
+body:has(.ml-wrap) .modal-card {
+    background-color: var(--ml-bg) !important;
+    color: var(--ml-text) !important;
+    color-scheme: dark !important;
+}
+
+/* Popup headings */
+.ml-wrap h2,
+.ml-wrap h3,
+.ml-wrap h4,
+.ml-wrap strong {
+    color: var(--ml-text) !important;
+}
+
+/* Descriptions and secondary text */
+.ml-wrap p,
+.ml-wrap small,
+.ml-wrap .muted,
+.ml-wrap span {
+    color: var(--ml-muted);
+}
+
+/* Search and filter section */
+.ml-filters {
+    background: transparent !important;
+}
+
+.ml-filters input,
+.ml-filters select {
+    background-color: var(--ml-input) !important;
+    color: var(--ml-text) !important;
+    border: 1px solid var(--ml-border) !important;
+    color-scheme: dark !important;
+}
+
+.ml-filters input::placeholder {
+    color: #92929e !important;
+    opacity: 1 !important;
+}
+
+.ml-filters select option {
+    background: var(--ml-input) !important;
+    color: var(--ml-text) !important;
+}
+
+/* Selection bar */
+.ml-selection-bar {
+    background: var(--ml-panel) !important;
+    color: var(--ml-text) !important;
+    border: 1px solid var(--ml-border) !important;
+}
+
+.ml-selection-bar strong {
+    color: #ffffff !important;
+}
+
+.ml-selection-bar span {
+    color: var(--ml-muted) !important;
+}
+
+.ml-selection-bar button {
+    background: transparent !important;
+    color: #ffffff !important;
+}
+
+/* Category grid */
+.ml-category-grid {
+    background: transparent !important;
+}
+
+.ml-category-card {
+    background: var(--ml-card) !important;
+    color: var(--ml-text) !important;
+    border: 1px solid var(--ml-border) !important;
+    border-radius: 13px !important;
+}
+
+.ml-category-card:hover {
+    background: #24242b !important;
+    border-color: #454550 !important;
+}
+
+.ml-category-card strong,
+.ml-category-card b {
+    color: #ffffff !important;
+}
+
+.ml-category-card small {
+    color: var(--ml-muted) !important;
+}
+
+.ml-category-card label,
+.ml-category-card span {
+    color: #c5c5d0 !important;
+}
+
+/* Dish cards */
+.ml-item-grid {
+    background: transparent !important;
+}
+
+.ml-item-card {
+    background: var(--ml-card) !important;
+    color: var(--ml-text) !important;
+    border: 1px solid var(--ml-border) !important;
+    border-radius: 13px !important;
+}
+
+.ml-item-card:hover {
+    background: #24242b !important;
+    border-color: #454550 !important;
+}
+
+.ml-item-card.selected,
+.ml-category-card.selected {
+    border-color: var(--ml-accent) !important;
+    background: #29221f !important;
+}
+
+.ml-item-card strong,
+.ml-item-card b {
+    color: #ffffff !important;
+}
+
+.ml-item-card small,
+.ml-item-card p {
+    color: var(--ml-muted) !important;
+}
+
+/* Checkboxes */
+.ml-wrap input[type="checkbox"] {
+    accent-color: var(--ml-accent) !important;
+}
+
+/* Pagination */
+.ml-pagination {
+    background: var(--ml-bg) !important;
+    color: var(--ml-muted) !important;
+}
+
+.ml-pagination button {
+    background: var(--ml-input) !important;
+    color: #ffffff !important;
+    border: 1px solid var(--ml-border) !important;
+}
+
+/* Error and empty messages */
+.ml-error,
+.ml-empty {
+    background: var(--ml-panel) !important;
+    color: #ff7777 !important;
+    border-color: var(--ml-border) !important;
+}
+
+/* Footer */
+.ml-footer {
+    background: var(--ml-bg) !important;
+    color: #ffffff !important;
+    border-top: 1px solid #454550 !important;
+}
+
+/* Cancel button */
+.ml-footer [data-ml-close] {
+    background: transparent !important;
+    color: #ffffff !important;
+    border: 1px solid transparent !important;
+}
+
+/* Import button */
+.ml-footer [data-ml-import] {
+    background: var(--ml-button) !important;
+    color: #ffffff !important;
+    border: 1px solid var(--ml-button) !important;
+}
+
+.ml-footer [data-ml-import]:hover {
+    background: #a36552 !important;
+}
+
+/* Remove inherited white backgrounds from nested elements */
+.ml-wrap .ml-category-section,
+.ml-wrap .ml-items-section,
+.ml-wrap .ml-section-heading,
+.ml-wrap .ml-category-grid,
+.ml-wrap .ml-item-grid,
+.ml-wrap .ml-pagination {
+    background-color: transparent !important;
+}
+
+/* Keep dark theme even when device/browser uses light mode */
+@media (prefers-color-scheme: light) {
+
+    .ml-wrap,
+    .ml-wrap *,
+    body:has(.ml-wrap) .modal,
+    body:has(.ml-wrap) .modal-box,
+    body:has(.ml-wrap) .modal-content,
+    body:has(.ml-wrap) .modal-body {
+        color-scheme: dark !important;
     }
 }
