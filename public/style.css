@@ -4778,3 +4778,28 @@ body[data-theme="dark"] .modal {
     color: #ffffff !important;
   }
 }
+
+/* BLACK MODAL BACKDROP */
+.modal {
+  background: rgba(0, 0, 0, 0.65) !important;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+
+/* Keep popup card unchanged */
+.modal .modal-box {
+  background: #1c1c1f;
+  color: #ffffff;
+}
+
+/* Light mode: black overlay too */
+html[data-theme="light"] .modal,
+body[data-theme="light"] .modal {
+  background: rgba(0, 0, 0, 0.55) !important;
+}
+
+/* Dark mode */
+html[data-theme="dark"] .modal,
+body[data-theme="dark"] .modal {
+  background: rgba(0, 0, 0, 0.70) !important;
+}
