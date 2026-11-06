@@ -1458,6 +1458,38 @@
       outline-color: var(--theme) !important;
       box-shadow: none !important;
     }
+
+    .owner-ordering-notice {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+    }
+
+    .owner-ordering-message {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .owner-ordering-close {
+      flex: 0 0 30px;
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      padding: 0;
+      border: none !important;
+      border-radius: 50%;
+      background: transparent !important;
+      color: #713f12 !important;
+      font-size: 25px;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .owner-ordering-close:hover {
+      background: #f5dfbd !important;
+    }
   </style>
 
   <link rel="stylesheet" href="/style.css">
@@ -1466,6 +1498,7 @@
     /* =====================================================
    VIGNADIGITAL DASHBOARD - FINAL THEME CSS
 ===================================================== */
+
 
     :root {
       --status-green: var(--theme);
@@ -2844,6 +2877,118 @@
       cursor: not-allowed;
       opacity: .55;
     }
+
+    /* ONLINE ORDERING DISABLED NOTICE */
+    html body .owner-ordering-notice {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      box-sizing: border-box;
+      margin: 16px 0 20px;
+      padding: 15px 16px;
+      background: #fff7e8;
+      border: 1px solid #f0b45b;
+      border-left: 5px solid #e58a24;
+      border-radius: 12px;
+      color: #713f12;
+    }
+
+    html body .owner-ordering-notice[hidden] {
+      display: none !important;
+    }
+
+    .owner-ordering-icon {
+      display: grid;
+      place-items: center;
+      flex: 0 0 26px;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: #e58a24;
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .owner-ordering-message {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    .owner-ordering-message strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    .owner-ordering-message p {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    html body .owner-ordering-close {
+      display: grid;
+      place-items: center;
+      flex: 0 0 30px;
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      margin-left: auto;
+      border: none !important;
+      border-radius: 50%;
+      background: #f5dfbd !important;
+      color: #713f12 !important;
+      font-size: 24px;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    html body .owner-ordering-close:hover {
+      background: #eacb9e !important;
+    }
+
+    /* WHITE TEXT INSIDE ALL DASHBOARD BUTTONS */
+    body button,
+    body button *,
+    body .btn,
+    body .btn *,
+    body a.button {
+      color: #ffffff !important;
+      -webkit-text-fill-color: #ffffff !important;
+    }
+
+    /* Button hover */
+    body button:hover,
+    body button:hover *,
+    body .btn:hover,
+    body .btn:hover * {
+      color: #ffffff !important;
+      -webkit-text-fill-color: #ffffff !important;
+    }
+
+    /* Keep input text unaffected */
+    body input,
+    body textarea,
+    body select {
+      -webkit-text-fill-color: #ffffff;
+    }
+
+    /* FORCE ORDER NOTIFICATION X TO BLACK */
+    html body #orderNotifications .order-notification button.order-notification-close {
+      color: #000000 !important;
+      -webkit-text-fill-color: #000000 !important;
+      background: transparent !important;
+      opacity: 1 !important;
+      text-shadow: none !important;
+    }
+
+    /* Keep X black on hover */
+    html body #orderNotifications .order-notification button.order-notification-close:hover {
+      color: #000000 !important;
+      -webkit-text-fill-color: #000000 !important;
+      background: rgba(0, 0, 0, 0.08) !important;
+    }
   </style>
 </head>
 
@@ -2895,6 +3040,21 @@
 
       <!-- MENU ITEMS -->
       <section data-panel="items">
+        <!-- ONLINE ORDERING STATUS -->
+        <div id="ownerOrderingNotice" class="owner-ordering-notice" hidden>
+          <span class="owner-ordering-icon">!</span>
+
+          <div class="owner-ordering-message">
+            <strong>Online Ordering is Disabled</strong>
+            <p>
+              Customers can view your menu, but they cannot place online orders.
+              Please contact Vigna Digital.
+            </p>
+          </div>
+
+          <button type="button" id="closeOwnerOrderingNotice" class="owner-ordering-close"
+            aria-label="Close notification" title="Close">&times;</button>
+        </div>
         <div class="stats" id="itemStats">
           <div class="skel skel-stat"></div>
           <div class="skel skel-stat"></div>
@@ -3368,44 +3528,73 @@
       const b = e.target.closest('button[data-act]');
       if (!b) return;
 
-      const i = items.find(x => x.id == b.dataset.id);
+      const i = items.find(
+        x => String(x.id ?? x._id) === String(b.dataset.id)
+      );
+
+      if (!i) {
+        console.error('Item not found:', b.dataset.id, items);
+        toast('Unable to find this menu item. Please refresh.');
+        return;
+      }
+
+      const itemId = i.id ?? i._id;
 
       try {
         if (b.dataset.act === 'edit') {
           itemModal(i);
+          return;
+        }
 
-        } else if (b.dataset.act === 'toggle') {
-          await api(
-            `/api/v1/items/${i.id}/availability`,
-            'PATCH',
-            { available: !i.available }
-          );
+        if (b.dataset.act === 'toggle') {
+          b.disabled = true;
 
-          await loadAll();
+          try {
+            await api(
+              `/api/v1/items/${encodeURIComponent(itemId)}/availability`,
+              'PATCH',
+              { available: !i.available }
+            );
 
-          toast(i.available
-            ? 'Item hidden from menu'
-            : 'Item is visible again'
-          );
+            await loadAll();
 
-        } else if (
-          await confirmDialog({
+            toast(
+              i.available
+                ? 'Item hidden from menu'
+                : 'Item is visible again'
+            );
+          } finally {
+            b.disabled = false;
+          }
+
+          return;
+        }
+
+        if (b.dataset.act === 'del') {
+          const confirmed = await confirmDialog({
             title: 'Delete this item?',
             message: `"${i.name}" will be removed from your menu. This can't be undone.`,
             confirmText: 'Delete item',
             danger: true
-          })
-        ) {
-          await api(`/api/v1/items/${i.id}`, 'DELETE');
+          });
+
+          if (!confirmed) return;
+
+          await api(
+            `/api/v1/items/${encodeURIComponent(itemId)}`,
+            'DELETE'
+          );
+
           await loadAll();
           toast('Item deleted');
         }
 
       } catch (er) {
-        toast(er.message);
+        console.error('Menu item action failed:', er);
+        toast(er.message || 'Unable to update menu item');
       }
     });
-
+    
     // ---------- CATEGORIES ----------
 
     function renderCategories() {
@@ -3556,6 +3745,24 @@
       img.src = src;
     });
 
+    function updateOwnerOrderingNotice(enabled, restaurantId = 'default') {
+      const notice = document.getElementById('ownerOrderingNotice');
+      if (!notice) return;
+
+      const storageKey = `ownerOrderingNoticeDismissed_${restaurantId}`;
+      notice.dataset.storageKey = storageKey;
+
+      if (enabled === true) {
+        // Reset dismissal when online ordering is enabled again.
+        localStorage.removeItem(storageKey);
+        notice.hidden = true;
+        return;
+      }
+
+      const dismissed = localStorage.getItem(storageKey) === 'true';
+      notice.hidden = dismissed;
+    }
+
 
     // -----------------------------------------------------
     // GENERATE QR WITH CENTERED RESTAURANT LOGO
@@ -3675,6 +3882,24 @@
 
     }
 
+
+
+
+
+    const closeOrderingNotice = document.getElementById(
+      'closeOwnerOrderingNotice'
+    );
+
+    closeOrderingNotice?.addEventListener('click', () => {
+      const notice = document.getElementById('ownerOrderingNotice');
+      if (!notice) return;
+
+      const storageKey =
+        notice.dataset.storageKey || 'ownerOrderingNoticeDismissed_default';
+
+      localStorage.setItem(storageKey, 'true');
+      notice.hidden = true;
+    });
 
     // -----------------------------------------------------
     // LOGO CHECKBOX
@@ -5143,6 +5368,11 @@
 
         $('#ordersPrintBillsSidebar').hidden = !orderingEnabled;
 
+        updateOwnerOrderingNotice(
+          orderingEnabled,
+          profile._id || profile.id || profile.slug || 'default'
+        );
+
         fillProfile();
 
         renderQr();
@@ -5164,7 +5394,6 @@
         console.error('Dashboard initialization failed:', error);
 
         toast(error.message || 'Unable to load dashboard.');
-
       }
 
     })();

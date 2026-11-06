@@ -29,6 +29,7 @@ const { HttpError } = svc;
 
 const router = express.Router();
 
+
 router.use(express.json({ limit: '3mb' }));
 
 // ======================================================
@@ -796,6 +797,114 @@ function menuRoutes(route, restaurantOf) {
 
             throw error;
         }
+    });
+
+    // ==================================================
+    // CREATE MENU ITEM
+    // ==================================================
+
+    route.post('/items', async (req, res) => {
+        const restaurantId = restaurantOf(req);
+        const image = await photo(req);
+
+        const item = await svc.saveItem(
+            restaurantId,
+            {
+                name: req.body.name,
+                description: req.body.description,
+                price: req.body.price,
+                category_id: req.body.category_id,
+                available: req.body.available,
+                remove_image: req.body.remove_image
+            },
+            image
+        );
+
+        res.status(201).json({
+            success: true,
+            item
+        });
+    });
+
+
+    // ==================================================
+    // UPDATE MENU ITEM
+    // ==================================================
+
+    route.put('/items/:ref', async (req, res) => {
+        const restaurantId = restaurantOf(req);
+        const itemId = ref(req);
+        const image = await photo(req);
+
+        const item = await svc.saveItem(
+            restaurantId,
+            {
+                id: itemId,
+                name: req.body.name,
+                description: req.body.description,
+                price: req.body.price,
+                category_id: req.body.category_id,
+                available: req.body.available,
+                remove_image: req.body.remove_image
+            },
+            image
+        );
+
+        res.json({
+            success: true,
+            item
+        });
+    });
+
+
+    // ==================================================
+    // HIDE / SHOW MENU ITEM
+    // ==================================================
+
+    route.patch('/items/:ref/availability', async (req, res) => {
+        const restaurantId = restaurantOf(req);
+        const itemId = ref(req);
+
+        if (!Number.isSafeInteger(itemId) || itemId <= 0) {
+            throw new HttpError(400, 'Invalid item ID');
+        }
+
+        if (typeof req.body?.available !== 'boolean') {
+            throw new HttpError(400, 'Available must be true or false');
+        }
+
+        const item = await svc.setItemAvailable(
+            restaurantId,
+            itemId,
+            req.body.available
+        );
+
+        res.set('Cache-Control', 'no-store');
+
+        res.json({
+            success: true,
+            message: item.available
+                ? 'Item is now visible'
+                : 'Item is now hidden',
+            item
+        });
+    });
+
+
+    // ==================================================
+    // DELETE MENU ITEM
+    // ==================================================
+
+    route.delete('/items/:ref', async (req, res) => {
+        const restaurantId = restaurantOf(req);
+        const itemId = ref(req);
+
+        await svc.deleteItem(restaurantId, itemId);
+
+        res.json({
+            success: true,
+            message: 'Item deleted successfully'
+        });
     });
     // --------------------------------------------------
     // GET CATEGORIES

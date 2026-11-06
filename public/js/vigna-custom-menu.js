@@ -596,11 +596,7 @@
 
             </section>
 
-            ${orderingEnabled() ? '' : `
-                <div class="ordering-unavailable" role="status">
-                    Online ordering is currently unavailable. Please contact the restaurant.
-                </div>
-            `}
+           
 
 
             <!-- CATEGORY NAVIGATION -->
