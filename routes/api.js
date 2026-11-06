@@ -775,6 +775,8 @@ function menuRoutes(route, restaurantOf) {
 
         res.status(204).end();
     });
+
+}
     // ======================================================
     // BULK UPLOAD IMAGES - GLOBAL DISH SYNCHRONIZATION
     // ======================================================
@@ -897,7 +899,7 @@ function menuRoutes(route, restaurantOf) {
             });
         }
     );
-}
+
 // ======================================================
 // SUPER ADMIN
 // ======================================================
