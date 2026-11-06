@@ -1,119 +1,658 @@
-// "Add menu" popup: browse what other restaurants publish (search, category and restaurant filters) and copy
-// dishes or whole categories into this restaurant's menu. Used by the restaurant dashboard and the admin's Manage menu.
-// MenuLibrary.open({ base, onDone }): base is '/api/v1' (owner) or '/api/v1/admin/restaurants/:id' (admin).
-// Needs app.js (api, esc, rupees, toast, openModal, closeModal).
+/* =========================================================
+   VIGNA DIGITAL - MENU LIBRARY
+   Used by Owner Dashboard and Super Admin
+   ========================================================= */
+
 window.MenuLibrary = (() => {
-  function open({ base, onDone } = {}) {
-    const dishes = new Map(), categories = new Map(); // selected: dish id -> dish, category id -> category
-    let rows = [], total = 0, catalog = [], timer;
-    const filter = { q: '', category: '', restaurant_id: '' };
+    'use strict';
 
-    const m = openModal({ title: 'Add menu', sub: 'Copy dishes or whole categories from other restaurants into this menu. Photos are copied too.', wide: true, html: `
-      <div class="subtabs" style="margin-bottom:12px"><button type="button" data-t="items" class="on">Dishes</button><button type="button" data-t="cats">Categories</button></div>
-      <div data-p="items">
-        <div class="filters lib-filters"><input type="search" data-q placeholder="Search dishes from all restaurants…" aria-label="Search dishes"><select data-rest aria-label="Restaurant"><option value="">All restaurants</option></select></div>
-        <div class="lib-chips" data-chips></div>
-        <div class="lib-list" data-list>${skelRows(5)}</div>
-        <div class="actions" style="justify-content:center;margin-top:10px"><button type="button" class="ghost sm hidden" data-more>Load more</button></div>
-      </div>
-      <div data-p="cats" class="hidden">
-        <label class="check" style="margin-top:0"><input type="checkbox" data-with checked> Also add all the dishes in the categories I select</label>
-        <div class="lib-list" data-catlist style="margin-top:10px">${skelRows(4)}</div>
-      </div>
-      <div class="err" data-err role="alert"></div>
-      <div class="card-foot lib-foot"><span class="muted small" data-count></span><button type="button" class="ghost" data-close>Cancel</button><button type="button" data-add disabled>Add selected</button></div>` });
-    m.querySelector('.modal-box').style.maxWidth = '780px';
-    const q = (s) => m.querySelector(s);
+    const PAGE_SIZE = 30;
 
-    const letter = (n) => esc((n || '?').trim().charAt(0).toUpperCase());
-    const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
-    function counter() {
-      const a = dishes.size, b = categories.size;
-      q('[data-count]').textContent = [a && plural(a, 'dish', 'dishes'), b && plural(b, 'category', 'categories')].filter(Boolean).join(' · ') || 'Nothing selected yet';
-      q('[data-add]').disabled = !(a || b);
+    const state = {
+        base: '',
+        onDone: null,
+        categories: [],
+        items: [],
+        selectedItems: new Set(),
+        selectedCategories: new Map(),
+        query: '',
+        category: '',
+        restaurant: '',
+        offset: 0,
+        total: 0,
+        loading: false
+    };
+
+    const esc = value =>
+        String(value ?? '').replace(/[&<>"']/g, char => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        })[char]);
+
+    const money = value =>
+        '₹' + Number(value || 0).toFixed(2);
+
+    const request = async (url, method = 'GET', body = null) => {
+        const options = {
+            method,
+            cache: 'no-store',
+            headers: {}
+        };
+
+        if (body !== null) {
+            options.headers['Content-Type'] = 'application/json';
+            options.body = JSON.stringify(body);
+        }
+
+        const response = await fetch(
+            `${state.base}${url}`,
+            options
+        );
+
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+            throw new Error(data.error || data.message || `HTTP ${response.status}`);
+        }
+
+        return data;
+    };
+
+    let modal = null;
+
+    function open({ base, onDone } = {}) {
+        if (!base) {
+            toast('Menu API path is missing.');
+            return;
+        }
+
+        state.base = base.replace(/\/$/, '');
+        state.onDone = onDone || null;
+
+        state.categories = [];
+        state.items = [];
+        state.selectedItems.clear();
+        state.selectedCategories.clear();
+
+        state.query = '';
+        state.category = '';
+        state.restaurant = '';
+        state.offset = 0;
+        state.total = 0;
+
+        modal = openModal({
+            title: 'Add dishes from Menu Library',
+            sub: 'Browse dishes from other restaurants and add them to this menu.',
+            wide: true,
+            html: `
+                <div class="ml-wrap">
+
+                    <div class="ml-filters">
+
+                        <input
+                            type="search"
+                            data-ml-search
+                            placeholder="Search dishes..."
+                            aria-label="Search dishes"
+                        >
+
+                        <select data-ml-category>
+                            <option value="">All categories</option>
+                        </select>
+
+                        <select data-ml-restaurant>
+                            <option value="">All restaurants</option>
+                        </select>
+
+                    </div>
+
+                    <div class="ml-selection-bar">
+
+                        <div>
+                            <strong data-ml-selected>0 selected</strong>
+                            <span>Choose dishes or categories to import.</span>
+                        </div>
+
+                        <button
+                            type="button"
+                            class="ghost sm"
+                            data-ml-clear
+                        >
+                            Clear selection
+                        </button>
+
+                    </div>
+
+                    <div class="ml-category-section">
+
+                        <h3>Browse categories</h3>
+
+                        <div data-ml-categories class="ml-category-grid">
+                            <div class="muted">Loading categories...</div>
+                        </div>
+
+                    </div>
+
+                    <div class="ml-items-section">
+
+                        <div class="ml-section-heading">
+                            <h3>Available dishes</h3>
+                            <span data-ml-count></span>
+                        </div>
+
+                        <div data-ml-items class="ml-item-grid">
+                            <div class="muted">Loading dishes...</div>
+                        </div>
+
+                    </div>
+
+                    <div class="ml-pagination">
+
+                        <button
+                            type="button"
+                            class="ghost sm"
+                            data-ml-prev
+                        >
+                            Previous
+                        </button>
+
+                        <span data-ml-page>Page 1</span>
+
+                        <button
+                            type="button"
+                            class="ghost sm"
+                            data-ml-next
+                        >
+                            Next
+                        </button>
+
+                    </div>
+
+                    <div class="ml-error" data-ml-error></div>
+
+                    <div class="card-foot ml-footer">
+
+                        <button
+                            type="button"
+                            class="ghost"
+                            data-ml-close
+                        >
+                            Cancel
+                        </button>
+
+                        <button
+                            type="button"
+                            data-ml-import
+                        >
+                            Import selected
+                        </button>
+
+                    </div>
+
+                </div>
+            `
+        });
+
+        bindEvents();
+        loadInitial();
     }
 
-    // ---- filters built from the catalogue ----
-    function drawFilters() {
-      const byName = new Map(), rests = new Map();
-      for (const c of catalog) {
-        const k = c.name.toLowerCase(), e = byName.get(k) || { name: c.name, n: 0 };
-        e.n += c.items; byName.set(k, e); rests.set(c.restaurant_id, c.restaurant);
-      }
-      q('[data-chips]').innerHTML = `<button type="button" class="lib-chip ${filter.category ? '' : 'on'}" data-c="">All</button>` +
-        [...byName.values()].map((e) => `<button type="button" class="lib-chip ${filter.category.toLowerCase() === e.name.toLowerCase() ? 'on' : ''}" data-c="${esc(e.name)}">${esc(e.name)} <span class="muted">${e.n}</span></button>`).join('');
-      q('[data-rest]').innerHTML = '<option value="">All restaurants</option>' + [...rests].sort((a, b) => a[1].localeCompare(b[1])).map(([id, n]) => `<option value="${id}" ${String(id) === filter.restaurant_id ? 'selected' : ''}>${esc(n)}</option>`).join('');
+    const el = selector => modal?.querySelector(selector);
+
+    function selectedCount() {
+        return state.selectedItems.size +
+            state.selectedCategories.size;
     }
 
-    // ---- dishes ----
-    function drawDishes() {
-      q('[data-list]').innerHTML = rows.length ? rows.map((d) => `<label class="lib-row ${dishes.has(d.id) ? 'sel' : ''}">
-        <input type="checkbox" data-id="${d.id}" ${dishes.has(d.id) ? 'checked' : ''}>
-        <div class="lib-thumb">${d.image ? `<img src="${esc(d.image)}" alt="" loading="lazy">` : letter(d.name)}</div>
-        <div class="lib-main"><b>${esc(d.name)}</b><div class="muted small">${esc(d.restaurant)} · ${esc(d.category)}</div>${d.description ? `<div class="muted small ds">${esc(d.description)}</div>` : ''}</div>
-        <div class="lib-price">${rupees(d.price)}</div></label>`).join('')
-        : `<p class="empty">${catalog.length ? 'No dishes match your search.' : 'No other restaurant has a published menu yet.'}</p>`;
-      q('[data-more]').classList.toggle('hidden', rows.length >= total);
-    }
-    async function loadDishes(append = false) {
-      const p = new URLSearchParams({ limit: 30, offset: append ? rows.length : 0 });
-      for (const k of ['q', 'category', 'restaurant_id']) if (filter[k]) p.set(k, filter[k]);
-      q('[data-list]').classList.add('is-busy');
-      try {
-        const r = await api(`${base}/library/items?${p}`);
-        rows = append ? rows.concat(r.items) : r.items; total = r.total; drawDishes();
-      } catch (er) { q('[data-err]').textContent = er.message; }
-      finally { q('[data-list]').classList.remove('is-busy'); }
+    function updateSelectionCount() {
+        const count = selectedCount();
+
+        el('[data-ml-selected]').textContent =
+            `${count} selected`;
+
+        el('[data-ml-import]').disabled = count === 0;
     }
 
-    // ---- categories ----
-    function drawCats() {
-      q('[data-catlist]').innerHTML = catalog.length ? catalog.map((c) => `<label class="lib-row cat ${categories.has(c.category_id) ? 'sel' : ''}">
-        <input type="checkbox" data-cid="${c.category_id}" ${categories.has(c.category_id) ? 'checked' : ''}>
-        <div class="lib-main"><b>${esc(c.name)}</b><div class="muted small">from ${esc(c.restaurant)}</div></div>
-        <div class="muted small">${plural(c.items, 'dish', 'dishes')}</div></label>`).join('')
-        : '<p class="empty">No other restaurant has a published menu yet.</p>';
+    function showError(message = '') {
+        el('[data-ml-error]').textContent = message;
     }
 
-    // ---- wiring ----
-    m.addEventListener('click', (e) => {
-      const t = e.target.closest('[data-t]');
-      if (t) {
-        m.querySelectorAll('[data-t]').forEach((b) => b.classList.toggle('on', b === t));
-        q('[data-p=items]').classList.toggle('hidden', t.dataset.t !== 'items'); q('[data-p=cats]').classList.toggle('hidden', t.dataset.t !== 'cats');
-      }
-      const chip = e.target.closest('[data-c]');
-      if (chip) { filter.category = chip.dataset.c; drawFilters(); loadDishes(); }
-    });
-    q('[data-q]').addEventListener('input', (e) => { filter.q = e.target.value.trim(); clearTimeout(timer); timer = setTimeout(() => loadDishes(), 250); });
-    q('[data-rest]').addEventListener('change', (e) => { filter.restaurant_id = e.target.value; loadDishes(); });
-    q('[data-more]').addEventListener('click', () => loadDishes(true));
-    q('[data-list]').addEventListener('change', (e) => {
-      const cb = e.target.closest('[data-id]'); if (!cb) return;
-      const d = rows.find((x) => x.id == cb.dataset.id);
-      cb.checked ? dishes.set(d.id, d) : dishes.delete(d.id);
-      cb.closest('.lib-row').classList.toggle('sel', cb.checked); counter();
-    });
-    q('[data-catlist]').addEventListener('change', (e) => {
-      const cb = e.target.closest('[data-cid]'); if (!cb) return;
-      const id = Number(cb.dataset.cid);
-      cb.checked ? categories.set(id, catalog.find((c) => c.category_id === id)) : categories.delete(id);
-      cb.closest('.lib-row').classList.toggle('sel', cb.checked); counter();
-    });
-    q('[data-add]').addEventListener('click', async () => {
-      q('[data-err]').textContent = ''; q('[data-add]').disabled = true;
-      try {
-        const withItems = q('[data-with]').checked;
-        const r = await api(`${base}/library/import`, 'POST', { items: [...dishes.keys()], categories: [...categories.keys()].map((category_id) => ({ category_id, with_items: withItems })) });
-        closeModal();
-        toast([`Added ${plural(r.added_items, 'dish', 'dishes')}`, r.added_categories && `${plural(r.added_categories, 'new category', 'new categories')}`, r.skipped_items && `${r.skipped_items} skipped (already in this menu)`].filter(Boolean).join(', '));
-        await onDone?.();
-      } catch (er) { q('[data-err]').textContent = er.message; q('[data-add]').disabled = false; }
-    });
+    async function loadInitial() {
+        try {
+            const result = await request('/library/categories');
 
-    counter();
-    api(`${base}/library/categories`).then((r) => { catalog = r.categories; drawFilters(); drawCats(); return loadDishes(); })
-      .catch((er) => { q('[data-list]').innerHTML = `<p class="err">${esc(er.message)}</p>`; });
-  }
-  return { open };
+            state.categories = Array.isArray(result.categories)
+                ? result.categories
+                : [];
+
+            renderCategories();
+            populateFilters();
+
+            await loadItems();
+
+        } catch (error) {
+            showError(error.message);
+        }
+    }
+
+    function populateFilters() {
+        const categorySelect = el('[data-ml-category]');
+        const restaurantSelect = el('[data-ml-restaurant]');
+
+        const currentCategory = categorySelect.value;
+        const currentRestaurant = restaurantSelect.value;
+
+        const categories = [
+            ...new Set(state.categories.map(c => c.name))
+        ].sort();
+
+        const restaurants = new Map();
+
+        state.categories.forEach(category => {
+            restaurants.set(
+                String(category.restaurant_id),
+                category.restaurant
+            );
+        });
+
+        categorySelect.innerHTML = `
+            <option value="">All categories</option>
+            ${categories.map(name => `
+                <option value="${esc(name)}">
+                    ${esc(name)}
+                </option>
+            `).join('')}
+        `;
+
+        restaurantSelect.innerHTML = `
+            <option value="">All restaurants</option>
+            ${[...restaurants.entries()].map(([id, name]) => `
+                <option value="${esc(id)}">
+                    ${esc(name)}
+                </option>
+            `).join('')}
+        `;
+
+        categorySelect.value = currentCategory;
+        restaurantSelect.value = currentRestaurant;
+    }
+
+    function renderCategories() {
+        const container = el('[data-ml-categories]');
+
+        if (!state.categories.length) {
+            container.innerHTML = `
+                <div class="ml-empty">
+                    No categories are available from other restaurants.
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = state.categories.map(category => {
+            const id = String(category.category_id);
+            const selected = state.selectedCategories.has(id);
+
+            return `
+                <label class="ml-category-card">
+
+                    <input
+                        type="checkbox"
+                        data-ml-cat="${esc(id)}"
+                        ${selected ? 'checked' : ''}
+                    >
+
+                    <span class="ml-category-content">
+
+                        <strong>${esc(category.name)}</strong>
+
+                        <small>
+                            ${esc(category.restaurant || 'Restaurant')}
+                        </small>
+
+                        <small>
+                            ${Number(category.items || 0)} available dishes
+                        </small>
+
+                    </span>
+
+                    <span class="ml-category-check">
+                        ✓
+                    </span>
+
+                    <span class="ml-category-options">
+
+                        <label>
+                            <input
+                                type="checkbox"
+                                data-ml-cat-items="${esc(id)}"
+                                ${state.selectedCategories.get(id) === true ? 'checked' : ''}
+                            >
+                            Include all dishes
+                        </label>
+
+                    </span>
+
+                </label>
+            `;
+        }).join('');
+    }
+
+    async function loadItems() {
+        if (state.loading) return;
+
+        state.loading = true;
+
+        const container = el('[data-ml-items]');
+
+        container.innerHTML = `
+            <div class="muted">Loading dishes...</div>
+        `;
+
+        const params = new URLSearchParams({
+            limit: PAGE_SIZE,
+            offset: state.offset
+        });
+
+        if (state.query) {
+            params.set('q', state.query);
+        }
+
+        if (state.category) {
+            params.set('category', state.category);
+        }
+
+        if (state.restaurant) {
+            params.set('restaurant_id', state.restaurant);
+        }
+
+        try {
+            const result = await request(
+                `/library/items?${params.toString()}`
+            );
+
+            state.items = Array.isArray(result.items)
+                ? result.items
+                : [];
+
+            state.total = Number(result.total || 0);
+
+            renderItems();
+            updatePagination();
+
+        } catch (error) {
+            container.innerHTML = `
+                <div class="ml-empty">
+                    ${esc(error.message)}
+                </div>
+            `;
+        } finally {
+            state.loading = false;
+        }
+    }
+
+    function renderItems() {
+        const container = el('[data-ml-items]');
+
+        el('[data-ml-count]').textContent =
+            `${state.total} dishes found`;
+
+        if (!state.items.length) {
+            container.innerHTML = `
+                <div class="ml-empty">
+                    No dishes found. Try another search.
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = state.items.map(item => {
+            const id = String(item.id);
+            const selected = state.selectedItems.has(id);
+
+            return `
+                <label class="ml-item-card ${selected ? 'selected' : ''}">
+
+                    <input
+                        type="checkbox"
+                        data-ml-item="${esc(id)}"
+                        ${selected ? 'checked' : ''}
+                    >
+
+                    <div class="ml-item-image">
+
+                        ${item.image
+                            ? `
+                                <img
+                                    src="${esc(item.image)}"
+                                    alt="${esc(item.name)}"
+                                    loading="lazy"
+                                >
+                            `
+                            : '🍽️'
+                        }
+
+                    </div>
+
+                    <div class="ml-item-details">
+
+                        <strong>${esc(item.name)}</strong>
+
+                        <span>${esc(item.category || 'Menu')}</span>
+
+                        <small>${esc(item.restaurant || '')}</small>
+
+                        <b>${money(item.price)}</b>
+
+                    </div>
+
+                </label>
+            `;
+        }).join('');
+
+        updateSelectionCount();
+    }
+
+    function updatePagination() {
+        const currentPage =
+            Math.floor(state.offset / PAGE_SIZE) + 1;
+
+        const totalPages = Math.max(
+            1,
+            Math.ceil(state.total / PAGE_SIZE)
+        );
+
+        el('[data-ml-page]').textContent =
+            `Page ${currentPage} of ${totalPages}`;
+
+        el('[data-ml-prev]').disabled =
+            state.offset <= 0;
+
+        el('[data-ml-next]').disabled =
+            state.offset + PAGE_SIZE >= state.total;
+    }
+
+    function bindEvents() {
+
+        let searchTimer;
+
+        el('[data-ml-search]').addEventListener('input', event => {
+            clearTimeout(searchTimer);
+
+            searchTimer = setTimeout(() => {
+                state.query = event.target.value.trim();
+                state.offset = 0;
+                loadItems();
+            }, 250);
+        });
+
+        el('[data-ml-category]').addEventListener('change', event => {
+            state.category = event.target.value;
+            state.offset = 0;
+            loadItems();
+        });
+
+        el('[data-ml-restaurant]').addEventListener('change', event => {
+            state.restaurant = event.target.value;
+            state.offset = 0;
+            loadItems();
+        });
+
+        el('[data-ml-categories]').addEventListener('change', event => {
+
+            const checkbox = event.target.closest('[data-ml-cat]');
+
+            if (checkbox) {
+                const id = checkbox.dataset.mlCat;
+
+                if (checkbox.checked) {
+                    if (!state.selectedCategories.has(id)) {
+                        state.selectedCategories.set(id, false);
+                    }
+                } else {
+                    state.selectedCategories.delete(id);
+                }
+
+                updateSelectionCount();
+                return;
+            }
+
+            const includeItems = event.target.closest(
+                '[data-ml-cat-items]'
+            );
+
+            if (includeItems) {
+                const id = includeItems.dataset.mlCatItems;
+
+                const categoryCheckbox = el(
+                    `[data-ml-cat="${CSS.escape(id)}"]`
+                );
+
+                if (includeItems.checked) {
+                    state.selectedCategories.set(id, true);
+
+                    if (categoryCheckbox) {
+                        categoryCheckbox.checked = true;
+                    }
+                } else if (state.selectedCategories.has(id)) {
+                    state.selectedCategories.set(id, false);
+                }
+
+                updateSelectionCount();
+            }
+        });
+
+        el('[data-ml-items]').addEventListener('change', event => {
+            const checkbox = event.target.closest('[data-ml-item]');
+
+            if (!checkbox) return;
+
+            const id = checkbox.dataset.mlItem;
+
+            if (checkbox.checked) {
+                state.selectedItems.add(id);
+            } else {
+                state.selectedItems.delete(id);
+            }
+
+            checkbox.closest('.ml-item-card')
+                ?.classList.toggle('selected', checkbox.checked);
+
+            updateSelectionCount();
+        });
+
+        el('[data-ml-clear]').addEventListener('click', () => {
+            state.selectedItems.clear();
+            state.selectedCategories.clear();
+
+            renderCategories();
+            renderItems();
+            updateSelectionCount();
+        });
+
+        el('[data-ml-prev]').addEventListener('click', () => {
+            if (state.offset <= 0) return;
+
+            state.offset = Math.max(
+                0,
+                state.offset - PAGE_SIZE
+            );
+
+            loadItems();
+        });
+
+        el('[data-ml-next]').addEventListener('click', () => {
+            if (state.offset + PAGE_SIZE >= state.total) return;
+
+            state.offset += PAGE_SIZE;
+            loadItems();
+        });
+
+        el('[data-ml-close]').addEventListener('click', () => {
+            closeModal();
+        });
+
+        el('[data-ml-import]').addEventListener('click', importSelected);
+    }
+
+    async function importSelected() {
+        const button = el('[data-ml-import]');
+
+        const items = [...state.selectedItems]
+            .map(Number)
+            .filter(Number.isSafeInteger);
+
+        const categories = [...state.selectedCategories.entries()]
+            .map(([category_id, with_items]) => ({
+                category_id: Number(category_id),
+                with_items
+            }))
+            .filter(category =>
+                Number.isSafeInteger(category.category_id)
+            );
+
+        if (!items.length && !categories.length) {
+            showError('Select at least one dish or category.');
+            return;
+        }
+
+        button.disabled = true;
+        button.textContent = 'Importing...';
+        showError('');
+
+        try {
+            const result = await request(
+                '/library/import',
+                'POST',
+                {
+                    items,
+                    categories
+                }
+            );
+
+            closeModal();
+
+            toast(
+                `Import complete: ${result.added_items || 0} dishes added, ` +
+                `${result.skipped_items || 0} skipped, ` +
+                `${result.added_categories || 0} categories created.`
+            );
+
+            if (typeof state.onDone === 'function') {
+                await state.onDone();
+            }
+
+        } catch (error) {
+            showError(error.message);
+
+            button.disabled = false;
+            button.textContent = 'Import selected';
+        }
+    }
+
+    return { open };
+
 })();
