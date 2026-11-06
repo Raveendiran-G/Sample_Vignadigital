@@ -389,147 +389,148 @@
    FORCE DARK THEME ON ALL DEVICES
    ============================================ */
 
-:root {
-    color-scheme: dark !important;
-
-    --admin-bg: #111113;
-    --admin-card: #1b1b20;
-    --admin-row: #222228;
-    --admin-row-hover: #2b2b32;
-    --admin-border: #303038;
-    --admin-text: #ffffff;
-    --admin-muted: #a1a1aa;
-    --admin-orange: #ff6426;
-}
-
-/* Main page */
-html,
-body {
-    background: var(--admin-bg) !important;
-    background-color: var(--admin-bg) !important;
-    color: var(--admin-text) !important;
-    color-scheme: dark !important;
-}
-
-/* Main dashboard cards */
-.main .card,
-.main section .card,
-.main [data-panel] > .card {
-    background: var(--admin-card) !important;
-    background-color: var(--admin-card) !important;
-    color: var(--admin-text) !important;
-    border: 1px solid var(--admin-border) !important;
-}
-
-/* Restaurant table wrapper */
-#rList,
-.table-wrap {
-    background: var(--admin-card) !important;
-    color: var(--admin-text) !important;
-}
-
-/* Table */
-#rList table {
-    background: var(--admin-card) !important;
-    color: var(--admin-text) !important;
-}
-
-/* Table headings */
-#rList table thead,
-#rList table thead tr,
-#rList table th {
-    background: var(--admin-card) !important;
-    background-color: var(--admin-card) !important;
-    color: #a1a1aa !important;
-    border-color: var(--admin-border) !important;
-}
-
-/* All table rows */
-#rList table tbody tr,
-#rList table tbody tr:nth-child(even),
-#rList table tbody tr:nth-child(odd) {
-    background: var(--admin-row) !important;
-    background-color: var(--admin-row) !important;
-    color: var(--admin-text) !important;
-}
-
-/* Table cells */
-#rList table tbody td {
-    background: transparent !important;
-    background-color: transparent !important;
-    color: var(--admin-text) !important;
-    border-color: var(--admin-border) !important;
-}
-
-/* Hover */
-#rList table tbody tr:hover,
-#rList table tbody tr:hover td {
-    background: var(--admin-row-hover) !important;
-    color: var(--admin-text) !important;
-}
-
-/* Search and filter controls */
-.main input,
-.main select,
-.main textarea {
-    background: #24242b !important;
-    background-color: #24242b !important;
-    color: #ffffff !important;
-    border-color: var(--admin-border) !important;
-    color-scheme: dark !important;
-}
-
-.main input::placeholder {
-    color: #85858f !important;
-}
-
-/* Headings and descriptions */
-.main h1,
-.main h2,
-.main h3,
-.main p,
-.main label,
-.main td,
-.main th {
-    color: var(--admin-text);
-}
-
-/* Muted text */
-.main .muted,
-.main .small {
-    color: var(--admin-muted);
-}
-
-/* Preserve orange highlights */
-.main .card h3,
-.main .stat.hl b {
-    color: var(--admin-orange) !important;
-}
-
-/* Keep orange action buttons */
-#rList .actions button:not(.ghost):not(.danger) {
-    background: var(--admin-orange) !important;
-    border-color: var(--admin-orange) !important;
-    color: #ffffff !important;
-}
-
-/* Dark theme even when device is in Light Mode */
-@media (prefers-color-scheme: light) {
     :root {
-        color-scheme: dark !important;
+      color-scheme: dark !important;
+
+      --admin-bg: #111113;
+      --admin-card: #1b1b20;
+      --admin-row: #222228;
+      --admin-row-hover: #2b2b32;
+      --admin-border: #303038;
+      --admin-text: #ffffff;
+      --admin-muted: #a1a1aa;
+      --admin-orange: #ff6426;
     }
 
+    /* Main page */
     html,
-    body,
+    body {
+      background: var(--admin-bg) !important;
+      background-color: var(--admin-bg) !important;
+      color: var(--admin-text) !important;
+      color-scheme: dark !important;
+    }
+
+    /* Main dashboard cards */
     .main .card,
+    .main section .card,
+    .main [data-panel]>.card {
+      background: var(--admin-card) !important;
+      background-color: var(--admin-card) !important;
+      color: var(--admin-text) !important;
+      border: 1px solid var(--admin-border) !important;
+    }
+
+    /* Restaurant table wrapper */
     #rList,
+    .table-wrap {
+      background: var(--admin-card) !important;
+      color: var(--admin-text) !important;
+    }
+
+    /* Table */
     #rList table {
+      background: var(--admin-card) !important;
+      color: var(--admin-text) !important;
+    }
+
+    /* Table headings */
+    #rList table thead,
+    #rList table thead tr,
+    #rList table th {
+      background: var(--admin-card) !important;
+      background-color: var(--admin-card) !important;
+      color: #a1a1aa !important;
+      border-color: var(--admin-border) !important;
+    }
+
+    /* All table rows */
+    #rList table tbody tr,
+    #rList table tbody tr:nth-child(even),
+    #rList table tbody tr:nth-child(odd) {
+      background: var(--admin-row) !important;
+      background-color: var(--admin-row) !important;
+      color: var(--admin-text) !important;
+    }
+
+    /* Table cells */
+    #rList table tbody td {
+      background: transparent !important;
+      background-color: transparent !important;
+      color: var(--admin-text) !important;
+      border-color: var(--admin-border) !important;
+    }
+
+    /* Hover */
+    #rList table tbody tr:hover,
+    #rList table tbody tr:hover td {
+      background: var(--admin-row-hover) !important;
+      color: var(--admin-text) !important;
+    }
+
+    /* Search and filter controls */
+    .main input,
+    .main select,
+    .main textarea {
+      background: #24242b !important;
+      background-color: #24242b !important;
+      color: #ffffff !important;
+      border-color: var(--admin-border) !important;
+      color-scheme: dark !important;
+    }
+
+    .main input::placeholder {
+      color: #85858f !important;
+    }
+
+    /* Headings and descriptions */
+    .main h1,
+    .main h2,
+    .main h3,
+    .main p,
+    .main label,
+    .main td,
+    .main th {
+      color: var(--admin-text);
+    }
+
+    /* Muted text */
+    .main .muted,
+    .main .small {
+      color: var(--admin-muted);
+    }
+
+    /* Preserve orange highlights */
+    .main .card h3,
+    .main .stat.hl b {
+      color: var(--admin-orange) !important;
+    }
+
+    /* Keep orange action buttons */
+    #rList .actions button:not(.ghost):not(.danger) {
+      background: var(--admin-orange) !important;
+      border-color: var(--admin-orange) !important;
+      color: #ffffff !important;
+    }
+
+    /* Dark theme even when device is in Light Mode */
+    @media (prefers-color-scheme: light) {
+      :root {
+        color-scheme: dark !important;
+      }
+
+      html,
+      body,
+      .main .card,
+      #rList,
+      #rList table {
         background-color: var(--admin-bg) !important;
         color: var(--admin-text) !important;
-    }
+      }
 
-    #rList table tbody tr {
+      #rList table tbody tr {
         background-color: var(--admin-row) !important;
+      }
     }
   </style>
 </head>

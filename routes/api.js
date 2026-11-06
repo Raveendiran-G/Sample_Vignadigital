@@ -736,19 +736,16 @@ router.post('/auth/password', auth(), async (req, res) => {
 // CATEGORY AND ITEM ROUTES
 // ======================================================
 
-function menuRoutes(route, restaurantOf) {
-
-    const ref = req => Number(req.params.ref);
-    const libraryRestaurant = req => Number(restaurantOf(req));
+function libraryRoutes(route, restaurantOf) {
 
     // --------------------------------------------------
     // MENU LIBRARY
-    // Available to the authenticated owner or admin route
-    // that owns this menu context.
+    // Available only within the authenticated owner/admin
+    // restaurant context supplied by the caller.
     // --------------------------------------------------
 
     route.get('/library/categories', async (req, res) => {
-        const restaurantId = libraryRestaurant(req);
+        const restaurantId = Number(restaurantOf(req));
 
         if (!Number.isSafeInteger(restaurantId) || restaurantId <= 0) {
             throw new HttpError(400, 'Invalid restaurant ID');
@@ -761,7 +758,7 @@ function menuRoutes(route, restaurantOf) {
     });
 
     route.get('/library/items', async (req, res) => {
-        const restaurantId = libraryRestaurant(req);
+        const restaurantId = Number(restaurantOf(req));
 
         if (!Number.isSafeInteger(restaurantId) || restaurantId <= 0) {
             throw new HttpError(400, 'Invalid restaurant ID');
@@ -790,7 +787,7 @@ function menuRoutes(route, restaurantOf) {
     });
 
     route.post('/library/import', async (req, res) => {
-        const restaurantId = libraryRestaurant(req);
+        const restaurantId = Number(restaurantOf(req));
 
         if (!Number.isSafeInteger(restaurantId) || restaurantId <= 0) {
             throw new HttpError(400, 'Invalid restaurant ID');
@@ -800,6 +797,11 @@ function menuRoutes(route, restaurantOf) {
             await svc.importFromLibrary(restaurantId, req.body)
         );
     });
+}
+
+function menuRoutes(route, restaurantOf) {
+
+    const ref = req => Number(req.params.ref);
 
     // --------------------------------------------------
     // GET MENU ITEMS
@@ -1481,6 +1483,16 @@ admin.get('/restaurants/:id/orders', async (req, res) => {
 
 // ADMIN RESTAURANT MENU ROUTES
 
+const adminLibrary = express.Router({ mergeParams: true });
+
+adminLibrary.use(async (req, res, next) => {
+    await svc.getRestaurant(Number(req.params.id));
+    next();
+});
+
+libraryRoutes(adminLibrary, req => Number(req.params.id));
+admin.use('/restaurants/:id', adminLibrary);
+
 const adminMenu = express.Router({ mergeParams: true });
 
 adminMenu.use(async (req, res, next) => {
@@ -1544,6 +1556,7 @@ owner.patch('/restaurant', async (req, res) => {
 // OWNER CATEGORY AND ITEM ROUTES
 // ======================================================
 
+libraryRoutes(owner, rid);
 menuRoutes(owner, rid);
 
 // ======================================================
