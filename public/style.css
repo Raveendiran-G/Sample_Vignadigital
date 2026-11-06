@@ -4727,18 +4727,43 @@ button.ghost {
   color: #ffffff !important;
 }
 
-/* Dark backdrop */
 /* =========================================
-   MODAL BACKDROP - KEEP PAGE VISIBLE
-   ========================================= */
+   MODAL BACKGROUND FIX — KEEP DASHBOARD VISIBLE
+========================================= */
 
-.modal-backdrop,
-.modal-overlay,
-.dialog-backdrop,
-.popup-backdrop {
+.modal {
+  background: rgba(15, 23, 42, 0.28) !important;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+/* Keep popup cards fully visible */
+.modal .modal-box {
+  opacity: 1 !important;
+  position: relative;
+  z-index: 1;
+}
+
+/* Confirmation popup */
+.modal.confirm-box {
+  background: rgba(15, 23, 42, 0.28) !important;
+}
+
+/* Do not darken the popup itself */
+.modal .confirm-box {
+  background: var(--card, #ffffff);
+}
+
+/* Light mode overlay */
+html[data-theme="light"] .modal,
+body[data-theme="light"] .modal {
+  background: rgba(30, 41, 59, 0.18) !important;
+}
+
+/* Dark mode overlay */
+html[data-theme="dark"] .modal,
+body[data-theme="dark"] .modal {
   background: rgba(0, 0, 0, 0.48) !important;
-  backdrop-filter: blur(3px) !important;
-  -webkit-backdrop-filter: blur(3px) !important;
 }
 
 /* Device Light Mode must not change the website */
