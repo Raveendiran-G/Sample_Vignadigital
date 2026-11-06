@@ -1266,24 +1266,31 @@ body.menu-page {
     opacity: 1 !important;
     visibility: visible !important;
 }
+/* CATEGORY ICONS AND LABELS — FIXED SIZE */
 
-/* CATEGORY EMOJIS — SMALLER THAN LABEL TEXT */
-
-#app .category-pill .category-icon,
-#app .chip .category-icon {
-    display: block !important;
-    flex: 0 0 8px !important;
-    width: 8px !important;
-    height: 8px !important;
-    min-height: 8px !important;
-    margin: 0 auto !important;
-    padding: 0 !important;
-    font-size: 6px !important;
-    line-height: 8px !important;
-    text-align: center !important;
-    transform: none !important;
+#app .category-navigation .category-pill {
+    min-width: 115px !important;
+    min-height: 90px !important;
+    padding: 10px 12px !important;
+    gap: 5px !important;
+    font-size: 23px !important; /* Larger category names */
+    font-weight: 800 !important;
 }
 
+#app .category-navigation .category-pill .category-icon {
+    display: inline-flex !important;
+    flex: 0 0 auto !important;
+    width: auto !important;
+    height: auto !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    font-size: 16px !important; /* Smaller icons */
+    line-height: 1.2 !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
 /* REMOVE DARK/BLACK BACKGROUNDS FROM CUSTOMER MENU */
 
 html,
@@ -1750,6 +1757,23 @@ body.menu-page #cartBar,
     #app .m-grid.list-view .premium-food-card {
         grid-template-columns: 110px minmax(0,1fr) !important;
     }
+}
+
+#app .category-navigation .category-pill {
+    min-width: 90px !important;
+    min-height: 78px !important;
+    padding: 8px 10px !important;
+    gap: 5px !important;
+    font-size: 17px !important;
+}
+
+#app .category-navigation .category-pill .category-icon {
+    width: auto !important;
+    height: auto !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    font-size: 32px !important;
+    line-height: 1.2 !important;
 }
 
 /* =========================================
@@ -2557,6 +2581,60 @@ body.menu-page #cartBar,
         ].join('');
     }
     let receiptPreviousBodyOverflow = null;
+
+    const categoryStyle = {
+        showIcon: true,
+        iconSize: 24,
+        fontSize: 20,
+        fontWeight: 700,
+        cardWidth: 180,
+        cardHeight: 120,
+        borderRadius: 24
+    };
+
+    function applyCategoryStyle(container = document) {
+        container.querySelectorAll(
+            '.m-chip, .category-card, .cat-card'
+        ).forEach(card => {
+            card.style.setProperty(
+                '--category-icon-size',
+                `${categoryStyle.iconSize}px`
+            );
+
+            card.style.setProperty(
+                '--category-font-size',
+                `${categoryStyle.fontSize}px`
+            );
+
+            card.style.setProperty(
+                '--category-font-weight',
+                categoryStyle.fontWeight
+            );
+
+            card.style.setProperty(
+                '--category-card-width',
+                `${categoryStyle.cardWidth}px`
+            );
+
+            card.style.setProperty(
+                '--category-card-height',
+                `${categoryStyle.cardHeight}px`
+            );
+
+            card.style.setProperty(
+                '--category-radius',
+                `${categoryStyle.borderRadius}px`
+            );
+
+            const icon = card.querySelector(
+                '.m-chip-icon, .category-icon, .cat-icon'
+            );
+
+            if (icon) {
+                icon.hidden = !categoryStyle.showIcon;
+            }
+        });
+    }
 
     function receiptHTML(data) {
         const restaurant = data.restaurant || {};
