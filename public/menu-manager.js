@@ -9,7 +9,27 @@ window.MenuManager = (() => {
       <div class="stats" data-stats>${skelStats(4)}</div>
       <div class="toolbar">
         <div class="filters"><input type="search" data-q placeholder="Search items…" aria-label="Search items"><select data-cat aria-label="Filter by category"><option value="">All categories</option></select></div>
-        <div class="actions"><div data-view></div><button class="ghost" data-cats>${ico('tag')} Categories</button><button class="ghost" data-library>${ico('store')} Add menu</button><button data-add>${ico('plus')} Add item</button></div>
+       <div class="actions">
+
+    <div data-view></div>
+
+    <button class="ghost" data-cats>
+        ${ico('tag')} Categories
+    </button>
+
+    <button class="ghost" data-library>
+        ${ico('store')} Add menu
+    </button>
+
+    <button class="ghost" data-bulk-images>
+        📸 Bulk Upload Images
+    </button>
+
+    <button data-add>
+        ${ico('plus')} Add item
+    </button>
+
+</div>
       </div>
       <div class="items" data-list>${skelCards(4)}</div>`;
 
@@ -45,7 +65,8 @@ window.MenuManager = (() => {
     function itemModal(item) {
       if (!categories.length) { toast('Create a category first'); categoriesModal(); return; }
       let image, removeImg = false;
-      const m = openModal({ title: item ? 'Edit item' : 'Add item', wide: true, html: `
+      const m = openModal({
+        title: item ? 'Edit item' : 'Add item', wide: true, html: `
         <form data-itemform>
           <div class="img-pick"><div class="thumb" data-prev style="--tc:${esc(themeColor)}">${thumb(item?.image, item?.name || '?')}</div>
             <div><input type="file" data-file accept="image/png,image/jpeg,image/webp"><button type="button" class="ghost sm" data-rm style="margin-top:8px">Remove image</button><div class="small muted" style="margin-top:6px">Photos are resized automatically.</div></div></div>
@@ -76,7 +97,8 @@ window.MenuManager = (() => {
 
     // ---------- categories (add, rename, delete) ----------
     function categoriesModal() {
-      const m = openModal({ title: 'Categories', sub: 'Group the dishes, for example Starters or Drinks.', html: `
+      const m = openModal({
+        title: 'Categories', sub: 'Group the dishes, for example Starters or Drinks.', html: `
         <form data-catform class="actions"><input name="name" placeholder="New category, e.g. Starters" maxlength="40" required style="flex:1;min-width:180px" aria-label="Category name"><button>Add</button></form>
         <div class="err" data-err role="alert"></div><div data-catlist style="margin-top:6px"></div>
         <div class="card-foot"><button type="button" class="ghost" data-close>Done</button></div>` });
@@ -112,6 +134,278 @@ window.MenuManager = (() => {
         } catch (er) { toast(er.message); }
       });
     }
+    // ======================================================
+    // BULK IMAGE UPLOAD
+    // ======================================================
+
+    function bulkImagesModal() {
+
+      const m = openModal({
+        title: 'Bulk Upload Food Images',
+
+        sub: 'Match image filenames with existing menu item names.',
+
+        wide: true,
+
+        html: `
+
+            <div class="bulk-image-upload">
+
+                <div class="card" style="padding:20px">
+
+                    <h3>Choose your food images</h3>
+
+                    <p class="muted">
+                        Select all images or an extracted folder.
+                        Image filenames must match existing dish names.
+                    </p>
+
+                    <label class="bulk-drop">
+
+                        <div style="font-size:36px">📸</div>
+
+                        <strong>Choose image folder</strong>
+
+                        <span class="muted">
+                            JPEG, PNG, WebP and GIF · Maximum 5 MB per image
+                        </span>
+
+                        <input
+                            type="file"
+                            data-bulk-files
+                            accept="image/jpeg,image/png,image/webp,image/gif"
+                            multiple
+                            webkitdirectory
+                            directory
+                            hidden
+                        >
+
+                    </label>
+
+                    <div data-bulk-count class="muted"
+                         style="margin-top:15px">
+                        No images selected.
+                    </div>
+
+                </div>
+
+                <div data-bulk-progress style="margin-top:15px"></div>
+
+                <div data-bulk-report style="margin-top:15px"></div>
+
+                <div class="card-foot">
+
+                    <button
+                        type="button"
+                        class="ghost"
+                        data-close
+                    >
+                        Close
+                    </button>
+
+                    <button
+                        type="button"
+                        data-bulk-submit
+                        disabled
+                    >
+                        Upload Images
+                    </button>
+
+                </div>
+
+            </div>
+
+        `
+      });
+
+      const fileInput = q('[data-bulk-files]', m);
+      const submit = q('[data-bulk-submit]', m);
+
+      fileInput.addEventListener('change', () => {
+
+        const files = [...fileInput.files];
+
+        const valid = files.filter(file =>
+          /^image\/(jpeg|png|webp|gif)$/.test(file.type)
+        );
+
+        q('[data-bulk-count]', m).textContent =
+          `${valid.length} valid images selected.`;
+
+        submit.disabled = valid.length === 0;
+
+      });
+
+      submit.addEventListener('click', async () => {
+
+        const files = [...fileInput.files].filter(file =>
+          /^image\/(jpeg|png|webp|gif)$/.test(file.type)
+        );
+
+        if (!files.length) return;
+
+        const oversized = files.filter(file =>
+          file.size > 5 * 1024 * 1024
+        );
+
+        if (oversized.length) {
+
+          q('[data-bulk-report]', m).innerHTML = `
+                <div class="err">
+                    ${oversized.length} images exceed the 5 MB limit.
+                    Please resize them before uploading.
+                </div>
+            `;
+
+          return;
+        }
+
+        submit.disabled = true;
+        submit.textContent = 'Uploading...';
+
+        q('[data-bulk-progress]', m).innerHTML = `
+            <div class="card">
+                Uploading ${files.length} images.
+                Please keep this window open.
+            </div>
+        `;
+
+        const form = new FormData();
+
+        files.forEach(file => {
+
+          // Preserve only the filename for backend matching.
+          form.append('images', file, file.name);
+
+        });
+
+        try {
+
+          const response = await fetch(
+            `${base}/items/bulk-images`,
+            {
+              method: 'POST',
+              credentials: 'same-origin',
+              body: form,
+              cache: 'no-store'
+            }
+          );
+
+          const result = await response.json();
+
+          if (!response.ok) {
+            throw new Error(
+              result.error || 'Bulk upload failed.'
+            );
+          }
+
+          const report = result.report;
+
+          q('[data-bulk-progress]', m).innerHTML = '';
+
+          q('[data-bulk-report]', m).innerHTML = `
+
+                <div class="card" style="padding:18px">
+
+                    <h3>Upload completed</h3>
+
+                    <div class="stats">
+
+                        <div class="stat">
+                            <span>Total images</span>
+                            <b>${report.total}</b>
+                        </div>
+
+                        <div class="stat">
+                            <span>Updated</span>
+                            <b style="color:#22c55e">
+                                ${report.updated}
+                            </b>
+                        </div>
+
+                        <div class="stat">
+                            <span>Unmatched</span>
+                            <b>${report.unmatched.length}</b>
+                        </div>
+
+                        <div class="stat">
+                            <span>Ambiguous</span>
+                            <b>${report.ambiguous.length}</b>
+                        </div>
+
+                        <div class="stat">
+                            <span>Failed</span>
+                            <b>${report.failed.length}</b>
+                        </div>
+
+                    </div>
+
+                    ${report.unmatched.length
+              ? `
+                                <h4>Unmatched images</h4>
+                                <ul>
+                                    ${report.unmatched.map(name =>
+                `<li>${esc(name)}</li>`
+              ).join('')}
+                                </ul>
+                            `
+              : ''
+            }
+
+                    ${report.ambiguous.length
+              ? `
+                                <h4>Ambiguous matches</h4>
+                                <ul>
+                                    ${report.ambiguous.map(entry =>
+                `<li>
+                                            ${esc(entry.filename)}:
+                                            ${entry.matching_items.map(esc).join(', ')}
+                                        </li>`
+              ).join('')}
+                                </ul>
+                            `
+              : ''
+            }
+
+                    ${report.failed.length
+              ? `
+                                <h4>Failed uploads</h4>
+                                <ul>
+                                    ${report.failed.map(entry =>
+                `<li>
+                                            ${esc(entry.filename)}:
+                                            ${esc(entry.reason)}
+                                        </li>`
+              ).join('')}
+                                </ul>
+                            `
+              : ''
+            }
+
+                </div>
+
+            `;
+
+          submit.textContent = 'Upload completed';
+
+          await changed();
+
+        } catch (error) {
+
+          q('[data-bulk-report]', m).innerHTML = `
+                <div class="err">
+                    ${esc(error.message)}
+                </div>
+            `;
+
+          submit.disabled = false;
+          submit.textContent = 'Retry Upload';
+
+        }
+
+      });
+
+    }
 
     // ---------- wiring ----------
     ['input', 'change'].forEach((ev) => { q('[data-q]').addEventListener(ev, paint); q('[data-cat]').addEventListener(ev, paint); });
@@ -127,6 +421,10 @@ window.MenuManager = (() => {
         else if (await confirmDialog({ title: 'Delete this item?', message: `"${i.name}" will be removed from the menu. This can't be undone.`, confirmText: 'Delete item', danger: true })) { await api(`${base}/items/${i.id}`, 'DELETE'); await changed(); toast('Item deleted'); }
       } catch (er) { toast(er.message); }
     });
+    q('[data-bulk-images]').addEventListener(
+      'click',
+      bulkImagesModal
+    );
 
     const loaded = reload().then(() => ({ reload })); // load the menu first: nothing below may be able to block it
     // grid/list switch (same saved preference as the restaurant dashboard); optional, so a stale cached app.js can't break the editor

@@ -775,7 +775,134 @@ function menuRoutes(route, restaurantOf) {
 
         res.status(204).end();
     });
+    // ======================================================
+    // BULK UPLOAD IMAGES FOR EXISTING MENU ITEMS
+    // ======================================================
 
+    route.post(
+        '/items/bulk-images',
+        upload.array('images', 120),
+        async (req, res) => {
+
+            const rid = restaurantOf(req);
+            const files = req.files || [];
+
+            if (!files.length) {
+                throw new HttpError(400, 'Please select image files.');
+            }
+
+            const normalize = value =>
+                String(value || '')
+                    .replace(/\.[^.]+$/, '')
+                    .normalize('NFKD')
+                    .replace(/[\u0300-\u036f]/g, '')
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]/g, '');
+
+            const existingItems = await cols.items
+                .find({ restaurant_id: rid })
+                .toArray();
+
+            const itemMap = new Map();
+
+            for (const item of existingItems) {
+
+                const key = normalize(item.name);
+
+                if (!itemMap.has(key)) {
+                    itemMap.set(key, []);
+                }
+
+                itemMap.get(key).push(item);
+            }
+
+            const report = {
+                total: files.length,
+                updated: 0,
+                unmatched: [],
+                ambiguous: [],
+                failed: []
+            };
+
+            for (const file of files) {
+
+                const filename = file.originalname
+                    .replace(/\\/g, '/')
+                    .split('/')
+                    .pop();
+
+                const key = normalize(filename);
+
+                const matches = itemMap.get(key) || [];
+
+                if (matches.length === 0) {
+                    report.unmatched.push(filename);
+                    continue;
+                }
+
+                if (matches.length > 1) {
+                    report.ambiguous.push({
+                        filename,
+                        matching_items: matches.map(item => item.name)
+                    });
+                    continue;
+                }
+
+                const item = matches[0];
+
+                try {
+
+                    const image = await saveUploadedFile(file);
+
+                    if (!image) {
+                        throw new Error('Image upload returned an empty path.');
+                    }
+
+                    const result = await cols.items.updateOne(
+                        {
+                            _id: item._id,
+                            restaurant_id: rid
+                        },
+                        {
+                            $set: {
+                                image
+                            }
+                        }
+                    );
+
+                    if (!result.matchedCount) {
+                        report.failed.push({
+                            filename,
+                            reason: 'Menu item no longer exists.'
+                        });
+                        continue;
+                    }
+
+                    report.updated++;
+
+                } catch (error) {
+
+                    console.error(
+                        'Bulk menu image upload failed:',
+                        filename,
+                        error
+                    );
+
+                    report.failed.push({
+                        filename,
+                        reason: error.message
+                    });
+                }
+            }
+
+            res.json({
+                success: true,
+                message: 'Bulk image upload completed.',
+                report
+            });
+
+        }
+    );
     route.get('/items', async (req, res) => {
         res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
 
