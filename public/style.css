@@ -4728,11 +4728,17 @@ button.ghost {
 }
 
 /* Dark backdrop */
+/* =========================================
+   MODAL BACKDROP - KEEP PAGE VISIBLE
+   ========================================= */
+
 .modal-backdrop,
 .modal-overlay,
 .dialog-backdrop,
 .popup-backdrop {
-  background: rgba(0, 0, 0, 0.78) !important;
+  background: rgba(0, 0, 0, 0.48) !important;
+  backdrop-filter: blur(3px) !important;
+  -webkit-backdrop-filter: blur(3px) !important;
 }
 
 /* Device Light Mode must not change the website */
