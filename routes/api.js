@@ -736,28 +736,51 @@ router.post('/auth/password', auth(), async (req, res) => {
 // ======================================================
 
 function menuRoutes(route, restaurantOf) {
+
     const ref = req => Number(req.params.ref);
 
+    // --------------------------------------------------
+    // GET CATEGORIES
+    // --------------------------------------------------
+
     route.get('/categories', async (req, res) => {
-        res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+
+        res.set(
+            'Cache-Control',
+            'no-store, no-cache, must-revalidate'
+        );
 
         res.json({
             categories: await svc.listCategories(
                 restaurantOf(req)
             )
         });
+
     });
 
+
+    // --------------------------------------------------
+    // CREATE CATEGORY
+    // --------------------------------------------------
+
     route.post('/categories', async (req, res) => {
+
         res.status(201).json(
             await svc.createCategory(
                 restaurantOf(req),
                 req.body.name
             )
         );
+
     });
 
+
+    // --------------------------------------------------
+    // RENAME CATEGORY
+    // --------------------------------------------------
+
     route.put('/categories/:ref', async (req, res) => {
+
         res.json(
             await svc.renameCategory(
                 restaurantOf(req),
@@ -765,32 +788,43 @@ function menuRoutes(route, restaurantOf) {
                 req.body.name
             )
         );
+
     });
 
+
+    // --------------------------------------------------
+    // DELETE CATEGORY
+    // --------------------------------------------------
+
     route.delete('/categories/:ref', async (req, res) => {
+
         await svc.deleteCategory(
             restaurantOf(req),
             ref(req)
         );
 
         res.status(204).end();
+
     });
 
-}
-    // ======================================================
-    // BULK UPLOAD IMAGES - GLOBAL DISH SYNCHRONIZATION
-    // ======================================================
+
+    // --------------------------------------------------
+    // GLOBAL DISH IMAGE SYNCHRONIZATION
+    // --------------------------------------------------
 
     route.post(
         '/items/bulk-images',
         upload.array('images', 120),
         async (req, res) => {
 
-            const rid = restaurantOf(req);
+            const restaurantId = restaurantOf(req);
             const files = req.files || [];
 
             if (!files.length) {
-                throw new HttpError(400, 'Please select image files.');
+                throw new HttpError(
+                    400,
+                    'Please select image files.'
+                );
             }
 
             const normalize = value =>
@@ -801,14 +835,17 @@ function menuRoutes(route, restaurantOf) {
                     .toLowerCase()
                     .replace(/[^a-z0-9]/g, '');
 
-            // Get this restaurant's items for matching uploaded filenames.
+            // Load the current restaurant's items.
             const existingItems = await cols.items
-                .find({ restaurant_id: rid })
+                .find({
+                    restaurant_id: restaurantId
+                })
                 .toArray();
 
             const itemMap = new Map();
 
             for (const item of existingItems) {
+
                 const key = normalize(item.name);
 
                 if (!itemMap.has(key)) {
@@ -816,10 +853,12 @@ function menuRoutes(route, restaurantOf) {
                 }
 
                 itemMap.get(key).push(item);
+
             }
 
             const report = {
                 total: files.length,
+                uploaded: 0,
                 updated: 0,
                 synchronized_items: 0,
                 unmatched: [],
@@ -829,7 +868,7 @@ function menuRoutes(route, restaurantOf) {
 
             for (const file of files) {
 
-                const filename = file.originalname
+                const filename = String(file.originalname || '')
                     .replace(/\\/g, '/')
                     .split('/')
                     .pop();
@@ -839,14 +878,19 @@ function menuRoutes(route, restaurantOf) {
                 const matches = itemMap.get(key) || [];
 
                 if (!matches.length) {
+
                     report.unmatched.push(filename);
+
                     continue;
                 }
 
                 if (matches.length > 1) {
+
                     report.ambiguous.push({
                         filename,
-                        matching_items: matches.map(item => item.name)
+                        matching_items: matches.map(
+                            item => item.name
+                        )
                     });
 
                     continue;
@@ -854,33 +898,43 @@ function menuRoutes(route, restaurantOf) {
 
                 const item = matches[0];
 
+                let image = null;
+
                 try {
 
-                    // Upload image once.
-                    const image = await saveUploadedFile(file);
+                    // Upload the image once.
+                    image = await saveUploadedFile(file);
 
                     if (!image) {
-                        throw new Error('Image upload returned an empty path.');
+                        throw new Error(
+                            'Image upload returned an empty path.'
+                        );
                     }
 
-                    // Synchronize this dish image across ALL restaurants.
-                    const syncResult = await svc.syncDishImageEverywhere(
-                        item.name,
-                        image
-                    );
+                    // Update matching dishes across ALL restaurants.
+                    const syncResult =
+                        await svc.syncDishImageEverywhere(
+                            item.name,
+                            image
+                        );
 
-                    if (!syncResult.matched) {
-                        throw new Error('No matching dishes found.');
+                    if (!syncResult || !syncResult.matched) {
+                        throw new Error(
+                            'No matching dishes were found.'
+                        );
                     }
 
-                    report.updated++;
+                    report.uploaded++;
 
-                    report.synchronized_items += syncResult.updated;
+                    report.updated += syncResult.updated;
+
+                    report.synchronized_items +=
+                        syncResult.matched;
 
                 } catch (error) {
 
                     console.error(
-                        'Global dish image synchronization failed:',
+                        'Global image synchronization failed:',
                         filename,
                         error
                     );
@@ -889,17 +943,21 @@ function menuRoutes(route, restaurantOf) {
                         filename,
                         reason: error.message
                     });
+
                 }
+
             }
 
             res.json({
-                success: true,
+                success: report.failed.length === 0,
                 message: 'Global image synchronization completed.',
                 report
             });
+
         }
     );
 
+}
 // ======================================================
 // SUPER ADMIN
 // ======================================================
