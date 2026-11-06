@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+  <meta name="color-scheme" content="dark">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="stylesheet" href="/style.css">
@@ -326,6 +327,61 @@
 
     .order-option .disabled {
       color: #ef4444 !important;
+    }
+
+    /* COPY DETAILS BUTTON - ORANGE */
+    #copyCreds {
+      background: #f56623 !important;
+      background-color: #f56623 !important;
+      color: #ffffff !important;
+      border: 1px solid #f56623 !important;
+      border-radius: 9px !important;
+      font-weight: 700 !important;
+      opacity: 1 !important;
+    }
+
+    #copyCreds:hover {
+      background: #e65312 !important;
+      background-color: #e65312 !important;
+      border-color: #e65312 !important;
+      color: #ffffff !important;
+    }
+
+    #copyCreds:active {
+      background: #d9480f !important;
+      border-color: #d9480f !important;
+    }
+
+    /* =========================================
+   ALL MENU MANAGE SECTIONS
+   FOOD IMAGES - 1:1 SQUARE RATIO
+   ========================================= */
+
+    [id^="menu-"] .thumb,
+    [id^="menu-"] .item-thumb,
+    [id^="menu-"] .item-image,
+    [id^="menu-"] .image-wrap,
+    [id^="menu-"] .food-image-wrap,
+    [id^="menu-"] .menu-item-image {
+      width: 100% !important;
+      aspect-ratio: 1 / 1 !important;
+      height: auto !important;
+      overflow: hidden !important;
+      border-radius: 10px !important;
+    }
+
+    [id^="menu-"] .thumb img,
+    [id^="menu-"] .item-thumb img,
+    [id^="menu-"] .item-image img,
+    [id^="menu-"] .image-wrap img,
+    [id^="menu-"] .food-image-wrap img,
+    [id^="menu-"] .menu-item-image img {
+      display: block !important;
+      width: 100% !important;
+      height: 100% !important;
+      aspect-ratio: 1 / 1 !important;
+      object-fit: cover !important;
+      object-position: center !important;
     }
   </style>
 </head>

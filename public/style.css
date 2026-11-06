@@ -1,5 +1,62 @@
 /* Inter, self-hosted (latin + latin-ext for the ₹ sign) */
 /* latin-ext */
+
+/* =========================================
+   VIGNADIGITAL - FORCE DEFAULT DARK THEME
+   Ignore Windows / Android / Browser Theme
+   ========================================= */
+
+:root {
+  color-scheme: dark !important;
+
+  --page-bg: #111113;
+  --surface-bg: #1b1b20;
+  --surface-card: #1d1d23;
+  --text-primary: #ffffff;
+  --text-secondary: #a1a1aa;
+  --border-color: #303038;
+  --theme: #ff6426;
+}
+
+/* Always maintain dark appearance */
+html,
+body {
+  background-color: #111113 !important;
+  color: #ffffff;
+}
+
+/* Form controls */
+input,
+textarea,
+select {
+  color-scheme: dark !important;
+}
+
+/* Prevent light-mode browser defaults */
+html {
+  color-scheme: only dark !important;
+}
+
+/* Keep dark theme even when device is in Light Mode */
+@media (prefers-color-scheme: light) {
+  :root {
+    color-scheme: dark !important;
+  }
+
+  html,
+  body {
+    background-color: #111113 !important;
+    color: #ffffff;
+  }
+}
+
+/* Also maintain dark theme in device Dark Mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark !important;
+  }
+}
+
 @font-face {
   font-family: 'Inter';
   font-style: normal;
@@ -189,7 +246,7 @@ svg.i {
   color: #fff;
 }
 
-.brand .mark > img {
+.brand .mark>img {
   width: 100%;
   height: 100%;
   object-fit: contain;
@@ -1323,7 +1380,7 @@ th {
   min-height: 100dvh;
 }
 
-.shell > .side {
+.shell>.side {
   position: fixed !important;
   inset: 0 auto 0 0;
   z-index: 100;
@@ -1336,22 +1393,22 @@ th {
   overflow: hidden;
 }
 
-.shell > .side.is-open {
+.shell>.side.is-open {
   transform: translateX(0) !important;
 }
 
-.shell > .side > .tabs {
+.shell>.side>.tabs {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
 }
 
-.shell > .side > .spacer {
+.shell>.side>.spacer {
   display: none;
 }
 
-.shell > .side > .logout {
+.shell>.side>.logout {
   flex: 0 0 auto;
   margin-top: auto;
 }
@@ -1408,6 +1465,7 @@ main.main.wide {
 }
 
 @media (max-width: 860px) {
+
   main.main,
   main.main.wide {
     padding: 20px 16px 48px;
@@ -1417,13 +1475,14 @@ main.main.wide {
     margin-bottom: 16px;
   }
 
-  .shell > .side {
+  .shell>.side {
     width: min(260px, calc(100vw - 24px));
     padding-bottom: max(20px, env(safe-area-inset-bottom));
   }
 }
 
 @media (max-width: 480px) {
+
   main.main,
   main.main.wide {
     padding-left: 12px;
@@ -1436,7 +1495,7 @@ main.main.wide {
   display: block !important;
 }
 
-.shell > .side {
+.shell>.side {
   position: fixed !important;
   inset: 0 auto 0 0 !important;
   z-index: 100 !important;
@@ -1449,18 +1508,18 @@ main.main.wide {
   overflow: hidden !important;
 }
 
-.shell > .side.is-open {
+.shell>.side.is-open {
   transform: translateX(0) !important;
 }
 
-.shell > .side > .tabs {
+.shell>.side>.tabs {
   flex: 1 1 auto !important;
   min-height: 0 !important;
   overflow-y: auto !important;
   overflow-x: hidden !important;
 }
 
-.shell > .side > .logout {
+.shell>.side>.logout {
   flex: 0 0 auto !important;
   margin-top: auto !important;
 }
@@ -1517,18 +1576,20 @@ main.main.wide {
 }
 
 @media (max-width: 860px) {
+
   main.main,
   main.main.wide {
     padding: 20px 16px 48px !important;
   }
 
-  .shell > .side {
+  .shell>.side {
     width: min(260px, calc(100vw - 24px)) !important;
     padding-bottom: max(20px, env(safe-area-inset-bottom)) !important;
   }
 }
 
 @media (max-width: 480px) {
+
   main.main,
   main.main.wide {
     padding-left: 12px !important;
@@ -1536,11 +1597,11 @@ main.main.wide {
   }
 }
 
-html body .shell > aside.side:not(.is-open) {
+html body .shell>aside.side:not(.is-open) {
   transform: translateX(-100%) !important;
 }
 
-html body .shell > aside.side.is-open {
+html body .shell>aside.side.is-open {
   transform: translateX(0) !important;
 }
 
@@ -3977,9 +4038,9 @@ button:focus,
 button:focus-visible,
 .btn:focus,
 .btn:focus-visible {
-    border: 0 !important;
-    border-color: transparent !important;
-    box-shadow: none !important;
+  border: 0 !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
 }
 
 /* Remove button focus outlines */
@@ -3992,7 +4053,7 @@ input[type="submit"]:focus,
 input[type="reset"]:focus,
 a.btn:focus,
 a.btn:focus-visible {
-    outline: none !important;
+  outline: none !important;
 }
 
 body.owner-dashboard .side .tabs button:hover {
@@ -4114,13 +4175,13 @@ body.owner-dashboard .orders-modal #ordersList button.order-active:hover {
   min-width: 0;
 }
 
-.shell > .side {
+.shell>.side {
   min-height: 100dvh;
   min-width: 0;
   overflow: hidden;
 }
 
-.shell > .side > .tabs {
+.shell>.side>.tabs {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
@@ -4128,11 +4189,11 @@ body.owner-dashboard .orders-modal #ordersList button.order-active:hover {
   scrollbar-width: thin;
 }
 
-.shell > .side > .spacer {
+.shell>.side>.spacer {
   display: none;
 }
 
-.shell > .side > .logout {
+.shell>.side>.logout {
   flex: 0 0 auto;
   margin-top: auto;
   padding-bottom: max(10px, env(safe-area-inset-bottom));
@@ -4148,6 +4209,7 @@ body.owner-dashboard .orders-modal #ordersList button.order-active:hover {
 }
 
 @media (max-width: 860px) {
+
   html,
   body {
     max-width: 100%;
@@ -4163,7 +4225,7 @@ body.owner-dashboard .orders-modal #ordersList button.order-active:hover {
     min-height: 100dvh;
   }
 
-  .shell > .side {
+  .shell>.side {
     position: fixed;
     inset: 0 auto 0 0;
     z-index: 60;
@@ -4175,28 +4237,28 @@ body.owner-dashboard .orders-modal #ordersList button.order-active:hover {
     padding: 20px 14px max(20px, env(safe-area-inset-bottom));
   }
 
-  .shell > .side.mobile-open {
+  .shell>.side.mobile-open {
     transform: translateX(0);
   }
 
-  .shell > .side > .tabs {
+  .shell>.side>.tabs {
     display: flex;
     flex-direction: column;
     align-items: stretch;
     overflow-y: auto;
   }
 
-  .shell > .side > .tabs button {
+  .shell>.side>.tabs button {
     flex: none;
     width: 100%;
     white-space: normal;
   }
 
-  .shell > .side > .tabs button span {
+  .shell>.side>.tabs button span {
     display: inline;
   }
 
-  .shell > .side > .logout {
+  .shell>.side>.logout {
     width: 100%;
     padding: 10px 12px;
   }
@@ -4252,7 +4314,7 @@ body.owner-dashboard .orders-modal #ordersList button.order-active:hover {
     margin-bottom: 18px;
   }
 
-  .page-head > * {
+  .page-head>* {
     min-width: 0;
   }
 
@@ -4285,9 +4347,9 @@ body.owner-dashboard .orders-modal #ordersList button.order-active:hover {
     align-items: stretch;
   }
 
-  .toolbar > *,
-  .actions > *,
-  .card-foot > * {
+  .toolbar>*,
+  .actions>*,
+  .card-foot>* {
     max-width: 100%;
   }
 
@@ -4312,8 +4374,7 @@ body.owner-dashboard .orders-modal #ordersList button.order-active:hover {
   }
 
   .modal {
-    padding: max(10px, env(safe-area-inset-top)) 10px
-      max(10px, env(safe-area-inset-bottom));
+    padding: max(10px, env(safe-area-inset-top)) 10px max(10px, env(safe-area-inset-bottom));
   }
 
   .modal-box {
@@ -4331,6 +4392,7 @@ body.owner-dashboard .orders-modal #ordersList button.order-active:hover {
 }
 
 @media (max-width: 480px) {
+
   main.main,
   main.main.wide {
     padding-left: 12px;
@@ -4373,7 +4435,7 @@ body.owner-dashboard .orders-modal #ordersList button.order-active:hover {
   display: block !important;
 }
 
-.shell > .side {
+.shell>.side {
   position: fixed !important;
   inset: 0 auto 0 0 !important;
   z-index: 100 !important;
@@ -4386,18 +4448,18 @@ body.owner-dashboard .orders-modal #ordersList button.order-active:hover {
   overflow: hidden !important;
 }
 
-.shell > .side.is-open {
+.shell>.side.is-open {
   transform: translateX(0) !important;
 }
 
-.shell > .side > .tabs {
+.shell>.side>.tabs {
   flex: 1 1 auto !important;
   min-height: 0 !important;
   overflow-y: auto !important;
   overflow-x: hidden !important;
 }
 
-.shell > .side > .logout {
+.shell>.side>.logout {
   flex: 0 0 auto !important;
   margin-top: auto !important;
 }
@@ -4454,18 +4516,20 @@ main.main.wide {
 }
 
 @media (max-width: 860px) {
+
   main.main,
   main.main.wide {
     padding: 20px 16px 48px !important;
   }
 
-  .shell > .side {
+  .shell>.side {
     width: min(260px, calc(100vw - 24px)) !important;
     padding-bottom: max(20px, env(safe-area-inset-bottom)) !important;
   }
 }
 
 @media (max-width: 480px) {
+
   main.main,
   main.main.wide {
     padding-left: 12px !important;

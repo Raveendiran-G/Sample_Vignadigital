@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+  <meta name="color-scheme" content="dark">
   <script>
     document.documentElement.classList.add('theme-loading');
   </script>
@@ -2989,6 +2990,38 @@
       -webkit-text-fill-color: #000000 !important;
       background: rgba(0, 0, 0, 0.08) !important;
     }
+
+    /* =========================================
+   OWNER DASHBOARD - SQUARE MENU IMAGES
+   1:1 IMAGE RATIO
+   ========================================= */
+
+    body.owner-dashboard .item-card .thumb,
+    body.owner-dashboard .item-card .item-image,
+    body.owner-dashboard .item-card .image-wrap,
+    body.owner-dashboard .items .thumb,
+    body.owner-dashboard .items .item-image,
+    body.owner-dashboard .items .image-wrap,
+    body.owner-dashboard .menu-item .thumb {
+      width: 100% !important;
+      aspect-ratio: 1 / 1 !important;
+      overflow: hidden !important;
+      border-radius: 12px;
+    }
+
+    body.owner-dashboard .item-card .thumb img,
+    body.owner-dashboard .item-card .item-image img,
+    body.owner-dashboard .item-card .image-wrap img,
+    body.owner-dashboard .items .thumb img,
+    body.owner-dashboard .items .item-image img,
+    body.owner-dashboard .items .image-wrap img,
+    body.owner-dashboard .menu-item .thumb img {
+      width: 100% !important;
+      height: 100% !important;
+      aspect-ratio: 1 / 1 !important;
+      object-fit: cover !important;
+      display: block !important;
+    }
   </style>
 </head>
 
@@ -3594,7 +3627,7 @@
         toast(er.message || 'Unable to update menu item');
       }
     });
-    
+
     // ---------- CATEGORIES ----------
 
     function renderCategories() {
