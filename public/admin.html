@@ -1290,14 +1290,35 @@ Password: ${password}${r.menu_url ? `\nYour menu: ${r.menu_url}` : ''}`;
 
       scrollTo(0, 0);
 
-      menuManagerReady = MenuManager.mount(
-        $('#menuMount'),
-        {
-          base: `/api/v1/admin/restaurants/${r.id}`,
-          themeColor: r.theme_color,
-          onChange: load
-        }
-      );
+      const menuMount = $('#menuMount');
+
+      if (!menuMount) {
+
+        console.error('Missing #menuMount element.');
+
+        toast('Menu editor container is missing.');
+
+      } else {
+
+        menuManagerReady = MenuManager.mount(
+          menuMount,
+          {
+            base: `/api/v1/admin/restaurants/${r.id}`,
+            themeColor: r.theme_color,
+            onChange: load
+          }
+        );
+
+        menuManagerReady.catch(error => {
+
+          console.error('MenuManager initialization failed:', error);
+
+          menuMount.innerHTML =
+            `<p class="err">${esc(error.message)}</p>`;
+
+        });
+
+      }
 
       menuManagerReady.catch(er => {
 
