@@ -1267,6 +1267,55 @@ body.menu-page {
     visibility: visible !important;
 }
 
+/* CATEGORY EMOJIS — SMALLER THAN LABEL TEXT */
+
+#app .category-pill .category-icon,
+#app .chip .category-icon {
+    display: block !important;
+    flex: 0 0 8px !important;
+    width: 8px !important;
+    height: 8px !important;
+    min-height: 8px !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    font-size: 6px !important;
+    line-height: 8px !important;
+    text-align: center !important;
+    transform: none !important;
+}
+
+/* REMOVE DARK/BLACK BACKGROUNDS FROM CUSTOMER MENU */
+
+html,
+body,
+body.menu-page,
+body.menu-page #app,
+#app,
+#app main,
+#app .menu-content,
+#app #menuContent,
+#app #sections,
+#app .m-wrap,
+#app .m-sec,
+#app .menu-category,
+#app .category-navigation,
+#app .m-chips {
+    background-color: #ffffff !important;
+    color: #242424 !important;
+    background-image: none !important;
+}
+
+/* KEEP MENU SECTIONS TRANSPARENT */
+
+#app .m-wrap,
+#app .m-sec,
+#app .menu-content,
+#app #menuContent,
+#app #sections,
+#app .menu-category {
+    box-shadow: none !important;
+}
+
 /* =========================================
    MENU SECTIONS
    ========================================= */
@@ -1536,7 +1585,8 @@ body.menu-page {
     color: #292929 !important;
     border: 1px solid #dedede !important;
 }
-    #placeOrderForm .checkout-location-field[hidden] {
+
+#placeOrderForm .checkout-location-field[hidden] {
     display: none !important;
 }
 
@@ -1564,6 +1614,7 @@ body.menu-page {
     max-height: 92vh !important;
     overflow-y: auto !important;
 }
+
 /* =========================================
    FLOATING VIEW CART — GRADIENT THEME
    ========================================= */
@@ -1621,6 +1672,7 @@ body.menu-page #cartBar,
 #cartBar.cart-bar[hidden] {
     display: none !important;
 }
+
 /* =========================================
    MOBILE
    ========================================= */
@@ -1655,6 +1707,15 @@ body.menu-page #cartBar,
     #app .chip {
         min-width: 70px !important;
         min-height: 62px !important;
+    }
+
+    #app .category-pill .category-icon,
+    #app .chip .category-icon {
+        width: 8px !important;
+        height: 8px !important;
+        min-height: 8px !important;
+        font-size: 6px !important;
+        line-height: 8px !important;
     }
 
     #app .m-grid {
@@ -1709,7 +1770,6 @@ body.menu-page #cartBar,
 
     `;
     }
-
 
     /* =========================================
    FOOD IMAGE CLICK PREVIEW
