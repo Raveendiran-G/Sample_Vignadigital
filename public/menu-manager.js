@@ -249,142 +249,199 @@ window.MenuManager = (() => {
         );
 
         if (oversized.length) {
-
           q('[data-bulk-report]', m).innerHTML = `
-                <div class="err">
-                    ${oversized.length} images exceed the 5 MB limit.
-                    Please resize them before uploading.
-                </div>
-            `;
-
+            <div class="err">
+                ${oversized.length} images exceed the 5 MB limit.
+            </div>
+        `;
           return;
         }
+
+        const BATCH_SIZE = 10;
+        const totalBatches = Math.ceil(files.length / BATCH_SIZE);
 
         submit.disabled = true;
         submit.textContent = 'Uploading...';
 
-        q('[data-bulk-progress]', m).innerHTML = `
-            <div class="card">
-                Uploading ${files.length} images.
-                Please keep this window open.
-            </div>
-        `;
-
-        const form = new FormData();
-
-        files.forEach(file => {
-
-          // Preserve only the filename for backend matching.
-          form.append('images', file, file.name);
-
-        });
+        const finalReport = {
+          total: files.length,
+          updated: 0,
+          unmatched: [],
+          ambiguous: [],
+          failed: []
+        };
 
         try {
 
-          const response = await fetch(
-            `${base}/items/bulk-images`,
-            {
-              method: 'POST',
-              credentials: 'same-origin',
-              body: form,
-              cache: 'no-store'
-            }
-          );
+          for (let i = 0; i < totalBatches; i++) {
 
-          const result = await response.json();
-
-          if (!response.ok) {
-            throw new Error(
-              result.error || 'Bulk upload failed.'
+            const batch = files.slice(
+              i * BATCH_SIZE,
+              (i + 1) * BATCH_SIZE
             );
-          }
 
-          const report = result.report;
+            q('[data-bulk-progress]', m).innerHTML = `
+                <div class="card" style="padding:18px">
+                    <strong>
+                        Uploading batch ${i + 1} of ${totalBatches}
+                    </strong>
+                    <p class="muted">
+                        ${Math.min((i + 1) * BATCH_SIZE, files.length)}
+                        of ${files.length} images processed.
+                    </p>
+                    <div style="
+                        height:8px;
+                        background:#333;
+                        border-radius:10px;
+                        overflow:hidden;
+                    ">
+                        <div style="
+                            width:${((i + 1) / totalBatches) * 100}%;
+                            height:100%;
+                            background:var(--theme-color,#e65b18);
+                            transition:width .3s;
+                        "></div>
+                    </div>
+                </div>
+            `;
+
+            const form = new FormData();
+
+            batch.forEach(file => {
+              form.append('images', file, file.name);
+            });
+
+            const response = await fetch(
+              `${base}/items/bulk-images`,
+              {
+                method: 'POST',
+                credentials: 'same-origin',
+                body: form,
+                cache: 'no-store'
+              }
+            );
+
+            const responseText = await response.text();
+
+            let result;
+
+            try {
+              result = JSON.parse(responseText);
+            } catch {
+              throw new Error(
+                `Batch ${i + 1} failed. Server returned: ` +
+                responseText.slice(0, 250)
+              );
+            }
+
+            if (!response.ok) {
+              throw new Error(
+                result.error ||
+                `Batch ${i + 1} failed with HTTP ${response.status}`
+              );
+            }
+
+            const report = result.report;
+
+            finalReport.updated += report.updated || 0;
+
+            finalReport.unmatched.push(
+              ...(report.unmatched || [])
+            );
+
+            finalReport.ambiguous.push(
+              ...(report.ambiguous || [])
+            );
+
+            finalReport.failed.push(
+              ...(report.failed || [])
+            );
+
+          }
 
           q('[data-bulk-progress]', m).innerHTML = '';
 
           q('[data-bulk-report]', m).innerHTML = `
 
-                <div class="card" style="padding:18px">
+            <div class="card" style="padding:18px">
 
-                    <h3>Upload completed</h3>
+                <h3>Image upload completed</h3>
 
-                    <div class="stats">
+                <div class="stats">
 
-                        <div class="stat">
-                            <span>Total images</span>
-                            <b>${report.total}</b>
-                        </div>
-
-                        <div class="stat">
-                            <span>Updated</span>
-                            <b style="color:#22c55e">
-                                ${report.updated}
-                            </b>
-                        </div>
-
-                        <div class="stat">
-                            <span>Unmatched</span>
-                            <b>${report.unmatched.length}</b>
-                        </div>
-
-                        <div class="stat">
-                            <span>Ambiguous</span>
-                            <b>${report.ambiguous.length}</b>
-                        </div>
-
-                        <div class="stat">
-                            <span>Failed</span>
-                            <b>${report.failed.length}</b>
-                        </div>
-
+                    <div class="stat">
+                        <span>Total images</span>
+                        <b>${finalReport.total}</b>
                     </div>
 
-                    ${report.unmatched.length
-              ? `
-                                <h4>Unmatched images</h4>
-                                <ul>
-                                    ${report.unmatched.map(name =>
-                `<li>${esc(name)}</li>`
-              ).join('')}
-                                </ul>
-                            `
-              : ''
-            }
+                    <div class="stat">
+                        <span>Successfully updated</span>
+                        <b style="color:#22c55e">
+                            ${finalReport.updated}
+                        </b>
+                    </div>
 
-                    ${report.ambiguous.length
-              ? `
-                                <h4>Ambiguous matches</h4>
-                                <ul>
-                                    ${report.ambiguous.map(entry =>
-                `<li>
-                                            ${esc(entry.filename)}:
-                                            ${entry.matching_items.map(esc).join(', ')}
-                                        </li>`
-              ).join('')}
-                                </ul>
-                            `
-              : ''
-            }
+                    <div class="stat">
+                        <span>Unmatched</span>
+                        <b>${finalReport.unmatched.length}</b>
+                    </div>
 
-                    ${report.failed.length
-              ? `
-                                <h4>Failed uploads</h4>
-                                <ul>
-                                    ${report.failed.map(entry =>
-                `<li>
-                                            ${esc(entry.filename)}:
-                                            ${esc(entry.reason)}
-                                        </li>`
-              ).join('')}
-                                </ul>
-                            `
-              : ''
-            }
+                    <div class="stat">
+                        <span>Ambiguous</span>
+                        <b>${finalReport.ambiguous.length}</b>
+                    </div>
+
+                    <div class="stat">
+                        <span>Failed</span>
+                        <b>${finalReport.failed.length}</b>
+                    </div>
 
                 </div>
 
-            `;
+                ${finalReport.unmatched.length
+              ? `
+                        <h4>Unmatched images</h4>
+                        <ul>
+                            ${finalReport.unmatched.map(name =>
+                `<li>${esc(name)}</li>`
+              ).join('')}
+                        </ul>
+                    `
+              : ''
+            }
+
+                ${finalReport.ambiguous.length
+              ? `
+                        <h4>Ambiguous matches</h4>
+                        <ul>
+                            ${finalReport.ambiguous.map(entry =>
+                `<li>
+                                    ${esc(entry.filename)}:
+                                    ${entry.matching_items.map(esc).join(', ')}
+                                </li>`
+              ).join('')}
+                        </ul>
+                    `
+              : ''
+            }
+
+                ${finalReport.failed.length
+              ? `
+                        <h4>Failed uploads</h4>
+                        <ul>
+                            ${finalReport.failed.map(entry =>
+                `<li>
+                                    ${esc(entry.filename)}:
+                                    ${esc(entry.reason)}
+                                </li>`
+              ).join('')}
+                        </ul>
+                    `
+              : ''
+            }
+
+            </div>
+        `;
 
           submit.textContent = 'Upload completed';
 
@@ -393,10 +450,10 @@ window.MenuManager = (() => {
         } catch (error) {
 
           q('[data-bulk-report]', m).innerHTML = `
-                <div class="err">
-                    ${esc(error.message)}
-                </div>
-            `;
+            <div class="err">
+                ${esc(error.message)}
+            </div>
+        `;
 
           submit.disabled = false;
           submit.textContent = 'Retry Upload';
