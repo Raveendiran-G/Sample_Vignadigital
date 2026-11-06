@@ -2934,6 +2934,31 @@ body.menu-page .checkout-panel .place-order:hover,
 body.menu-page .receipt-actions button:not(.receipt-secondary):hover {
     filter: brightness(1.08);
 }
+    /* Receipt visibility */
+#vignaReceiptOverlay .receipt-hidden {
+    display: none !important;
+}
+
+#vignaReceiptOverlay .receipt-hidden:not(.receipt-hidden) {
+    display: block;
+}
+
+#vignaReceiptOverlay {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 999999 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow-y: auto !important;
+}
+
+#vignaReceiptOverlay .receipt-mode {
+    position: relative;
+    z-index: 1000000;
+    max-height: 92vh;
+    overflow-y: auto;
+}
 
         `;
 
@@ -3266,7 +3291,20 @@ body.menu-page .receipt-actions button:not(.receipt-secondary):hover {
     async function submitOrder(event) {
         event.preventDefault();
 
-        const form = event.currentTarget;
+        const form = document.getElementById('placeOrderForm')
+            || document.getElementById('vigna-checkout-form')
+            || event.target.closest('form');
+
+        if (!(form instanceof HTMLFormElement)) {
+            console.error('Checkout form not found or invalid:', form);
+            alert('Unable to process checkout. Please refresh and try again.');
+            return;
+        }
+
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
         const message = $('#orderMessage', currentCheckout || document);
         const button = $('#confirmOrder', currentCheckout || document);
 
@@ -3281,7 +3319,7 @@ body.menu-page .receipt-actions button:not(.receipt-secondary):hover {
             return;
         }
 
-        if (!form.reportValidity()) return;
+
 
         const formData = new FormData(form);
         const orderType = String(formData.get('order_type') || 'Dine In');
@@ -3548,55 +3586,125 @@ body.menu-page .receipt-actions button:not(.receipt-secondary):hover {
     }
 
     function showReceipt(data) {
-        $('#vignaReceiptOverlay')?.remove();
+        try {
+            // Remove any previous receipt.
+            document.getElementById('vignaReceiptOverlay')?.remove();
 
-        const restaurant = data.restaurant || {};
-        const overlay = document.createElement('div');
-        overlay.id = 'vignaReceiptOverlay';
-        overlay.className = 'checkout-overlay';
-        overlay.innerHTML = [
-            '<section class="checkout-panel receipt-mode">',
-            '<div class="receipt-animation-wrap" id="receiptAnimation">',
-            '<section class="receipt-printer-stage">',
-            '<div class="printer-brand">VIGNADIGITAL</div>',
-            '<div class="receipt-printing-paper">',
-            restaurant.logo
-                ? '<img class="receipt-icon" src="' + escapeHTML(restaurant.logo) +
-                '" width="48" alt="">'
-                : '',
-            '<h2>', escapeHTML(restaurant.name || 'Restaurant'), '</h2>',
-            '<p>ORDER CONFIRMED</p>',
-            '<p>Order #', escapeHTML(data.order_number || data.order_no || ''), '</p>',
-            '<p>Printing your receipt…</p>',
-            '</div>',
-            '<div class="printer-machine"><span></span>THERMAL RECEIPT PRINTER</div>',
-            '<div class="printer-icon">🧾</div>',
-            '</section>',
-            '</div>',
-            '<div id="receiptResult" class="receipt-hidden">',
-            receiptHTML(data),
-            '<div class="receipt-actions">',
-            '<button type="button" id="printReceipt">Print Receipt</button>',
-            '<button type="button" class="receipt-secondary" id="backMenu">Back to Menu</button>',
-            '</div>',
-            '<p class="order-status" id="liveStatus">Status: Pending</p>',
-            '</div>',
-            '</section>'
-        ].join('');
+            const restaurant = data.restaurant || {};
 
-        if (receiptPreviousBodyOverflow === null) {
-            receiptPreviousBodyOverflow = document.body.style.overflow;
+            const overlay = document.createElement('div');
+
+            overlay.id = 'vignaReceiptOverlay';
+            overlay.className = 'checkout-overlay';
+
+            overlay.innerHTML = [
+                '<section class="checkout-panel receipt-mode">',
+
+                // Receipt printer animation
+                '<div class="receipt-animation-wrap" id="receiptAnimation">',
+
+                '<section class="receipt-printer-stage">',
+
+                '<div class="printer-brand">VIGNADIGITAL</div>',
+
+                '<div class="receipt-printing-paper">',
+
+                restaurant.logo
+                    ? '<img class="receipt-icon" src="' +
+                    escapeHTML(restaurant.logo) +
+                    '" width="48" alt="">'
+                    : '',
+
+                '<h2>' + escapeHTML(restaurant.name || 'Restaurant') + '</h2>',
+
+                '<p>ORDER CONFIRMED</p>',
+
+                '<p>Order #' +
+                escapeHTML(data.order_number || data.order_no || '') +
+                '</p>',
+
+                '<p>Printing your receipt…</p>',
+
+                '</div>',
+
+                '<div class="printer-machine">',
+                '<span></span>THERMAL RECEIPT PRINTER',
+                '</div>',
+
+                '<div class="printer-icon">🧾</div>',
+
+                '</section>',
+
+                '</div>',
+
+                // Final animated receipt
+                '<div id="receiptResult" class="receipt-hidden">',
+
+                receiptHTML(data),
+
+                '<div class="receipt-actions">',
+
+                '<button type="button" id="printReceipt">',
+                'Print Receipt',
+                '</button>',
+
+                '<button type="button" class="receipt-secondary" id="backMenu">',
+                'Back to Menu',
+                '</button>',
+
+                '</div>',
+
+                '<p class="order-status" id="liveStatus">Status: Pending</p>',
+
+                '</div>',
+
+                '</section>'
+            ].join('');
+
+            if (receiptPreviousBodyOverflow === null) {
+                receiptPreviousBodyOverflow = document.body.style.overflow;
+            }
+
+            // Add receipt above the entire menu.
+            document.body.appendChild(overlay);
+
+            document.body.style.overflow = 'hidden';
+
+            // Start receipt animation.
+            const animation = document.getElementById('receiptAnimation');
+            const result = document.getElementById('receiptResult');
+
+            if (!animation || !result) {
+                throw new Error('Receipt animation elements could not be created.');
+            }
+
+            window.setTimeout(() => {
+                if (!overlay.isConnected) return;
+
+                animation.remove();
+
+                result.classList.remove('receipt-hidden');
+
+                // Ensure receipt is visible.
+                result.style.display = 'block';
+
+                result.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+
+            }, 2200);
+
+            console.log('[Vigna] Receipt displayed successfully.');
+
+        } catch (error) {
+            console.error('[Vigna] Receipt display error:', error);
+
+            showCustomerNotification(
+                'Your order was placed successfully, but the receipt could not be displayed.',
+                'error'
+            );
         }
-
-        document.body.appendChild(overlay);
-        document.body.style.overflow = 'hidden';
-
-        window.setTimeout(() => {
-            if (!overlay.isConnected) return;
-
-            $('#receiptAnimation', overlay)?.remove();
-            $('#receiptResult', overlay)?.classList.remove('receipt-hidden');
-        }, 2200);
     }
 
     function printReceipt() {
