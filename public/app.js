@@ -1,6 +1,20 @@
 // Shared helpers for the login, admin, dashboard and menu pages (talks to /api/v1 with the login cookie).
 // ---- loading feedback: a progress bar while any request runs, a spinner on the button that was pressed ----
 let inflight = 0, apiStarts = 0, barTimer;
+
+function setDashboardTheme(theme) {
+  if (theme !== 'light' && theme !== 'dark') {
+    throw new Error('Theme must be light or dark.');
+  }
+
+  document.documentElement.dataset.theme = theme;
+  localStorage.setItem('vigna-theme', theme);
+}
+
+if (document.documentElement.dataset.theme) {
+  document.documentElement.classList.remove('theme-loading');
+}
+
 const loadStart = () => { inflight++; apiStarts++; clearTimeout(barTimer); barTimer = setTimeout(() => document.documentElement.classList.add('is-loading'), 120); }; // short requests never flash the bar
 const loadEnd = () => { inflight = Math.max(0, inflight - 1); if (!inflight) { clearTimeout(barTimer); document.documentElement.classList.remove('is-loading'); document.dispatchEvent(new Event('api-idle')); } };
 document.body.insertAdjacentHTML('beforeend', '<div class="loadbar" aria-hidden="true"></div>');

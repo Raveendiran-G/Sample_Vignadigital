@@ -531,7 +531,6 @@ body {
     #rList table tbody tr {
         background-color: var(--admin-row) !important;
     }
-}
   </style>
 </head>
 
@@ -1525,11 +1524,12 @@ Password: ${password}${r.menu_url ? `\nYour menu: ${r.menu_url}` : ''}`;
 
       }
 
-      menuManagerReady.catch(er => {
-
-        $('#menuMount').innerHTML =
-          `<p class="err">${esc(er.message)}</p>`;
-      });
+      if (menuManagerReady) {
+        menuManagerReady.catch(er => {
+          $('#menuMount').innerHTML =
+            `<p class="err">${esc(er.message)}</p>`;
+        });
+      }
     }
 
     // --------------------------------------------------

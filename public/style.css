@@ -59,6 +59,17 @@
   --radius: 14px;
   --shadow: 0 1px 2px rgba(24, 24, 27, .04), 0 4px 16px rgba(24, 24, 27, .04);
   --ring: 0 0 0 3px rgba(217, 72, 15, .22);
+  --page-bg: var(--bg);
+  --surface: var(--card);
+  --surface-secondary: var(--raised);
+  --surface-hover: #fff7f1;
+  --text-primary: var(--ink);
+  --text-secondary: var(--muted);
+  --text-muted: var(--muted);
+  --border-color: var(--line);
+  --danger-color: var(--bad);
+  --success-color: var(--ok);
+  --overlay-bg: rgba(0, 0, 0, .45);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -84,6 +95,25 @@
     --info-bg: #15244a;
     --shadow: none;
   }
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --page-bg: #131316;
+  --surface: #1b1b20;
+  --surface-secondary: #212127;
+  --surface-hover: #2c2c33;
+  --text-primary: #f4f4f5;
+  --text-secondary: #b8b8c0;
+  --text-muted: #9a9aa3;
+  --border-color: #2c2c33;
+  --danger-color: #f87171;
+  --success-color: #4ade80;
+  --overlay-bg: rgba(0, 0, 0, .65);
 }
 
 * {
@@ -4802,4 +4832,37 @@ body[data-theme="light"] .modal {
 html[data-theme="dark"] .modal,
 body[data-theme="dark"] .modal {
   background: rgba(0, 0, 0, 0.70) !important;
+}
+
+/* DARK THEME FOR DASHBOARD TABS */
+.tabs button,
+.subtabs button,
+.menu-tabs button {
+    background: #1b1b20 !important;
+    color: #ffffff !important;
+    border: 1px solid #303038 !important;
+}
+
+/* Hover */
+.tabs button:hover,
+.subtabs button:hover,
+.menu-tabs button:hover {
+    background: #292930 !important;
+    color: #ffffff !important;
+}
+
+/* Active tab */
+.tabs button.on,
+.subtabs button.on,
+.menu-tabs button.active {
+    background: #ff6426 !important;
+    color: #ffffff !important;
+    border-color: #ff6426 !important;
+}
+
+/* Prevent white text/background overrides */
+.tabs button *,
+.subtabs button *,
+.menu-tabs button * {
+    color: inherit !important;
 }

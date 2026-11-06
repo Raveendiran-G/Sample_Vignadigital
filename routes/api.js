@@ -739,6 +739,67 @@ router.post('/auth/password', auth(), async (req, res) => {
 function menuRoutes(route, restaurantOf) {
 
     const ref = req => Number(req.params.ref);
+    const libraryRestaurant = req => Number(restaurantOf(req));
+
+    // --------------------------------------------------
+    // MENU LIBRARY
+    // Available to the authenticated owner or admin route
+    // that owns this menu context.
+    // --------------------------------------------------
+
+    route.get('/library/categories', async (req, res) => {
+        const restaurantId = libraryRestaurant(req);
+
+        if (!Number.isSafeInteger(restaurantId) || restaurantId <= 0) {
+            throw new HttpError(400, 'Invalid restaurant ID');
+        }
+
+        res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+        res.json({
+            categories: await svc.libraryCategories(restaurantId)
+        });
+    });
+
+    route.get('/library/items', async (req, res) => {
+        const restaurantId = libraryRestaurant(req);
+
+        if (!Number.isSafeInteger(restaurantId) || restaurantId <= 0) {
+            throw new HttpError(400, 'Invalid restaurant ID');
+        }
+
+        const queryRestaurant = req.query.restaurant_id;
+
+        if (
+            queryRestaurant !== undefined &&
+            (!/^\d+$/.test(String(queryRestaurant)) ||
+                Number(queryRestaurant) <= 0)
+        ) {
+            throw new HttpError(400, 'Invalid library restaurant ID');
+        }
+
+        const result = await svc.libraryItems(restaurantId, {
+            q: req.query.q,
+            category: req.query.category,
+            restaurant_id: queryRestaurant,
+            limit: req.query.limit,
+            offset: req.query.offset
+        });
+
+        res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+        res.json(result);
+    });
+
+    route.post('/library/import', async (req, res) => {
+        const restaurantId = libraryRestaurant(req);
+
+        if (!Number.isSafeInteger(restaurantId) || restaurantId <= 0) {
+            throw new HttpError(400, 'Invalid restaurant ID');
+        }
+
+        res.json(
+            await svc.importFromLibrary(restaurantId, req.body)
+        );
+    });
 
     // --------------------------------------------------
     // GET MENU ITEMS

@@ -230,6 +230,61 @@
     z-index: 2;
 }
 
+/* The library is shared by both dashboard themes. */
+.ml-wrap,
+.ml-footer {
+    background: var(--surface, var(--card, #ffffff));
+    color: var(--text-primary, var(--ink, #292929));
+}
+
+.ml-filters input,
+.ml-filters select,
+.ml-category-card,
+.ml-item-card {
+    background: var(--surface, var(--card, #ffffff));
+    color: var(--text-primary, var(--ink, #292929));
+    border-color: var(--border-color, var(--line, #dedede));
+}
+
+.ml-selection-bar,
+.ml-empty,
+.ml-item-image {
+    background: var(--surface-secondary, var(--raised, #f7f7f6));
+    border-color: var(--border-color, var(--line, #e9e7e4));
+}
+
+.ml-category-section h3,
+.ml-items-section h3,
+.ml-category-content,
+.ml-item-details,
+.ml-item-details strong {
+    color: var(--text-primary, var(--ink, #292929));
+}
+
+.ml-selection-bar span,
+.ml-item-details span,
+.ml-item-details small,
+.ml-category-content small,
+.ml-section-heading span,
+.ml-pagination span,
+.ml-empty {
+    color: var(--text-muted, var(--muted, #777777));
+}
+
+.ml-category-card:has(input:checked),
+.ml-item-card.selected {
+    background: color-mix(
+        in srgb,
+        var(--theme-color, #d9480f) 10%,
+        var(--surface, #ffffff)
+    );
+}
+
+.ml-error-state,
+.ml-error {
+    color: var(--danger-color, var(--bad, #dc4444));
+}
+
 @media(max-width:700px) {
     .ml-filters {
         grid-template-columns: 1fr;

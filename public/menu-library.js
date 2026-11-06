@@ -4,90 +4,115 @@
    ========================================================= */
 
 window.MenuLibrary = (() => {
-    'use strict';
+  'use strict';
 
-    const PAGE_SIZE = 30;
+  const PAGE_SIZE = 30;
 
-    const state = {
-        base: '',
-        onDone: null,
-        categories: [],
-        items: [],
-        selectedItems: new Set(),
-        selectedCategories: new Map(),
-        query: '',
-        category: '',
-        restaurant: '',
-        offset: 0,
-        total: 0,
-        loading: false
+  const state = {
+    base: '',
+    onDone: null,
+    categories: [],
+    items: [],
+    selectedItems: new Set(),
+    selectedCategories: new Map(),
+    query: '',
+    category: '',
+    restaurant: '',
+    offset: 0,
+    total: 0,
+    loading: false
+  };
+
+  const esc = value =>
+    String(value ?? '').replace(/[&<>"']/g, char => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    })[char]);
+
+  const money = value =>
+    '₹' + Number(value || 0).toFixed(2);
+
+  const request = async (url, method = 'GET', body = null) => {
+    const options = {
+      method,
+      credentials: 'same-origin',
+      cache: 'no-store',
+      headers: {
+        Accept: 'application/json'
+      }
     };
 
-    const esc = value =>
-        String(value ?? '').replace(/[&<>"']/g, char => ({
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#39;'
-        })[char]);
+    if (body !== null) {
+      options.headers['Content-Type'] = 'application/json';
+      options.body = JSON.stringify(body);
+    }
 
-    const money = value =>
-        '₹' + Number(value || 0).toFixed(2);
+    const base = String(state.base || '').replace(/\/+$/, '');
+    const endpoint = `${base}${url}`;
 
-    const request = async (url, method = 'GET', body = null) => {
-        const options = {
-            method,
-            cache: 'no-store',
-            headers: {}
-        };
+    let response;
 
-        if (body !== null) {
-            options.headers['Content-Type'] = 'application/json';
-            options.body = JSON.stringify(body);
-        }
+    try {
+      response = await fetch(endpoint, options);
+    } catch (error) {
+      throw new Error(
+        `Cannot connect to Menu Library: ${error.message}`
+      );
+    }
 
-        const response = await fetch(
-            `${state.base}${url}`,
-            options
-        );
+    const text = await response.text();
 
-        const data = await response.json().catch(() => ({}));
+    let data = {};
 
-        if (!response.ok) {
-            throw new Error(data.error || data.message || `HTTP ${response.status}`);
-        }
+    try {
+      data = text ? JSON.parse(text) : {};
+    } catch {
+      throw new Error(
+        `Invalid server response (${response.status}): ${text.slice(0, 200)}`
+      );
+    }
 
-        return data;
-    };
+    if (!response.ok) {
+      throw new Error(
+        data.error ||
+        data.message ||
+        `Menu Library request failed: HTTP ${response.status}`
+      );
+    }
 
-    let modal = null;
+    return data;
+  };
 
-    function open({ base, onDone } = {}) {
-        if (!base) {
-            toast('Menu API path is missing.');
-            return;
-        }
+  let modal = null;
 
-        state.base = base.replace(/\/$/, '');
-        state.onDone = onDone || null;
+  function open({ base, onDone } = {}) {
+    if (!base) {
+      toast('Menu API path is missing.');
+      return;
+    }
 
-        state.categories = [];
-        state.items = [];
-        state.selectedItems.clear();
-        state.selectedCategories.clear();
+    state.base = base.replace(/\/$/, '');
+    state.onDone = onDone || null;
 
-        state.query = '';
-        state.category = '';
-        state.restaurant = '';
-        state.offset = 0;
-        state.total = 0;
+    state.categories = [];
+    state.items = [];
+    state.selectedItems.clear();
+    state.selectedCategories.clear();
 
-        modal = openModal({
-            title: 'Add dishes from Menu Library',
-            sub: 'Browse dishes from other restaurants and add them to this menu.',
-            wide: true,
-            html: `
+    state.query = '';
+    state.category = '';
+    state.restaurant = '';
+    state.offset = 0;
+    state.total = 0;
+
+    modal = openModal({
+      title: 'Add dishes from Menu Library',
+      sub: 'Browse dishes from other restaurants and add them to this menu.',
+      wide: true,
+      html: `
                 <div class="ml-wrap">
 
                     <div class="ml-filters">
@@ -194,71 +219,80 @@ window.MenuLibrary = (() => {
 
                 </div>
             `
-        });
+    });
 
-        bindEvents();
-        loadInitial();
+    bindEvents();
+    loadInitial();
+  }
+
+  const el = selector => modal?.querySelector(selector);
+
+  function selectedCount() {
+    return state.selectedItems.size +
+      state.selectedCategories.size;
+  }
+
+  function updateSelectionCount() {
+    const count = selectedCount();
+
+    el('[data-ml-selected]').textContent =
+      `${count} selected`;
+
+    el('[data-ml-import]').disabled = count === 0;
+  }
+
+  function showError(message = '') {
+    const error = el('[data-ml-error]');
+    if (error) error.textContent = message;
+  }
+
+  async function loadInitial() {
+    showError('');
+
+    try {
+      const result = await request('/library/categories');
+
+      state.categories = Array.isArray(result.categories)
+        ? result.categories
+        : [];
+
+      renderCategories();
+      populateFilters();
+
+      await loadItems();
+
+    } catch (error) {
+      el('[data-ml-categories]').innerHTML = `
+        <div class="ml-empty ml-error-state">${esc(error.message)}</div>
+      `;
+      el('[data-ml-items]').innerHTML = `
+        <div class="ml-empty ml-error-state">${esc(error.message)}</div>
+      `;
+      showError(error.message);
     }
+  }
 
-    const el = selector => modal?.querySelector(selector);
+  function populateFilters() {
+    const categorySelect = el('[data-ml-category]');
+    const restaurantSelect = el('[data-ml-restaurant]');
 
-    function selectedCount() {
-        return state.selectedItems.size +
-            state.selectedCategories.size;
-    }
+    const currentCategory = categorySelect.value;
+    const currentRestaurant = restaurantSelect.value;
 
-    function updateSelectionCount() {
-        const count = selectedCount();
+    const categories = [
+      ...new Set(state.categories.map(c => c.name))
+    ].sort();
 
-        el('[data-ml-selected]').textContent =
-            `${count} selected`;
+    const restaurants = new Map();
 
-        el('[data-ml-import]').disabled = count === 0;
-    }
+    state.categories.forEach(category => {
+      restaurants.set(
+        String(category.restaurant_id),
+        category.restaurant
+      );
+    });
 
-    function showError(message = '') {
-        el('[data-ml-error]').textContent = message;
-    }
-
-    async function loadInitial() {
-        try {
-            const result = await request('/library/categories');
-
-            state.categories = Array.isArray(result.categories)
-                ? result.categories
-                : [];
-
-            renderCategories();
-            populateFilters();
-
-            await loadItems();
-
-        } catch (error) {
-            showError(error.message);
-        }
-    }
-
-    function populateFilters() {
-        const categorySelect = el('[data-ml-category]');
-        const restaurantSelect = el('[data-ml-restaurant]');
-
-        const currentCategory = categorySelect.value;
-        const currentRestaurant = restaurantSelect.value;
-
-        const categories = [
-            ...new Set(state.categories.map(c => c.name))
-        ].sort();
-
-        const restaurants = new Map();
-
-        state.categories.forEach(category => {
-            restaurants.set(
-                String(category.restaurant_id),
-                category.restaurant
-            );
-        });
-
-        categorySelect.innerHTML = `
+    categorySelect.innerHTML = `
             <option value="">All categories</option>
             ${categories.map(name => `
                 <option value="${esc(name)}">
@@ -267,7 +301,7 @@ window.MenuLibrary = (() => {
             `).join('')}
         `;
 
-        restaurantSelect.innerHTML = `
+    restaurantSelect.innerHTML = `
             <option value="">All restaurants</option>
             ${[...restaurants.entries()].map(([id, name]) => `
                 <option value="${esc(id)}">
@@ -276,27 +310,27 @@ window.MenuLibrary = (() => {
             `).join('')}
         `;
 
-        categorySelect.value = currentCategory;
-        restaurantSelect.value = currentRestaurant;
-    }
+    categorySelect.value = currentCategory;
+    restaurantSelect.value = currentRestaurant;
+  }
 
-    function renderCategories() {
-        const container = el('[data-ml-categories]');
+  function renderCategories() {
+    const container = el('[data-ml-categories]');
 
-        if (!state.categories.length) {
-            container.innerHTML = `
+    if (!state.categories.length) {
+      container.innerHTML = `
                 <div class="ml-empty">
                     No categories are available from other restaurants.
                 </div>
             `;
-            return;
-        }
+      return;
+    }
 
-        container.innerHTML = state.categories.map(category => {
-            const id = String(category.category_id);
-            const selected = state.selectedCategories.has(id);
+    container.innerHTML = state.categories.map(category => {
+      const id = String(category.category_id);
+      const selected = state.selectedCategories.has(id);
 
-            return `
+      return `
                 <label class="ml-category-card">
 
                     <input
@@ -338,82 +372,82 @@ window.MenuLibrary = (() => {
 
                 </label>
             `;
-        }).join('');
-    }
+    }).join('');
+  }
 
-    async function loadItems() {
-        if (state.loading) return;
+  async function loadItems() {
+    if (state.loading) return;
 
-        state.loading = true;
+    state.loading = true;
 
-        const container = el('[data-ml-items]');
+    const container = el('[data-ml-items]');
 
-        container.innerHTML = `
+    container.innerHTML = `
             <div class="muted">Loading dishes...</div>
         `;
 
-        const params = new URLSearchParams({
-            limit: PAGE_SIZE,
-            offset: state.offset
-        });
+    const params = new URLSearchParams({
+      limit: PAGE_SIZE,
+      offset: state.offset
+    });
 
-        if (state.query) {
-            params.set('q', state.query);
-        }
+    if (state.query) {
+      params.set('q', state.query);
+    }
 
-        if (state.category) {
-            params.set('category', state.category);
-        }
+    if (state.category) {
+      params.set('category', state.category);
+    }
 
-        if (state.restaurant) {
-            params.set('restaurant_id', state.restaurant);
-        }
+    if (state.restaurant) {
+      params.set('restaurant_id', state.restaurant);
+    }
 
-        try {
-            const result = await request(
-                `/library/items?${params.toString()}`
-            );
+    try {
+      const result = await request(
+        `/library/items?${params.toString()}`
+      );
 
-            state.items = Array.isArray(result.items)
-                ? result.items
-                : [];
+      state.items = Array.isArray(result.items)
+        ? result.items
+        : [];
 
-            state.total = Number(result.total || 0);
+      state.total = Number(result.total || 0);
 
-            renderItems();
-            updatePagination();
+      renderItems();
+      updatePagination();
 
-        } catch (error) {
-            container.innerHTML = `
-                <div class="ml-empty">
+    } catch (error) {
+      container.innerHTML = `
+                <div class="ml-empty ml-error-state">
                     ${esc(error.message)}
                 </div>
             `;
-        } finally {
-            state.loading = false;
-        }
+    } finally {
+      state.loading = false;
     }
+  }
 
-    function renderItems() {
-        const container = el('[data-ml-items]');
+  function renderItems() {
+    const container = el('[data-ml-items]');
 
-        el('[data-ml-count]').textContent =
-            `${state.total} dishes found`;
+    el('[data-ml-count]').textContent =
+      `${state.total} dishes found`;
 
-        if (!state.items.length) {
-            container.innerHTML = `
+    if (!state.items.length) {
+      container.innerHTML = `
                 <div class="ml-empty">
                     No dishes found. Try another search.
                 </div>
             `;
-            return;
-        }
+      return;
+    }
 
-        container.innerHTML = state.items.map(item => {
-            const id = String(item.id);
-            const selected = state.selectedItems.has(id);
+    container.innerHTML = state.items.map(item => {
+      const id = String(item.id);
+      const selected = state.selectedItems.has(id);
 
-            return `
+      return `
                 <label class="ml-item-card ${selected ? 'selected' : ''}">
 
                     <input
@@ -425,15 +459,15 @@ window.MenuLibrary = (() => {
                     <div class="ml-item-image">
 
                         ${item.image
-                            ? `
+          ? `
                                 <img
                                     src="${esc(item.image)}"
                                     alt="${esc(item.name)}"
                                     loading="lazy"
                                 >
                             `
-                            : '🍽️'
-                        }
+          : '🍽️'
+        }
 
                     </div>
 
@@ -451,208 +485,208 @@ window.MenuLibrary = (() => {
 
                 </label>
             `;
-        }).join('');
+    }).join('');
+
+    updateSelectionCount();
+  }
+
+  function updatePagination() {
+    const currentPage =
+      Math.floor(state.offset / PAGE_SIZE) + 1;
+
+    const totalPages = Math.max(
+      1,
+      Math.ceil(state.total / PAGE_SIZE)
+    );
+
+    el('[data-ml-page]').textContent =
+      `Page ${currentPage} of ${totalPages}`;
+
+    el('[data-ml-prev]').disabled =
+      state.offset <= 0;
+
+    el('[data-ml-next]').disabled =
+      state.offset + PAGE_SIZE >= state.total;
+  }
+
+  function bindEvents() {
+
+    let searchTimer;
+
+    el('[data-ml-search]').addEventListener('input', event => {
+      clearTimeout(searchTimer);
+
+      searchTimer = setTimeout(() => {
+        state.query = event.target.value.trim();
+        state.offset = 0;
+        loadItems();
+      }, 250);
+    });
+
+    el('[data-ml-category]').addEventListener('change', event => {
+      state.category = event.target.value;
+      state.offset = 0;
+      loadItems();
+    });
+
+    el('[data-ml-restaurant]').addEventListener('change', event => {
+      state.restaurant = event.target.value;
+      state.offset = 0;
+      loadItems();
+    });
+
+    el('[data-ml-categories]').addEventListener('change', event => {
+
+      const checkbox = event.target.closest('[data-ml-cat]');
+
+      if (checkbox) {
+        const id = checkbox.dataset.mlCat;
+
+        if (checkbox.checked) {
+          if (!state.selectedCategories.has(id)) {
+            state.selectedCategories.set(id, false);
+          }
+        } else {
+          state.selectedCategories.delete(id);
+        }
 
         updateSelectionCount();
-    }
+        return;
+      }
 
-    function updatePagination() {
-        const currentPage =
-            Math.floor(state.offset / PAGE_SIZE) + 1;
+      const includeItems = event.target.closest(
+        '[data-ml-cat-items]'
+      );
 
-        const totalPages = Math.max(
-            1,
-            Math.ceil(state.total / PAGE_SIZE)
+      if (includeItems) {
+        const id = includeItems.dataset.mlCatItems;
+
+        const categoryCheckbox = el(
+          `[data-ml-cat="${CSS.escape(id)}"]`
         );
 
-        el('[data-ml-page]').textContent =
-            `Page ${currentPage} of ${totalPages}`;
+        if (includeItems.checked) {
+          state.selectedCategories.set(id, true);
 
-        el('[data-ml-prev]').disabled =
-            state.offset <= 0;
-
-        el('[data-ml-next]').disabled =
-            state.offset + PAGE_SIZE >= state.total;
-    }
-
-    function bindEvents() {
-
-        let searchTimer;
-
-        el('[data-ml-search]').addEventListener('input', event => {
-            clearTimeout(searchTimer);
-
-            searchTimer = setTimeout(() => {
-                state.query = event.target.value.trim();
-                state.offset = 0;
-                loadItems();
-            }, 250);
-        });
-
-        el('[data-ml-category]').addEventListener('change', event => {
-            state.category = event.target.value;
-            state.offset = 0;
-            loadItems();
-        });
-
-        el('[data-ml-restaurant]').addEventListener('change', event => {
-            state.restaurant = event.target.value;
-            state.offset = 0;
-            loadItems();
-        });
-
-        el('[data-ml-categories]').addEventListener('change', event => {
-
-            const checkbox = event.target.closest('[data-ml-cat]');
-
-            if (checkbox) {
-                const id = checkbox.dataset.mlCat;
-
-                if (checkbox.checked) {
-                    if (!state.selectedCategories.has(id)) {
-                        state.selectedCategories.set(id, false);
-                    }
-                } else {
-                    state.selectedCategories.delete(id);
-                }
-
-                updateSelectionCount();
-                return;
-            }
-
-            const includeItems = event.target.closest(
-                '[data-ml-cat-items]'
-            );
-
-            if (includeItems) {
-                const id = includeItems.dataset.mlCatItems;
-
-                const categoryCheckbox = el(
-                    `[data-ml-cat="${CSS.escape(id)}"]`
-                );
-
-                if (includeItems.checked) {
-                    state.selectedCategories.set(id, true);
-
-                    if (categoryCheckbox) {
-                        categoryCheckbox.checked = true;
-                    }
-                } else if (state.selectedCategories.has(id)) {
-                    state.selectedCategories.set(id, false);
-                }
-
-                updateSelectionCount();
-            }
-        });
-
-        el('[data-ml-items]').addEventListener('change', event => {
-            const checkbox = event.target.closest('[data-ml-item]');
-
-            if (!checkbox) return;
-
-            const id = checkbox.dataset.mlItem;
-
-            if (checkbox.checked) {
-                state.selectedItems.add(id);
-            } else {
-                state.selectedItems.delete(id);
-            }
-
-            checkbox.closest('.ml-item-card')
-                ?.classList.toggle('selected', checkbox.checked);
-
-            updateSelectionCount();
-        });
-
-        el('[data-ml-clear]').addEventListener('click', () => {
-            state.selectedItems.clear();
-            state.selectedCategories.clear();
-
-            renderCategories();
-            renderItems();
-            updateSelectionCount();
-        });
-
-        el('[data-ml-prev]').addEventListener('click', () => {
-            if (state.offset <= 0) return;
-
-            state.offset = Math.max(
-                0,
-                state.offset - PAGE_SIZE
-            );
-
-            loadItems();
-        });
-
-        el('[data-ml-next]').addEventListener('click', () => {
-            if (state.offset + PAGE_SIZE >= state.total) return;
-
-            state.offset += PAGE_SIZE;
-            loadItems();
-        });
-
-        el('[data-ml-close]').addEventListener('click', () => {
-            closeModal();
-        });
-
-        el('[data-ml-import]').addEventListener('click', importSelected);
-    }
-
-    async function importSelected() {
-        const button = el('[data-ml-import]');
-
-        const items = [...state.selectedItems]
-            .map(Number)
-            .filter(Number.isSafeInteger);
-
-        const categories = [...state.selectedCategories.entries()]
-            .map(([category_id, with_items]) => ({
-                category_id: Number(category_id),
-                with_items
-            }))
-            .filter(category =>
-                Number.isSafeInteger(category.category_id)
-            );
-
-        if (!items.length && !categories.length) {
-            showError('Select at least one dish or category.');
-            return;
+          if (categoryCheckbox) {
+            categoryCheckbox.checked = true;
+          }
+        } else if (state.selectedCategories.has(id)) {
+          state.selectedCategories.set(id, false);
         }
 
-        button.disabled = true;
-        button.textContent = 'Importing...';
-        showError('');
+        updateSelectionCount();
+      }
+    });
 
-        try {
-            const result = await request(
-                '/library/import',
-                'POST',
-                {
-                    items,
-                    categories
-                }
-            );
+    el('[data-ml-items]').addEventListener('change', event => {
+      const checkbox = event.target.closest('[data-ml-item]');
 
-            closeModal();
+      if (!checkbox) return;
 
-            toast(
-                `Import complete: ${result.added_items || 0} dishes added, ` +
-                `${result.skipped_items || 0} skipped, ` +
-                `${result.added_categories || 0} categories created.`
-            );
+      const id = checkbox.dataset.mlItem;
 
-            if (typeof state.onDone === 'function') {
-                await state.onDone();
-            }
+      if (checkbox.checked) {
+        state.selectedItems.add(id);
+      } else {
+        state.selectedItems.delete(id);
+      }
 
-        } catch (error) {
-            showError(error.message);
+      checkbox.closest('.ml-item-card')
+        ?.classList.toggle('selected', checkbox.checked);
 
-            button.disabled = false;
-            button.textContent = 'Import selected';
-        }
+      updateSelectionCount();
+    });
+
+    el('[data-ml-clear]').addEventListener('click', () => {
+      state.selectedItems.clear();
+      state.selectedCategories.clear();
+
+      renderCategories();
+      renderItems();
+      updateSelectionCount();
+    });
+
+    el('[data-ml-prev]').addEventListener('click', () => {
+      if (state.offset <= 0) return;
+
+      state.offset = Math.max(
+        0,
+        state.offset - PAGE_SIZE
+      );
+
+      loadItems();
+    });
+
+    el('[data-ml-next]').addEventListener('click', () => {
+      if (state.offset + PAGE_SIZE >= state.total) return;
+
+      state.offset += PAGE_SIZE;
+      loadItems();
+    });
+
+    el('[data-ml-close]').addEventListener('click', () => {
+      closeModal();
+    });
+
+    el('[data-ml-import]').addEventListener('click', importSelected);
+  }
+
+  async function importSelected() {
+    const button = el('[data-ml-import]');
+
+    const items = [...state.selectedItems]
+      .map(Number)
+      .filter(Number.isSafeInteger);
+
+    const categories = [...state.selectedCategories.entries()]
+      .map(([category_id, with_items]) => ({
+        category_id: Number(category_id),
+        with_items
+      }))
+      .filter(category =>
+        Number.isSafeInteger(category.category_id)
+      );
+
+    if (!items.length && !categories.length) {
+      showError('Select at least one dish or category.');
+      return;
     }
 
-    return { open };
+    button.disabled = true;
+    button.textContent = 'Importing...';
+    showError('');
+
+    try {
+      const result = await request(
+        '/library/import',
+        'POST',
+        {
+          items,
+          categories
+        }
+      );
+
+      closeModal();
+
+      toast(
+        `Import complete: ${result.added_items || 0} dishes added, ` +
+        `${result.skipped_items || 0} skipped, ` +
+        `${result.added_categories || 0} categories created.`
+      );
+
+      if (typeof state.onDone === 'function') {
+        await state.onDone();
+      }
+
+    } catch (error) {
+      showError(error.message);
+
+      button.disabled = false;
+      button.textContent = 'Import selected';
+    }
+  }
+
+  return { open };
 
 })();
