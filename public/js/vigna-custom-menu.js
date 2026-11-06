@@ -3029,7 +3029,7 @@ body.menu-page .receipt-actions button:not(.receipt-secondary):hover {
             const addControl = cartItem
                 ? quantityControlMarkup(id, cartItem.qty, getItemName(item))
                 : '<button class="order-add" type="button" data-add="' +
-                    escapeHTML(id) + '">+ Add</button>';
+                escapeHTML(id) + '">+ Add</button>';
 
             actions.innerHTML = addControl +
                 '<button class="order-now-btn" type="button" data-order-now="' +
@@ -3064,22 +3064,25 @@ body.menu-page .receipt-actions button:not(.receipt-secondary):hover {
             openCheckout();
         }
     }
-
     function renderCartBar() {
         let bar = $('#cartBar');
 
         if (!bar) {
             bar = document.createElement('button');
+
             bar.id = 'cartBar';
             bar.className = 'cart-bar';
             bar.type = 'button';
-            bar.setAttribute('aria-live', 'polite');
+
+            // Hide immediately before inserting into the page.
+            bar.hidden = true;
+            bar.style.setProperty('display', 'none', 'important');
+
             document.body.appendChild(bar);
         }
 
         updateCartBar();
     }
-
     function updateCartBar() {
         let bar = $('#cartBar');
 
@@ -3089,24 +3092,43 @@ body.menu-page .receipt-actions button:not(.receipt-secondary):hover {
         }
 
         const count = cartCount();
-        const isVisible = orderingEnabled() && count > 0;
+        const shouldShow = orderingEnabled() && count > 0;
 
-        bar.hidden = !isVisible;
-        bar.disabled = !isVisible;
-        bar.setAttribute(
-            'aria-label',
-            count + ' items, subtotal ' + money(subtotal()) + '. View cart and order.'
-        );
+        // Always update the cart contents.
+        bar.innerHTML = `
+        <span>
+            🛒 ${count} ${count === 1 ? 'Item' : 'Items'}
+        </span>
 
-        bar.innerHTML = [
-            '<span class="cart-bar-summary">',
-            '<b>🛒 ', count, ' ', count === 1 ? 'Item' : 'Items', '</b>',
-            '<small>', money(subtotal()), ' · Review your items and place your order</small>',
-            '</span>',
-            '<strong>View Cart / Order <span aria-hidden="true">→</span></strong>'
-        ].join('');
+        <strong>
+            View Cart · ${money(subtotal())}
+        </strong>
+    `;
+
+        if (shouldShow) {
+            bar.hidden = false;
+
+            bar.style.setProperty(
+                'display',
+                'flex',
+                'important'
+            );
+
+            bar.disabled = false;
+        } else {
+            bar.hidden = true;
+
+            bar.style.setProperty(
+                'display',
+                'none',
+                'important'
+            );
+
+            bar.disabled = true;
+        }
+
+        updateAddButtons();
     }
-
     function createCheckoutModal() {
         let modal = $('#checkoutSheet');
 
@@ -3421,7 +3443,7 @@ body.menu-page .receipt-actions button:not(.receipt-secondary):hover {
 
         const qrMarkup = qrImage
             ? '<img class="receipt-upi-image" src="' + escapeHTML(qrImage) +
-                '" alt="Restaurant UPI QR Code" loading="eager" onerror="this.style.display=\'none\'; this.parentElement.classList.add(\'qr-error\');">'
+            '" alt="Restaurant UPI QR Code" loading="eager" onerror="this.style.display=\'none\'; this.parentElement.classList.add(\'qr-error\');">'
             : '<div class="receipt-qr-missing">Restaurant QR image is not configured.</div>';
 
         const upiMarkup = upiId
@@ -3460,11 +3482,11 @@ body.menu-page .receipt-actions button:not(.receipt-secondary):hover {
             : createdAt.toLocaleString('en-IN');
         const locationMarkup = location
             ? '<div class="meta-line"><span>' + escapeHTML(locationLabel) +
-                '</span><span>:</span><span>' + escapeHTML(location) + '</span></div>'
+            '</span><span>:</span><span>' + escapeHTML(location) + '</span></div>'
             : '';
         const noteMarkup = data.note
             ? '<div class="meta-line"><span>Note</span><span>:</span><span>' +
-                escapeHTML(data.note) + '</span></div>'
+            escapeHTML(data.note) + '</span></div>'
             : '';
 
         return [
@@ -3472,7 +3494,7 @@ body.menu-page .receipt-actions button:not(.receipt-secondary):hover {
             '<header class="receipt-head">',
             restaurant.logo
                 ? '<img class="receipt-icon" src="' + escapeHTML(restaurant.logo) +
-                    '" alt="' + escapeHTML(restaurant.name || 'Restaurant') + '">'
+                '" alt="' + escapeHTML(restaurant.name || 'Restaurant') + '">'
                 : '',
             '<h2>', escapeHTML(restaurant.name || 'Restaurant'), '</h2>',
             restaurant.address ? '<p>' + escapeHTML(restaurant.address) + '</p>' : '',
@@ -3540,7 +3562,7 @@ body.menu-page .receipt-actions button:not(.receipt-secondary):hover {
             '<div class="receipt-printing-paper">',
             restaurant.logo
                 ? '<img class="receipt-icon" src="' + escapeHTML(restaurant.logo) +
-                    '" width="48" alt="">'
+                '" width="48" alt="">'
                 : '',
             '<h2>', escapeHTML(restaurant.name || 'Restaurant'), '</h2>',
             '<p>ORDER CONFIRMED</p>',
