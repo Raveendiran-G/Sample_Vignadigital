@@ -1384,34 +1384,26 @@ body.menu-page {
     box-shadow: 0 7px 18px rgba(0,0,0,.08) !important;
 }
 
-/* =========================================
-   FOOD IMAGES - 4:3
-   ========================================= */
+/* SQUARE FOOD ITEM IMAGES — 1:1 */
 
-#app .food-image-wrap {
+#app .food-image-wrap,
+#app .thumb {
     position: relative !important;
     width: 100% !important;
     height: auto !important;
-    aspect-ratio: 4 / 3 !important;
+    aspect-ratio: 1 / 1 !important;
     overflow: hidden !important;
     background: #eeeeee !important;
 }
 
-#app .food-image {
+#app .food-image,
+#app .thumb img {
     display: block !important;
     width: 100% !important;
     height: 100% !important;
-    aspect-ratio: 4 / 3 !important;
+    aspect-ratio: 1 / 1 !important;
     object-fit: cover !important;
     object-position: center !important;
-}
-
-#app .food-image-overlay {
-    background: linear-gradient(
-        to bottom,
-        transparent,
-        rgba(0,0,0,.08)
-    ) !important;
 }
 
 /* =========================================
@@ -1690,6 +1682,208 @@ body.menu-page #cartBar.cart-bar {
     `;
     }
 
+
+    /* =========================================
+   FOOD IMAGE CLICK PREVIEW
+   ========================================= */
+
+    function enableFoodImagePreview() {
+
+        if (window.vignaImagePreviewEnabled) return;
+        window.vignaImagePreviewEnabled = true;
+
+        const style = document.createElement('style');
+
+        style.textContent = `
+        #vignaFoodImagePreview {
+            position: fixed;
+            inset: 0;
+            z-index: 9999999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(0,0,0,.88);
+            backdrop-filter: blur(5px);
+        }
+
+        #vignaFoodImagePreview.active {
+            display: flex;
+        }
+
+        #vignaFoodImagePreview img {
+            display: block;
+            max-width: 95%;
+            max-height: 85vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            border-radius: 12px;
+            background: #ffffff;
+            box-shadow: 0 15px 50px rgba(0,0,0,.4);
+            animation: vignaImageZoom .25s ease;
+        }
+
+       #vignaFoodImagePreview .vigna-image-close {
+    position: fixed !important;
+    top: 24px !important;
+    right: 24px !important;
+
+    width: 42px !important;
+    height: 42px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    border: none !important;
+    border-radius: 50% !important;
+
+    background: #444444 !important;
+    color: #ffffff !important;
+
+    font-family: Arial, sans-serif !important;
+    font-size: 25px !important;
+    font-weight: 600 !important;
+    line-height: 1 !important;
+
+    cursor: pointer !important;
+    z-index: 10000001 !important;
+    box-sizing: border-box !important;
+}
+
+#vignaFoodImagePreview .vigna-image-close:hover {
+    background: #87564b !important;
+}
+
+@media (max-width: 600px) {
+    #vignaFoodImagePreview .vigna-image-close {
+        top: 15px !important;
+        right: 15px !important;
+        width: 38px !important;
+        height: 38px !important;
+    }
+}
+
+        #vignaFoodImagePreview .vigna-image-caption {
+            position: absolute;
+            bottom: 20px;
+            left: 15px;
+            right: 15px;
+            color: #ffffff;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        @keyframes vignaImageZoom {
+            from {
+                opacity: 0;
+                transform: scale(.88);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        #app .food-image,
+        #app .thumb img {
+            cursor: zoom-in !important;
+        }
+
+        @media(max-width:600px) {
+            #vignaFoodImagePreview img {
+                max-width: 100%;
+                max-height: 78vh;
+            }
+
+        }
+    `;
+
+        document.head.appendChild(style);
+
+        const preview = document.createElement('div');
+
+        preview.id = 'vignaFoodImagePreview';
+
+        preview.innerHTML = `
+        <button type="button"
+                class="vigna-image-close"
+                aria-label="Close image preview">
+            &times;
+        </button>
+
+        <img src="" alt="Food image preview">
+
+        <div class="vigna-image-caption"></div>
+    `;
+
+        document.body.appendChild(preview);
+
+        const previewImage = preview.querySelector('img');
+        const caption = preview.querySelector('.vigna-image-caption');
+        const closeButton = preview.querySelector('.vigna-image-close');
+
+        function closePreview() {
+            preview.classList.remove('active');
+            previewImage.src = '';
+            document.body.style.overflow = '';
+        }
+
+        // Open image when a food image is clicked
+        document.addEventListener('click', function (event) {
+
+            const image = event.target.closest(
+                '#app .food-image, #app .thumb img'
+            );
+
+            if (!image) return;
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            const imageURL = image.currentSrc || image.src;
+
+            if (!imageURL) return;
+
+            previewImage.src = imageURL;
+            previewImage.alt = image.alt || 'Food image preview';
+
+            const card = image.closest('.premium-food-card, .m-card');
+
+            const nameElement = card?.querySelector(
+                '.food-name, .nm'
+            );
+
+            caption.textContent = nameElement
+                ? nameElement.textContent.trim()
+                : '';
+
+            preview.classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+        }, true);
+
+        // Close button
+        closeButton.addEventListener('click', closePreview);
+
+        // Close when clicking outside the image
+        preview.addEventListener('click', function (event) {
+            if (event.target === preview) {
+                closePreview();
+            }
+        });
+
+        // Close using Escape key
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape' && preview.classList.contains('active')) {
+                closePreview();
+            }
+        });
+    }
 
 
     /* =========================================================
@@ -2894,6 +3088,7 @@ body.menu-page #cartBar.cart-bar {
         initialized = true;
 
         addStyles();
+        enableFoodImagePreview();
         setupSearch();
         setupViewSwitch();
 
