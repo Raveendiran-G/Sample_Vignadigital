@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-
+    <link rel="stylesheet" href="/menu-library.css">
     <meta name="theme-color" content="#d9480f" id="themeMeta">
 
     <title>Menu</title>
@@ -1426,6 +1426,32 @@
 
         }
 
+        .order-add.has-quantity {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            gap: 10px;
+            padding: 6px 10px;
+        }
+
+        .order-add.has-quantity span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            font-size: 18px;
+            font-weight: 800;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .order-add.has-quantity strong {
+            font-size: 13px;
+            min-width: 14px;
+            text-align: center;
+        }
 
 
         /* FINAL ORDER NOW BUTTON COLOUR - VIGNADIGITAL */
@@ -2904,6 +2930,87 @@
         /* Click effect */
         body.menu-page #cartBar.cart-bar:active {
             filter: brightness(0.9);
+        }
+
+        /* FIX: CUSTOMER NOTIFICATION AT TOP-RIGHT OF SCREEN */
+
+        html body #customerOrderNotifications {
+            position: fixed !important;
+            top: 15px !important;
+            right: 15px !important;
+            left: auto !important;
+            bottom: auto !important;
+
+            width: min(340px, calc(100vw - 30px)) !important;
+            max-width: 340px !important;
+
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 10px !important;
+
+            z-index: 2147483647 !important;
+            pointer-events: none !important;
+
+            margin: 0 !important;
+            padding: 0 !important;
+            transform: none !important;
+        }
+
+        html body #customerOrderNotifications .customer-order-notification {
+            position: relative !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+
+            background: #fff !important;
+            color: #333 !important;
+
+            border: 1px solid #e5bd42 !important;
+            border-left: 5px solid #356F6A !important;
+            border-radius: 12px !important;
+
+            padding: 15px 42px 15px 15px !important;
+
+            box-shadow: 0 5px 22px rgba(0, 0, 0, .22) !important;
+
+            pointer-events: auto !important;
+            animation: customerNoticeIn .3s ease !important;
+        }
+
+        html body #customerOrderNotifications .notice-close {
+            position: absolute !important;
+            top: 5px !important;
+            right: 6px !important;
+
+            width: 30px !important;
+            height: 30px !important;
+
+            padding: 0 !important;
+            border: none !important;
+            background: transparent !important;
+
+            color: #555 !important;
+            font-size: 23px !important;
+            cursor: pointer !important;
+        }
+
+        @keyframes customerNoticeIn {
+            from {
+                opacity: 0;
+                transform: translateX(25px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @media (max-width: 600px) {
+            html body #customerOrderNotifications {
+                top: 10px !important;
+                right: 10px !important;
+                width: calc(100vw - 20px) !important;
+            }
         }
     </style>
 

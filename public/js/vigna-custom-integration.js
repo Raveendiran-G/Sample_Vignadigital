@@ -70,23 +70,57 @@
     }
 
     function findCards() {
-        return [
-            ...document.querySelectorAll(
-                '#vigna-menu-root [data-vigna-item], ' +
-                '#vigna-menu-root [data-menu-item], ' +
-                '#vigna-menu-root article.card'
-            )
+        const root = document.getElementById('vigna-menu-root');
+
+        if (!root) return [];
+
+        const selectors = [
+            '[data-vigna-item]',
+            '[data-menu-item]',
+            '[data-item]',
+            'article.card',
+            '.m-card',
+            '.order-card',
+            '.menu-card',
+            '.food-card',
+            '.item-card',
+            '.product-card'
         ];
+
+        return [...new Set(
+            selectors.flatMap(selector => [...root.querySelectorAll(selector)])
+        )];
     }
 
     function getCardName(card) {
-        return (
-            card.dataset.name ||
-            card.dataset.itemName ||
-            card.querySelector('[itemprop="name"]')?.textContent ||
-            card.querySelector('h2, h3, h4')?.textContent ||
-            ''
-        ).trim();
+        const selectors = [
+            '[data-name]',
+            '[data-item-name]',
+            '[itemprop="name"]',
+            '.nm',
+            '.item-name',
+            '.menu-item-name',
+            '.food-name',
+            '.item-title',
+            'h2',
+            'h3',
+            'h4'
+        ];
+
+        for (const selector of selectors) {
+            const element = card.matches(selector)
+                ? card
+                : card.querySelector(selector);
+
+            const value =
+                element?.dataset?.name ||
+                element?.dataset?.itemName ||
+                element?.textContent;
+
+            if (value?.trim()) return value.trim();
+        }
+
+        return '';
     }
 
     function renderCartButton(card, item) {
@@ -114,42 +148,75 @@
 
         container.dataset.qty = String(qty);
 
-        if (qty > 0) {
-            container.innerHTML = `
-                <div class="vigna-quantity">
-                    <button type="button"
-                        data-vigna-minus="${item.id}">−</button>
+        container.innerHTML = `
+        <div class="vigna-order-actions">
 
-                    <span>${qty}</span>
+            <button
+                type="button"
+                class="vigna-add-button ${qty > 0 ? 'has-quantity' : ''}"
+                data-vigna-add="${item.id}"
+            >
+                ${qty > 0
+                ? `
+                        <span
+                            class="vigna-card-qty-control"
+                            data-vigna-card-minus="${item.id}"
+                        >−</span>
 
-                    <button type="button"
-                        data-vigna-plus="${item.id}">+</button>
-                </div>
-            `;
-        } else {
-            container.innerHTML = `
-                <button type="button"
-                    class="vigna-add-button"
-                    data-vigna-add="${item.id}">
-                    Add to Cart
-                </button>
-            `;
-        }
+                        <span class="vigna-card-qty">
+                            ${qty}
+                        </span>
+
+                        <span
+                            class="vigna-card-qty-control"
+                            data-vigna-card-plus="${item.id}"
+                        >+</span>
+                    `
+                : '+ Add'
+            }
+            </button>
+
+            <button
+                type="button"
+                class="vigna-order-now-button"
+                data-vigna-order-now="${item.id}"
+            >
+                Order Now
+            </button>
+
+        </div>
+    `;
     }
 
-    function matchCards() {
-        findCards().forEach(card => {
-            const name = normalizeName(getCardName(card));
+    function getCardName(card) {
+        const selectors = [
+            '[data-name]',
+            '[data-item-name]',
+            '[itemprop="name"]',
+            '.nm',
+            '.item-name',
+            '.menu-item-name',
+            '.food-name',
+            '.item-title',
+            'h2',
+            'h3',
+            'h4'
+        ];
 
-            const item = state.items.find(
-                entry => normalizeName(entry.name) === name
-            );
+        for (const selector of selectors) {
+            const element = card.matches(selector)
+                ? card
+                : card.querySelector(selector);
 
-            if (item) {
-                card.dataset.vignaItemId = String(item.id);
-                renderCartButton(card, item);
-            }
-        });
+            const value =
+                element?.dataset?.name ||
+                element?.dataset?.itemName ||
+                element?.textContent;
+
+            if (value?.trim()) return value.trim();
+        }
+
+        return '';
     }
 
     function cartCount() {
@@ -239,6 +306,18 @@
         renderCart();
     }
 
+    function orderNow(id) {
+        const itemId = Number(id);
+
+        if (!state.cart.has(itemId)) {
+            addItem(itemId);
+        }
+
+        if (!state.cart.has(itemId)) return;
+
+        openCart();
+    }
+
     function removeItem(id) {
         id = Number(id);
 
@@ -274,8 +353,13 @@
                 z-index: 5;
             }
 
+            .vigna-order-actions {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 8px;
+            }
+
             .vigna-add-button {
-                width: 100%;
                 padding: 11px 16px;
                 border: 0;
                 border-radius: 8px;
@@ -285,11 +369,29 @@
                 cursor: pointer;
             }
 
+            .vigna-order-now-button {
+                padding: 11px 12px;
+                border: 0;
+                border-radius: 8px;
+                background: #f58220;
+                color: #fff;
+                font-weight: 700;
+                cursor: pointer;
+            }
+
             .vigna-quantity {
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 gap: 18px;
+            }
+
+            .vigna-quantity-row {
+                display: grid;
+                grid-column: 1 / -1;
+                grid-template-columns: auto minmax(24px, 1fr) auto;
+                align-items: center;
+                gap: 8px;
             }
 
             .vigna-quantity button {
@@ -607,9 +709,9 @@
                 box-sizing: border-box;
                 margin: 0 auto;
                 padding: 20px 18px 28px;
-                background: #fffdf7;
+                background: #fffcf5;
                 color: #493328;
-                font: 12px/1.5 monospace;
+                font: 11px/1.35 ui-monospace, SFMono-Regular, Consolas, monospace;
                 animation: vignaReceiptUnroll .8s cubic-bezier(.2,.8,.2,1) both;
             }
 
@@ -619,8 +721,24 @@
             }
 
             .vigna-receipt-head h2 {
-                margin: 5px 0;
+                margin: 4px 0;
                 color: #603123;
+                font-size: 15px;
+            }
+
+            .vigna-receipt-logo {
+                display: block;
+                width: 48px;
+                height: 48px;
+                margin: 0 auto 5px;
+                object-fit: contain;
+                border-radius: 6px;
+            }
+
+            .vigna-receipt-address {
+                margin: 2px 0;
+                color: #604d40;
+                overflow-wrap: anywhere;
             }
 
             .vigna-receipt-label {
@@ -688,6 +806,7 @@
                 margin-top: 5px;
                 padding: 9px 0;
                 font-weight: 900;
+                color: #d9480f;
                 font-size: 14px;
             }
 
@@ -702,6 +821,14 @@
                 background: #fff;
                 text-align: center;
                 overflow-wrap: anywhere;
+                border: 1px solid #eee4d8;
+                font-size: 10px;
+            }
+
+            .vigna-receipt-upi::before {
+                content: "SCAN & PAY TO HOTEL OWNER";
+                font-weight: 800;
+                color: #603123;
             }
 
             .vigna-receipt-upi img {
@@ -713,40 +840,75 @@
                 object-fit: contain;
             }
 
-            .vigna-order-success-notification {
-                position: fixed;
-                top: max(16px, env(safe-area-inset-top));
-                left: 50%;
-                z-index: 1000000;
-                width: min(520px, calc(100% - 24px));
-                box-sizing: border-box;
-                padding: 13px 16px;
-                transform: translate(-50%, -18px);
-                border: 1px solid #FFCA28;
-                border-radius: 12px;
-                background: #FFF3CD;
-                color: #664D03;
-                box-shadow: 0 8px 26px #0002;
-                font: 14px/1.45 Arial, sans-serif;
-                opacity: 0;
-                animation: vignaOrderSuccess .25s ease forwards;
-            }
+           /* CUSTOMER ORDER SUCCESS NOTIFICATION */
+.vigna-order-success-notification {
+    position: fixed !important;
+    top: 16px !important;
+    right: 16px !important;
+    left: auto !important;
+    z-index: 2147483647 !important;
 
-            .vigna-order-success-notification strong {
-                display: block;
-                margin-bottom: 3px;
-            }
+    width: min(340px, calc(100vw - 32px));
+    box-sizing: border-box;
 
-            .vigna-order-success-notification p {
-                margin: 0;
-            }
+    padding: 14px 38px 14px 15px;
 
-            @keyframes vignaOrderSuccess {
-                to {
-                    opacity: 1;
-                    transform: translate(-50%, 0);
-                }
-            }
+    border: 1px solid #FFCA28;
+    border-radius: 12px;
+
+    background: #FFF3CD;
+    color: #664D03;
+
+    box-shadow: 0 8px 26px #0003;
+
+    font: 14px/1.5 Arial, sans-serif;
+
+    opacity: 0;
+    transform: translateX(30px);
+
+    pointer-events: auto;
+
+    animation: vignaOrderSuccess .3s ease forwards;
+}
+
+.vigna-order-success-notification strong {
+    display: block;
+    margin-bottom: 4px;
+    color: #f58220;
+}
+
+.vigna-order-success-notification p {
+    margin: 0;
+}
+
+.vigna-order-success-close {
+    position: absolute;
+    top: 5px;
+    right: 9px;
+
+    border: 0;
+    background: transparent;
+    color: #664D03;
+
+    font-size: 22px;
+    cursor: pointer;
+}
+
+@keyframes vignaOrderSuccess {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@media(max-width:560px) {
+    .vigna-order-success-notification {
+        top: 10px !important;
+        right: 10px !important;
+        width: min(300px, calc(100vw - 20px));
+        font-size: 12px;
+    }
+}
 
             .vigna-receipt-foot {
                 padding-top: 12px;
@@ -848,6 +1010,34 @@
                     animation: none !important;
                 }
             }
+
+            .vigna-add-button.has-quantity {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 10px;
+    padding: 0 8px;
+}
+
+.vigna-card-qty-control {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    font-size: 18px;
+    font-weight: 800;
+    cursor: pointer;
+    user-select: none;
+}
+
+.vigna-card-qty {
+    min-width: 14px;
+    text-align: center;
+    font-weight: 800;
+    font-size: 13px;
+}
         `;
 
         document.head.appendChild(style);
@@ -1094,11 +1284,14 @@
     }
 
     function showOrderSuccessNotification(orderNumber) {
+
         document.querySelectorAll('.vigna-order-success-notification')
             .forEach(notification => notification.remove());
 
         const notification = document.createElement('div');
+
         notification.className = 'vigna-order-success-notification';
+
         notification.setAttribute('role', 'status');
         notification.setAttribute('aria-live', 'polite');
 
@@ -1107,14 +1300,33 @@
             : '';
 
         notification.innerHTML = `
-            <strong>✅ Order placed successfully!</strong>
-            <p>Your order has been placed successfully!${escapeHTML(orderText)}
-                The hotel owner will confirm your order shortly.</p>
-        `;
+        <button
+            type="button"
+            class="vigna-order-success-close"
+            aria-label="Close notification"
+        >×</button>
 
+        <strong>✅ Order placed successfully!</strong>
+
+        <p>
+            Your order has been placed successfully!
+            ${escapeHTML(orderText)}
+            The hotel owner will confirm your order shortly.
+        </p>
+    `;
+
+        // Append directly to BODY, not to the receipt popup.
         document.body.appendChild(notification);
 
-        window.setTimeout(() => notification.remove(), 5000);
+        notification.querySelector('.vigna-order-success-close')
+            .addEventListener('click', () => {
+                notification.remove();
+            });
+
+        // Automatically disappear after 6 seconds.
+        window.setTimeout(() => {
+            notification.remove();
+        }, 6000);
     }
 
     // =====================================================
@@ -1153,6 +1365,7 @@
                 ${upiId ? `
                     <div>UPI ID: ${escapeHTML(upiId)}</div>
                 ` : ''}
+                <small>Scan the QR code to make payment</small>
             </div>
         `;
     }
@@ -1170,9 +1383,20 @@
 
                 <div class="vigna-receipt-head">
 
-                    <div style="font-size:30px">🍽️</div>
+                    ${state.restaurant?.logo ? `
+                        <img class="vigna-receipt-logo"
+                            src="${escapeHTML(state.restaurant.logo)}"
+                            alt="${escapeHTML(restaurantName)} logo"
+                            onerror="this.style.display='none'">
+                    ` : ''}
 
                     <h2>${escapeHTML(restaurantName)}</h2>
+
+                    ${state.restaurant?.address ? `
+                        <div class="vigna-receipt-address">
+                            ${escapeHTML(state.restaurant.address)}
+                        </div>
+                    ` : ''}
 
                     <div>ORDER RECEIPT</div>
 
@@ -1229,8 +1453,8 @@
                     <div class="vigna-receipt-table-head">
                         <span>ITEM</span>
                         <span>QTY</span>
-                        <span>RATE</span>
-                        <span>AMOUNT</span>
+                        <span>PRICE</span>
+                        <span>TOTAL</span>
                     </div>
 
                     ${itemsHTML}
@@ -1575,8 +1799,6 @@
 
             state.lastOrder = order;
 
-            showOrderSuccessNotification(order.orderNo);
-
             state.cart.clear();
 
             renderCart();
@@ -1586,6 +1808,8 @@
             updateLocationField();
 
             showReceiptAnimation(order);
+
+            showOrderSuccessNotification(order.orderNo);
 
         } catch (error) {
             console.error(
@@ -1631,50 +1855,127 @@
         );
     }
 
-    function getDatabaseItems(categories) {
-        const result = [];
+    // =====================================================
+    // INSTANT MENU CACHE
+    // =====================================================
 
-        categories.forEach(category => {
-            const items = Array.isArray(category.items)
-                ? category.items
-                : [];
-
-            items.forEach(item => {
-                result.push({
-                    id: Number(
-                        item.id ??
-                        item.item_id ??
-                        item._id
-                    ),
-                    name: String(
-                        item.name ??
-                        item.item_name ??
-                        item.title ??
-                        ''
-                    ).trim(),
-                    price: Number(
-                        item.price ??
-                        item.selling_price ??
-                        item.amount ??
-                        0
-                    ),
-                    available: !(
-                        item.available === false ||
-                        item.is_available === false ||
-                        item.status === 'unavailable' ||
-                        item.status === 'out_of_stock'
-                    )
-                });
-            });
-        });
-
-        return result.filter(item =>
-            Number.isFinite(item.id) &&
-            item.id > 0 &&
-            item.name
-        );
+    function getMenuCacheKey() {
+        return `vigna_menu_cache_${SLUG}`;
     }
 
+    function saveMenuCache(data) {
+        try {
+            localStorage.setItem(
+                getMenuCacheKey(),
+                JSON.stringify({
+                    savedAt: Date.now(),
+                    data
+                })
+            );
+        } catch (error) {
+            console.warn('[Vigna] Menu cache save failed:', error);
+        }
+    }
+
+    function loadMenuCache() {
+        try {
+            const cached = localStorage.getItem(getMenuCacheKey());
+
+            if (!cached) return null;
+
+            const parsed = JSON.parse(cached);
+
+            if (!parsed.data || !parsed.data.restaurant ||
+                !Array.isArray(parsed.data.categories)) {
+                return null;
+            }
+
+            return parsed.data;
+        } catch (error) {
+            console.warn('[Vigna] Menu cache read failed:', error);
+            return null;
+        }
+    }
+
+    function getDatabaseItems(categories) {
+        if (!Array.isArray(categories)) {
+            return [];
+        }
+
+        return categories.flatMap(category => {
+            if (!Array.isArray(category.items)) {
+                return [];
+            }
+
+            return category.items.map(item => ({
+                ...item,
+
+                id: item.id ??
+                    item._id ??
+                    item.item_id ??
+                    item.name,
+
+                name: item.name ??
+                    item.item_name ??
+                    item.title ??
+                    'Menu Item',
+
+                price: Number(
+                    item.price ??
+                    item.selling_price ??
+                    item.amount ??
+                    0
+                ),
+
+                available: !(
+                    item.available === false ||
+                    item.available === 0 ||
+                    item.available === '0' ||
+                    item.available === 'false' ||
+                    item.is_available === false ||
+                    item.is_available === 0
+                )
+            }));
+        });
+    }
+
+    function applyMenuData(data) {
+        if (
+            !data ||
+            !data.restaurant ||
+            !Array.isArray(data.categories)
+        ) {
+            return;
+        }
+
+        state.restaurant = data.restaurant;
+        state.items = getDatabaseItems(data.categories);
+
+        state.orderingEnabled =
+            getRestaurantOrderingStatus(data.restaurant);
+
+        if (!state.orderingEnabled) {
+            state.cart.clear();
+
+            document.getElementById('vigna-cart-modal')
+                ?.classList.remove('open');
+
+            document.body.style.overflow = '';
+        }
+
+        if (data.restaurant.name) {
+            document.title = `${data.restaurant.name} | Menu`;
+        }
+
+        if (/^#[0-9a-fA-F]{6}$/.test(
+            String(data.restaurant.theme_color || '')
+        )) {
+            window.VIGNA_THEME = data.restaurant.theme_color;
+        }
+
+        matchCards();
+        renderCart();
+    }
     /* =====================================================
        MATCH CUSTOM HTML CARDS WITH DATABASE ITEMS
        ===================================================== */
@@ -1729,53 +2030,20 @@
                 throw new Error('Invalid restaurant menu API response.');
             }
 
-            const previousOrderingState = state.orderingEnabled;
+            // Update menu with the latest server data.
+            applyMenuData(data);
 
-            state.restaurant = data.restaurant;
+            // Save the latest successful response.
+            saveMenuCache(data);
 
-            state.items = getDatabaseItems(data.categories);
-
-            state.orderingEnabled =
-                getRestaurantOrderingStatus(data.restaurant);
-
-            /* Clear cart when restaurant disables ordering */
-            if (previousOrderingState && !state.orderingEnabled) {
-                state.cart.clear();
-
-                document.getElementById('vigna-cart-modal')
-                    ?.classList.remove('open');
-
-                document.body.style.overflow = '';
-            }
-
-            /* Update restaurant title */
-            if (data.restaurant.name) {
-                document.title = `${data.restaurant.name} | Menu`;
-            }
-
-            /* Apply saved restaurant theme without replacing custom design */
-            if (
-                /^#[0-9a-fA-F]{6}$/.test(
-                    String(data.restaurant.theme_color || '')
-                )
-            ) {
-                window.VIGNA_THEME = data.restaurant.theme_color;
-            }
-
-            /* Render Add to Cart buttons */
-            matchCards();
-
-            /* Update floating cart */
-            renderCart();
-
-            console.log('[Vigna] Custom menu integration loaded.', {
+            console.log('[Vigna] Live menu updated.', {
                 restaurant: data.restaurant.name,
                 items: state.items.length,
                 orderingEnabled: state.orderingEnabled
             });
 
         } catch (error) {
-            console.error('[Vigna] Custom menu loading failed:', error);
+            console.error('[Vigna] Menu refresh failed:', error);
 
         } finally {
             menuRefreshRunning = false;
@@ -1794,15 +2062,41 @@
         if (!target) return;
 
         const add = target.closest('[data-vigna-add]');
+        const cardPlus = target.closest('[data-vigna-card-plus]');
+        const cardMinus = target.closest('[data-vigna-card-minus]');
+        const orderNowButton = target.closest('[data-vigna-order-now]');
         const plus = target.closest('[data-vigna-plus]');
         const minus = target.closest('[data-vigna-minus]');
         const cartButton = target.closest('#vigna-cart-button');
 
+        if (cardPlus) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            addItem(cardPlus.dataset.vignaCardPlus);
+            return;
+        }
+
+        if (cardMinus) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            removeItem(cardMinus.dataset.vignaCardMinus);
+            return;
+        }
         if (add) {
             event.preventDefault();
             event.stopPropagation();
 
             addItem(add.dataset.vignaAdd);
+            return;
+        }
+
+        if (orderNowButton) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            orderNow(orderNowButton.dataset.vignaOrderNow);
             return;
         }
 
@@ -1834,34 +2128,45 @@
     /* =====================================================
        INITIALIZATION
        ===================================================== */
-
-    async function initialize() {
+    function initialize() {
         addStyles();
 
         createModal();
 
-        await loadMenu();
+        // Start observing custom menu cards immediately.
+        const root = document.getElementById('vigna-menu-root');
 
-        /* Refresh ordering availability without page reload */
+        if (root) {
+            const observer = new MutationObserver(() => {
+                if (!state.items.length) return;
+
+                matchCards();
+            });
+
+            observer.observe(document.documentElement, {
+                childList: true,
+                subtree: true
+            });
+        }
+
+        // FIRST: Load cached menu data immediately.
+        const cachedMenu = loadMenuCache();
+
+        if (cachedMenu) {
+            applyMenuData(cachedMenu);
+
+            console.log('[Vigna] Instant cached menu loaded.');
+        }
+
+        // THEN: Fetch the latest menu without blocking the page.
+        loadMenu();
+
+        // Keep restaurant ordering availability synchronized.
         setInterval(() => {
             if (document.visibilityState === 'visible') {
                 loadMenu();
             }
         }, 2000);
-
-        /* Detect changes to custom HTML menu cards */
-        const root = document.getElementById('vigna-menu-root');
-
-        if (root) {
-            const observer = new MutationObserver(() => {
-                matchCards();
-            });
-
-            observer.observe(root, {
-                childList: true,
-                subtree: true
-            });
-        }
     }
 
     /* =====================================================
