@@ -1540,6 +1540,9 @@ body.menu-page {
     color: #292929 !important;
     border: 1px solid #dedede !important;
 }
+    #placeOrderForm .checkout-location-field[hidden] {
+    display: none !important;
+}
 
 /* =========================================
    RECEIPT VISIBILITY
@@ -2112,33 +2115,70 @@ body.menu-page #cartBar,
         modal.id = 'checkoutSheet';
         modal.className = 'checkout-overlay';
         modal.setAttribute('role', 'presentation');
+
         modal.innerHTML = [
             '<section class="checkout-panel" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">',
+
             '<button type="button" class="checkout-close" id="closeCheckout" aria-label="Close checkout">×</button>',
+
             '<span class="checkout-eyebrow">YOUR ORDER</span>',
             '<h2 id="checkoutTitle">Checkout</h2>',
+
             '<div id="checkoutLines" aria-live="polite"></div>',
+
             '<div class="checkout-totals">',
             '<div><span>Food Subtotal</span><strong id="subtotalValue"></strong></div>',
             '<div><span>Tax (5%)</span><strong id="taxValue"></strong></div>',
             '<div class="checkout-total"><span>Grand Total</span><strong id="totalValue"></strong></div>',
             '</div>',
+
             '<form id="placeOrderForm">',
-            '<label>Customer name<input id="customerName" name="customer" type="text" required minlength="2" maxlength="80" autocomplete="name" placeholder="Your name"></label>',
-            '<label>Mobile number<input name="phone" type="tel" required maxlength="30" autocomplete="tel" inputmode="tel" placeholder="Mobile number"></label>',
-            '<label>Order type<select name="order_type" id="orderType" required>',
+
+            '<label>Customer name',
+            '<input id="customerName" name="customer" type="text" required minlength="2" maxlength="80" autocomplete="name" placeholder="Your name">',
+            '</label>',
+
+            '<label>Mobile number',
+            '<input name="phone" type="tel" required maxlength="30" autocomplete="tel" inputmode="tel" placeholder="Mobile number">',
+            '</label>',
+
+            '<label>Order type',
+            '<select name="order_type" id="orderType" required>',
             '<option value="Dine In">Dine In</option>',
             '<option value="Takeaway">Takeaway</option>',
             '<option value="Delivery">Delivery</option>',
             '<option value="Room Service">Room Service</option>',
-            '</select></label>',
-            '<label class="checkout-location-field" id="tableField">Table number<input name="table_no" id="tableNo" type="text" required maxlength="30" placeholder="Enter table number"></label>',
-            '<label class="checkout-location-field" id="roomField" hidden>Room number<input name="room_no" id="roomNo" type="text" maxlength="30" placeholder="Enter room number"></label>',
-            '<label class="checkout-location-field" id="deliveryField" hidden>Delivery address<textarea name="delivery_address" id="deliveryAddress" maxlength="200" rows="2" placeholder="Enter complete delivery address"></textarea></label>',
-            '<label>Special instructions (optional)<textarea name="note" maxlength="500" rows="3" placeholder="Allergies or other requests"></textarea></label>',
+            '</select>',
+            '</label>',
+
+            // DINE IN: TABLE NUMBER
+            '<label class="checkout-location-field" id="tableField">',
+            'Table number',
+            '<input name="table_no" id="tableNo" type="text" required maxlength="30" placeholder="Enter table number">',
+            '</label>',
+
+            // ROOM SERVICE: ROOM NUMBER
+            '<label class="checkout-location-field" id="roomField" hidden>',
+            'Room number',
+            '<input name="room_no" id="roomNo" type="text" maxlength="30" placeholder="Enter room number">',
+            '</label>',
+
+            // DELIVERY: DELIVERY ADDRESS
+            '<label class="checkout-location-field" id="deliveryField" hidden>',
+            'Delivery address',
+            '<textarea name="delivery_address" id="deliveryAddress" maxlength="200" rows="2" placeholder="Enter complete delivery address"></textarea>',
+            '</label>',
+
+            '<label>Special instructions (optional)',
+            '<textarea name="note" maxlength="500" rows="3" placeholder="Allergies or other requests"></textarea>',
+            '</label>',
+
             '<button class="place-order" type="submit" id="confirmOrder">Confirm Order</button>',
+
             '<p class="muted checkout-hint">Review your items before confirming your order.</p>',
+
             '<div id="orderMessage" role="alert" aria-live="polite"></div>',
+
             '</form>',
             '</section>'
         ].join('');
@@ -2150,30 +2190,47 @@ body.menu-page #cartBar,
     function renderCheckoutItems() {
         if (!currentCheckout) return;
 
-        const container = $('#checkoutLines', currentCheckout);
+        const modal = currentCheckout;
+        const container = $('#checkoutLines', modal);
+
         if (!container) return;
 
         container.innerHTML = [...cart.values()].map(item => [
             '<div class="checkout-line">',
-            '<div class="checkout-line-info"><b>', escapeHTML(item.name), '</b>',
-            '<div class="muted">', money(item.price), ' each</div></div>',
+            '<div class="checkout-line-info"><b>',
+            escapeHTML(item.name),
+            '</b><div class="muted">',
+            money(item.price),
+            ' each</div></div>',
             '<div class="checkout-qty">',
-            '<button type="button" data-checkout-dec="', escapeHTML(item.id), '" aria-label="Decrease ', escapeHTML(item.name), '">−</button>',
-            '<span aria-live="polite">', String(item.qty), '</span>',
-            '<button type="button" data-checkout-inc="', escapeHTML(item.id), '" aria-label="Increase ', escapeHTML(item.name), '">+</button>',
+            '<button type="button" data-checkout-dec="',
+            escapeHTML(item.id),
+            '" aria-label="Decrease quantity">−</button>',
+            '<span aria-live="polite">',
+            String(item.qty),
+            '</span>',
+            '<button type="button" data-checkout-inc="',
+            escapeHTML(item.id),
+            '" aria-label="Increase quantity">+</button>',
             '</div>',
-            '<strong>', money(item.price * item.qty), '</strong>',
+            '<strong>',
+            money(item.price * item.qty),
+            '</strong>',
             '</div>'
         ].join('')).join('');
 
-        $('#subtotalValue', currentCheckout).textContent = money(subtotal());
-        $('#taxValue', currentCheckout).textContent = money(taxAmount());
-        $('#totalValue', currentCheckout).textContent = money(payableTotal());
+        $('#subtotalValue', modal).textContent = money(subtotal());
+        $('#taxValue', modal).textContent = money(taxAmount());
+        $('#totalValue', modal).textContent = money(payableTotal());
 
-        const confirmButton = $('#confirmOrder', currentCheckout);
+        const confirmButton = $('#confirmOrder', modal);
+
         if (confirmButton && !confirmButton.disabled) {
-            confirmButton.textContent = 'Confirm Order · ' + money(payableTotal());
+            confirmButton.textContent =
+                'Confirm Order · ' + money(payableTotal());
         }
+
+        updateOrderTypeFields();
     }
 
     function updateOrderTypeFields() {
