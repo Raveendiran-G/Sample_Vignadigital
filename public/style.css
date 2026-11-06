@@ -4834,35 +4834,3 @@ body[data-theme="dark"] .modal {
   background: rgba(0, 0, 0, 0.70) !important;
 }
 
-/* DARK THEME FOR DASHBOARD TABS */
-.tabs button,
-.subtabs button,
-.menu-tabs button {
-    background: #1b1b20 !important;
-    color: #ffffff !important;
-    border: 1px solid #303038 !important;
-}
-
-/* Hover */
-.tabs button:hover,
-.subtabs button:hover,
-.menu-tabs button:hover {
-    background: #292930 !important;
-    color: #ffffff !important;
-}
-
-/* Active tab */
-.tabs button.on,
-.subtabs button.on,
-.menu-tabs button.active {
-    background: #ff6426 !important;
-    color: #ffffff !important;
-    border-color: #ff6426 !important;
-}
-
-/* Prevent white text/background overrides */
-.tabs button *,
-.subtabs button *,
-.menu-tabs button * {
-    color: inherit !important;
-}
