@@ -1,89 +1,990 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Vigna Digital Menu · QR menus for restaurants</title>
-<meta name="description" content="Give your restaurant a digital menu. Guests scan a QR code and browse your full menu with photos and prices on their phone.">
-<link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/landing.css"></head><body class="lp">
+<!DOCTYPE html>
+<html lang="en">
 
-<header class="lp-nav"><div class="lp-wrap">
-  <a class="lp-logo" href="/"><span class="lp-mark">▦</span> Vigna Digital <b>Menu</b></a>
-  <nav>
-    <a class="lp-link" href="#how">How it works</a>
-    <a class="lp-link" href="#features">Features</a>
-    <a class="btn" href="/login">Login</a>
-  </nav>
-</div></header>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vigna Digital | Next-Gen Digital Menus</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="/landing.css">
+</head>
 
-<section class="lp-hero"><div class="lp-wrap lp-hero-grid">
-  <div>
-    <p class="lp-eyebrow">Digital menus for restaurants</p>
-    <h1>Your whole menu,<br>one <span>scan</span> away.</h1>
-    <p class="lp-lead">Guests point their phone at a QR code on the table and see your menu as beautiful photo cards. You update dishes and prices in seconds, with no reprinting.</p>
-    <div class="lp-cta">
-      <a class="btn lp-big" href="/login">Restaurant login</a>
-      <% if (contact) { %><a class="btn ghost lp-big" href="mailto:<%= contact %>?subject=Digital%20menu%20for%20my%20restaurant">Get your menu</a><% } %>
-    </div>
-  </div>
+<body>
 
-  <div class="lp-visual" aria-hidden="true">
-    <div class="lp-phone">
-      <div class="lp-notch"></div>
-      <div class="lp-phone-head">Your Restaurant</div>
-      <div class="lp-chips"><span class="on">Starters</span><span>Mains</span><span>Desserts</span></div>
-      <div class="lp-cards">
-        <div><i style="--c:#ffd8a8">🍕</i><b>Margherita</b><em>12.00</em></div>
-        <div><i style="--c:#ffc9c9">🍔</i><b>Smash Burger</b><em>9.50</em></div>
-        <div><i style="--c:#c3fae8">🥗</i><b>Garden Salad</b><em>7.00</em></div>
-        <div><i style="--c:#eebefa">🍰</i><b>Cheesecake</b><em>6.50</em></div>
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <div class="nav-inner">
+        <div class="logo-wrap">
+          <div class="logo-icon">V</div>
+          <span>VignaDigital</span>
+        </div>
+        <div class="nav-links">
+          <a href="#how-it-works" class="nav-link">How it works</a>
+          <a href="#features" class="nav-link">Features</a>
+          <a href="/login" class="btn btn-sm btn-outline">Login</a>
+        </div>
       </div>
     </div>
-    <div class="lp-qr">
-      <svg viewBox="0 0 29 29" width="84" height="84" shape-rendering="crispEdges">
-        <rect width="29" height="29" fill="#fff"/>
-        <g fill="#1d1d1f">
-          <path d="M2 2h7v7H2zM20 2h7v7h-7zM2 20h7v7H2z"/>
-          <g fill="#fff"><path d="M3 3h5v5H3zM21 3h5v5h-5zM3 21h5v5H3z"/></g>
-          <path d="M4 4h3v3H4zM22 4h3v3h-3zM4 22h3v3H4z"/>
-          <path d="M11 2h2v2h-2zM14 4h3v2h-3zM11 7h2v2h-2zM16 8h2v3h-2zM11 11h3v2h-3zM2 11h2v2H2zM6 12h3v2H6zM2 15h3v2H2zM8 16h2v3H8zM12 14h2v3h-2zM15 12h3v2h-3zM20 11h2v3h-2zM24 12h3v2h-3zM19 16h3v2h-3zM24 16h2v3h-2zM12 19h3v2h-3zM17 20h2v3h-2zM21 20h3v2h-3zM25 22h2v3h-2zM13 24h3v3h-3zM20 25h3v2h-3z"/>
-        </g>
-      </svg>
-      <span>Scan for menu</span>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container hero-layout">
+
+      <div class="hero-content">
+        <div class="hero-badge reveal">
+          <span class="dot"></span> Next-Gen Digital Menus
+        </div>
+
+        <h1 class="reveal delay-100">
+          <span class="text-gradient">Your whole menu,</span><br>
+          <span class="text-gradient-brand">one scan away.</span>
+        </h1>
+
+        <p class="reveal delay-200">
+          Eliminate printing costs. Guests point their phone at a QR code and instantly browse beautiful, interactive
+          photo cards. Update pricing and availability in real-time.
+        </p>
+
+        <div class="hero-btns reveal delay-300">
+          <button class="btn btn-primary open-form-btn">
+            Get Started Free
+          </button>
+          <a href="/login" class="btn btn-outline">Restaurant Login</a>
+        </div>
+      </div>
+
+      <!-- Orange iPhone 17 Pro Max -->
+      <div class="hero-visual reveal delay-400">
+
+        <div class="phone-frame iphone-orange">
+
+          <!-- iPhone side buttons -->
+          <div class="phone-btn-mute"></div>
+          <div class="phone-btn-vol-up"></div>
+          <div class="phone-btn-vol-down"></div>
+          <div class="phone-btn-power"></div>
+
+          <div class="phone-bezel">
+
+            <div class="phone-screen">
+
+              <!-- iPhone Status Bar -->
+              <div class="iphone-status-bar">
+
+                <!-- Real Indian time -->
+                <span id="iphone-time">1:10</span>
+
+                <div class="iphone-status-right">
+
+                  <!-- Mobile signal -->
+                  <svg viewBox="0 0 24 18" class="status-signal">
+                    <path d="M2 15V11H5V15Z" />
+                    <path d="M7 15V8H10V15Z" />
+                    <path d="M12 15V5H15V15Z" />
+                    <path d="M17 15V2H20V15Z" />
+                  </svg>
+
+                  <!-- WiFi -->
+                  <svg viewBox="0 0 24 18" class="status-wifi">
+                    <path d="M2 6C7 -0.5 17 -0.5 22 6" />
+                    <path d="M5 9C9 5 15 5 19 9" />
+                    <path d="M9 12C11 10 13 10 15 12" />
+                    <circle cx="12" cy="15" r="1.2" />
+                  </svg>
+
+                  <!-- Battery -->
+                  <svg viewBox="0 0 28 16" class="status-battery">
+                    <rect x="1" y="2" width="22" height="12" rx="3" />
+                    <path d="M25 5V11" />
+                    <rect x="3" y="4" width="17" height="8" rx="1.5" class="battery-fill" />
+                  </svg>
+
+                </div>
+              </div>
+
+              <!-- ONE Dynamic Island -->
+              <div class="phone-notch">
+                <span class="notch-camera"></span>
+                <span class="notch-green-dot"></span>
+              </div>
+
+              <!-- Restaurant Header -->
+              <div class="app-header">
+
+                <div class="app-brand-row">
+
+                  <div class="app-restaurant-mark">
+                    🍽️
+                  </div>
+
+                  <div class="app-restaurant-info">
+                    <h3>The Royal Dine</h3>
+                    <p>Fresh food, happy moments</p>
+                  </div>
+
+                  <span class="app-more">⋮</span>
+
+                </div>
+
+                <div class="app-welcome">
+                  <small>WELCOME TO</small>
+                  <h2>Our Menu 👋</h2>
+                  <p>Discover something delicious today.</p>
+                </div>
+
+              </div>
+
+              <!-- Clickable Categories -->
+              <div class="app-tabs">
+
+                <button type="button" class="app-tab active" data-category="starters">
+                  Starters
+                </button>
+
+                <button type="button" class="app-tab" data-category="main">
+                  Main Course
+                </button>
+
+                <button type="button" class="app-tab" data-category="biryani">
+                  Biryani
+                </button>
+
+              </div>
+
+              <!-- Category Heading -->
+              <div class="app-menu-heading">
+
+                <strong id="demo-category-title">
+                  Starters
+                </strong>
+
+                <span id="demo-item-count">
+                  3 Items
+                </span>
+
+              </div>
+
+              <!-- Scrollable Menu Items -->
+              <div class="app-grid" id="demo-menu-items" aria-live="polite">
+              </div>
+
+              <!-- ONLY ONE CART BAR -->
+              <div class="app-cart-bar">
+
+                <span id="demo-cart-count">
+                  0 Items
+                </span>
+
+                <button type="button" id="demo-cart-button">
+                  View Cart →
+                </button>
+
+              </div>
+
+              <!-- CART PANEL INSIDE IPHONE -->
+              <div id="demo-cart-panel" class="demo-cart-panel">
+
+                <div class="demo-cart-header">
+                  <strong>🛒 Your Cart</strong>
+
+                  <button type="button" id="demo-cart-close">
+                    ✕
+                  </button>
+                </div>
+
+                <!-- Cart Items -->
+                <div id="demo-cart-items" class="demo-cart-items">
+                  <p class="demo-cart-empty">Your cart is empty.</p>
+                </div>
+
+                <!-- Cart Footer -->
+                <div class="demo-cart-footer" id="demo-cart-footer">
+
+                  <div class="demo-cart-total">
+                    <span>Grand Total</span>
+                    <strong id="demo-cart-total">₹0</strong>
+                  </div>
+
+                  <button type="button" id="demo-confirm-order">
+                    Confirm Order →
+                  </button>
+
+                  <button type="button" id="demo-cart-back">
+                    Continue Shopping
+                  </button>
+
+                </div>
+
+                <!-- ORDER SUCCESS SCREEN -->
+                <div id="demo-order-success" class="demo-order-success">
+
+                  <div class="success-tick">
+                    <svg viewBox="0 0 60 60">
+                      <circle cx="30" cy="30" r="26"></circle>
+                      <path d="M17 30 L26 39 L44 20"></path>
+                    </svg>
+                  </div>
+
+                  <h3>Order Placed!</h3>
+
+                  <p>Your order has been placed successfully.</p>
+
+                  <button type="button" id="demo-success-done">
+                    Done
+                  </button>
+
+                </div>
+
+              </div>
+
+              <!-- iPhone Home Indicator -->
+              <div class="phone-home-indicator">
+                <span></span>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Floating Status Widget -->
+        <div class="widget widget-1">
+
+          <div class="widget-icon green">
+            <svg viewBox="0 0 24 24">
+              <path d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+
+          <div class="widget-text">
+            <p>Status</p>
+            <h4>Live Sync</h4>
+          </div>
+
+        </div>
+
+        <!-- Floating QR Widget -->
+        <div class="widget widget-2">
+
+          <div class="qr-mock">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+
+          <div class="widget-text">
+            <h4>Scan & Order</h4>
+            <p class="text-brand">No App Required</p>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- How it Works -->
+  <section id="how-it-works" class="section">
+    <div class="container">
+      <h2 class="section-title reveal">
+        Go digital in <span class="text-brand">3 simple steps</span>
+      </h2>
+
+      <p class="section-subtitle reveal">
+        Setup takes minutes. Your customers will thank you forever.
+      </p>
+
+      <div class="grid-3">
+        <div class="glass-card step-card reveal delay-100">
+          <div class="step-num">1</div>
+          <h3 class="card-title">Create Dashboard</h3>
+          <p class="card-text">
+            Sign up and get instant access to your centralized menu management system.
+          </p>
+        </div>
+
+        <div class="glass-card step-card reveal delay-200">
+          <div class="step-num">2</div>
+          <h3 class="card-title">Build Your Menu</h3>
+          <p class="card-text">
+            Upload dish photos, set categories, and define pricing in an intuitive interface.
+          </p>
+        </div>
+
+        <div class="glass-card step-card reveal delay-300">
+          <div class="step-num">3</div>
+          <h3 class="card-title">Print & Place</h3>
+          <p class="card-text">
+            Download your custom high-res QR code and place it directly on your tables.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section id="features" class="section">
+    <div class="container">
+      <h2 class="section-title reveal">
+        Engineered for <span class="text-brand">Hospitality</span>
+      </h2>
+
+      <p class="section-subtitle reveal">
+        Everything you need to run a modern dining experience.
+      </p>
+
+      <div class="grid-3">
+        <div class="glass-card reveal">
+          <div class="feat-icon">📱</div>
+          <h4 class="card-title">Mobile Optimized</h4>
+          <p class="card-text">
+            Lightning-fast, thumb-friendly grids that run perfectly in any mobile browser.
+          </p>
+        </div>
+
+        <div class="glass-card reveal delay-100">
+          <div class="feat-icon">🖼️</div>
+          <h4 class="card-title">Visual Storytelling</h4>
+          <p class="card-text">
+            Entice customers with high-quality photo cards and detailed descriptions.
+          </p>
+        </div>
+
+        <div class="glass-card reveal delay-200">
+          <div class="feat-icon">⚡</div>
+          <h4 class="card-title">Real-Time Sync</h4>
+          <p class="card-text">
+            Update availability and pricing instantly across active customer screens.
+          </p>
+        </div>
+
+        <div class="glass-card reveal delay-300">
+          <div class="feat-icon">🔳</div>
+          <h4 class="card-title">Dynamic QR Generation</h4>
+          <p class="card-text">
+            Generate brand-colored QR codes linked to your live menu.
+          </p>
+        </div>
+
+        <div class="glass-card reveal delay-400">
+          <div class="feat-icon">🛡️</div>
+          <h4 class="card-title">Admin Dashboard</h4>
+          <p class="card-text">
+            Secure access to manage inventory and menus.
+          </p>
+        </div>
+
+        <div class="glass-card reveal delay-500">
+          <div class="feat-icon">📋</div>
+          <h4 class="card-title">Smart Categories</h4>
+          <p class="card-text">
+            Organize dishes into Starters, Main Course and Biryani.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section">
+    <div class="container reveal">
+      <div class="cta-box">
+        <div class="cta-content">
+          <h2>Ready to modernize?</h2>
+          <p>
+            Join restaurants streamlining their service with Vigna Digital.
+          </p>
+        </div>
+
+        <div class="cta-action">
+          <button class="btn btn-white open-form-btn">
+            Create Free Account
+          </button>
+          <p class="cta-subtext">No credit card required</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="container">
+    <div class="footer">
+      <div class="logo-wrap footer-logo">
+        <div class="logo-icon">V</div>
+        <span>VignaDigital</span>
+      </div>
+
+      <div class="footer-links">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Contact</a>
+      </div>
+
+      <div class="copyright">
+        © <%= new Date().getFullYear() %> Vigna Digital. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Get Started Modal -->
+  <div class="modal-overlay" id="signupModal">
+    <div class="modal-content">
+
+      <button type="button" class="modal-close" aria-label="Close">
+        <svg viewBox="0 0 24 24">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <h2 class="modal-title">Get Started</h2>
+      <p class="modal-subtitle">
+        Enter your details to create your digital menu today.
+      </p>
+
+      <form id="getStartedForm">
+        <div class="form-group">
+          <label for="fullName">Full Name</label>
+          <input type="text" id="fullName" class="form-input" placeholder="Your name" required>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" class="form-input" placeholder="you@example.com" required>
+        </div>
+
+        <div class="form-group">
+          <label for="restaurantName">Restaurant Name</label>
+          <input type="text" id="restaurantName" class="form-input" placeholder="Your restaurant" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-full mt-4">
+          Create Free Account
+        </button>
+      </form>
     </div>
   </div>
-</div></section>
 
-<section id="how" class="lp-sec"><div class="lp-wrap">
-  <h2>Up and running in three steps</h2>
-  <div class="lp-steps">
-    <div><span class="lp-num">1</span><h3>We set you up</h3><p>Sign up and get your own dashboard login. Your restaurant gets a private menu page right away.</p></div>
-    <div><span class="lp-num">2</span><h3>Add your dishes</h3><p>Create categories, then add each item with a photo, name, description and price.</p></div>
-    <div><span class="lp-num">3</span><h3>Print the QR code</h3><p>Download your QR code from the dashboard and place it on tables, counters or flyers.</p></div>
-  </div>
-</div></section>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
 
-<section id="features" class="lp-sec lp-alt"><div class="lp-wrap">
-  <h2>Everything a menu needs</h2>
-  <div class="lp-feats">
-    <div><b>📱 Made for phones</b><p>A fast, thumb-friendly card grid that works on any screen, with no app to install.</p></div>
-    <div><b>🖼️ Photo cards</b><p>Show off your dishes with images, descriptions and prices, grouped by category.</p></div>
-    <div><b>⚡ Instant updates</b><p>Change a price or hide a sold-out dish and every guest sees it immediately.</p></div>
-    <div><b>🔳 Your own QR code</b><p>Download or print a high-resolution QR code that always points to your latest menu.</p></div>
-    <div><b>🔒 Your own login</b><p>A private web dashboard for your team to manage the menu, from any browser.</p></div>
-    <div><b>🧾 Tidy by category</b><p>Starters, mains, drinks, desserts: guests jump straight to what they want.</p></div>
-  </div>
-</div></section>
+      /* =====================================
+         SCROLL REVEAL
+      ===================================== */
 
-<section class="lp-sec"><div class="lp-wrap">
-  <div class="lp-banner">
-    <div><h2>Ready to go digital?</h2><p>Already a customer? Sign in to manage your menu.</p></div>
-    <div class="lp-cta">
-      <a class="btn lp-big lp-inv" href="/login">Login</a>
-      <% if (contact) { %><a class="btn lp-big lp-outline" href="mailto:<%= contact %>?subject=Digital%20menu%20for%20my%20restaurant">Contact us</a><% } %>
-    </div>
-  </div>
-</div></section>
+      const revealItems = document.querySelectorAll(".reveal");
 
-<footer class="lp-foot"><div class="lp-wrap">
-  <span>© <%= new Date().getFullYear() %> Vigna Digital</span>
-  <a href="/login">Restaurant login</a>
-</div></footer>
-</body></html>
+      if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver((entries, obs) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("active");
+              obs.unobserve(entry.target);
+            }
+          });
+        }, {
+          threshold: 0.15
+        });
+
+        revealItems.forEach(el => observer.observe(el));
+      } else {
+        revealItems.forEach(el => el.classList.add("active"));
+      }
+
+
+      /* =====================================
+         NAVBAR
+      ===================================== */
+
+      const navbar = document.getElementById("navbar");
+
+      window.addEventListener("scroll", function () {
+        if (navbar) {
+          navbar.classList.toggle("scrolled", window.scrollY > 20);
+        }
+      }, { passive: true });
+
+
+      /* =====================================
+         REAL INDIAN TIME
+      ===================================== */
+
+      /* =====================================
+        REAL INDIAN TIME
+     ===================================== */
+
+      const timeElement = document.getElementById("iphone-time");
+
+      function updateIndianTime() {
+        if (!timeElement) return;
+
+        const parts = new Intl.DateTimeFormat("en-IN", {
+          timeZone: "Asia/Kolkata",
+          hour: "numeric",
+          minute: "2-digit",
+          hour12: true
+        }).formatToParts(new Date());
+
+        const hour = parts.find(p => p.type === "hour")?.value;
+        const minute = parts.find(p => p.type === "minute")?.value;
+        const period = parts.find(p => p.type === "dayPeriod")?.value;
+
+        timeElement.textContent = `${hour}:${minute} ${period.toUpperCase()}`;
+      }
+
+      updateIndianTime();
+      setInterval(updateIndianTime, 1000);
+
+
+
+
+      /* =====================================
+         DEMO MENU
+      ===================================== */
+
+      const demoMenu = {
+        starters: [
+          {
+            name: "Paneer Tikka",
+            price: 180,
+            emoji: "🍢",
+            desc: "Smoky grilled paneer",
+            color: "#ffe0c2"
+          },
+          {
+            name: "Crispy Chicken",
+            price: 220,
+            emoji: "🍗",
+            desc: "Golden crispy chicken",
+            color: "#ffd8bd"
+          },
+          {
+            name: "Veg Spring Roll",
+            price: 140,
+            emoji: "🥟",
+            desc: "Crispy vegetable rolls",
+            color: "#d9f5dc"
+          }
+        ],
+
+        main: [
+          {
+            name: "Paneer Butter Masala",
+            price: 240,
+            emoji: "🍛",
+            desc: "Rich creamy gravy",
+            color: "#ffddc2"
+          },
+          {
+            name: "Chicken Curry",
+            price: 260,
+            emoji: "🍲",
+            desc: "Traditional spicy curry",
+            color: "#fbd4c2"
+          },
+          {
+            name: "Veg Fried Rice",
+            price: 180,
+            emoji: "🍚",
+            desc: "Fresh vegetable rice",
+            color: "#e2f1d4"
+          }
+        ],
+
+        biryani: [
+          {
+            name: "Chicken Biryani",
+            price: 280,
+            emoji: "🍗",
+            desc: "Authentic dum biryani",
+            color: "#ffe0b2"
+          },
+          {
+            name: "Mutton Biryani",
+            price: 350,
+            emoji: "🍖",
+            desc: "Traditional mutton dum",
+            color: "#f8d5b9"
+          },
+          {
+            name: "Veg Biryani",
+            price: 200,
+            emoji: "🍛",
+            desc: "Aromatic vegetable biryani",
+            color: "#dff0cf"
+          }
+        ]
+      };
+
+
+      /* =====================================
+         ELEMENTS
+      ===================================== */
+
+      const menuBox = document.getElementById("demo-menu-items");
+      const categoryTitle = document.getElementById("demo-category-title");
+      const itemCount = document.getElementById("demo-item-count");
+
+      const cartPanel = document.getElementById("demo-cart-panel");
+      const cartButton = document.getElementById("demo-cart-button");
+      const closeButton = document.getElementById("demo-cart-close");
+      const backButton = document.getElementById("demo-cart-back");
+
+      const cartItems = document.getElementById("demo-cart-items");
+      const cartCount = document.getElementById("demo-cart-count");
+      const cartTotal = document.getElementById("demo-cart-total");
+
+      const confirmButton = document.getElementById("demo-confirm-order");
+      const successScreen = document.getElementById("demo-order-success");
+      const successDone = document.getElementById("demo-success-done");
+      const cartFooter = document.getElementById("demo-cart-footer");
+
+      if (
+        !menuBox || !categoryTitle || !itemCount ||
+        !cartPanel || !cartButton || !closeButton ||
+        !backButton || !cartItems || !cartCount ||
+        !cartTotal || !confirmButton || !successScreen ||
+        !successDone || !cartFooter
+      ) {
+        console.error("Phone demo: One or more required HTML elements are missing.");
+        return;
+      }
+
+
+      /* =====================================
+         SINGLE CART SYSTEM
+      ===================================== */
+
+      let cart = [];
+
+
+      function getCartCount() {
+        return cart.reduce((total, item) => total + item.quantity, 0);
+      }
+
+
+      function getCartTotal() {
+        return cart.reduce(
+          (total, item) => total + item.price * item.quantity,
+          0
+        );
+      }
+
+
+      function updateCart() {
+
+        const count = getCartCount();
+        const total = getCartTotal();
+
+        cartCount.textContent =
+          count + (count === 1 ? " Item" : " Items");
+
+        cartButton.textContent = count > 0
+          ? "View Cart · ₹" + total
+          : "View Cart →";
+
+        cartTotal.textContent = "₹" + total;
+
+        if (cart.length === 0) {
+          cartItems.innerHTML = `
+                <p class="demo-cart-empty">
+                    🛒 Your cart is empty.
+                    <br><br>
+                    Add delicious items to continue.
+                </p>
+            `;
+          return;
+        }
+
+        cartItems.innerHTML = cart.map(item => `
+            <div class="demo-cart-item">
+
+                <div>
+                    <div class="demo-cart-item-name">
+                        ${item.name}
+                    </div>
+
+                    <div class="demo-cart-item-price">
+                        ₹${item.price} × ${item.quantity}
+                    </div>
+                </div>
+
+                <strong>
+                    ₹${item.price * item.quantity}
+                </strong>
+
+            </div>
+        `).join("");
+      }
+
+
+      /* =====================================
+         ADD ITEMS TO CART
+      ===================================== */
+
+      function addToCart(item) {
+
+        const existing = cart.find(
+          cartItem => cartItem.name === item.name
+        );
+
+        if (existing) {
+          existing.quantity++;
+        } else {
+          cart.push({
+            name: item.name,
+            price: item.price,
+            quantity: 1
+          });
+        }
+
+        updateCart();
+      }
+
+
+      /* =====================================
+         RENDER MENU
+      ===================================== */
+
+      function renderMenu(category) {
+
+        const items = demoMenu[category];
+
+        if (!items) return;
+
+        const titles = {
+          starters: "Starters",
+          main: "Main Course",
+          biryani: "Biryani"
+        };
+
+        categoryTitle.textContent = titles[category];
+        itemCount.textContent = items.length + " Items";
+
+        menuBox.innerHTML = "";
+
+        document.querySelectorAll(".app-tab").forEach(button => {
+          const active = button.dataset.category === category;
+
+          button.classList.toggle("active", active);
+          button.setAttribute("aria-pressed", String(active));
+        });
+
+        items.forEach(item => {
+
+          const card = document.createElement("div");
+          card.className = "menu-item";
+
+          const image = document.createElement("div");
+          image.className = "item-img";
+          image.style.background = item.color;
+          image.textContent = item.emoji;
+
+          const title = document.createElement("div");
+          title.className = "item-title";
+          title.textContent = item.name;
+
+          const description = document.createElement("p");
+          description.className = "item-description";
+          description.textContent = item.desc;
+
+          const row = document.createElement("div");
+          row.className = "item-row";
+
+          const price = document.createElement("strong");
+          price.className = "item-price";
+          price.textContent = "₹" + item.price;
+
+          const addButton = document.createElement("button");
+          addButton.type = "button";
+          addButton.className = "item-add";
+          addButton.textContent = "+ Add";
+
+          addButton.addEventListener("click", function () {
+
+            addToCart(item);
+
+            addButton.textContent = "✓ Added";
+            addButton.classList.add("added");
+
+            setTimeout(() => {
+              addButton.textContent = "+ Add";
+              addButton.classList.remove("added");
+            }, 800);
+
+          });
+
+          row.append(price, addButton);
+          card.append(image, title, description, row);
+
+          menuBox.appendChild(card);
+        });
+
+        menuBox.scrollTop = 0;
+      }
+
+
+      /* =====================================
+         CATEGORY BUTTONS
+      ===================================== */
+
+      document.querySelectorAll(".app-tab").forEach(button => {
+
+        button.addEventListener("click", function () {
+          renderMenu(this.dataset.category);
+        });
+
+      });
+
+
+      /* =====================================
+         OPEN CART INSIDE IPHONE
+      ===================================== */
+
+      cartButton.addEventListener("click", function () {
+
+        successScreen.classList.remove("show");
+
+        cartItems.style.display = "block";
+        cartFooter.style.display = "block";
+
+        updateCart();
+
+        cartPanel.classList.add("open");
+      });
+
+
+      /* =====================================
+         CLOSE CART
+      ===================================== */
+
+      function closeCart() {
+        cartPanel.classList.remove("open");
+        successScreen.classList.remove("show");
+      }
+
+      closeButton.addEventListener("click", closeCart);
+      backButton.addEventListener("click", closeCart);
+
+
+      /* =====================================
+         CONFIRM ORDER
+      ===================================== */
+
+      confirmButton.addEventListener("click", function () {
+
+        if (cart.length === 0) {
+
+          cartItems.innerHTML = `
+                <div class="cart-warning">
+                    <span>⚠️</span>
+                    <p>Your cart is empty!</p>
+                    <small>Please add food items before confirming.</small>
+                </div>
+            `;
+
+          return;
+        }
+
+        // Hide cart details
+        cartItems.style.display = "none";
+        cartFooter.style.display = "none";
+
+        // Show success screen inside the phone
+        successScreen.classList.add("show");
+
+      });
+
+
+      /* =====================================
+         DONE BUTTON
+      ===================================== */
+
+      successDone.addEventListener("click", function () {
+
+        // Reset cart
+        cart = [];
+
+        updateCart();
+
+        // Restore cart content
+        cartItems.style.display = "block";
+        cartFooter.style.display = "block";
+
+        // Close success screen and cart
+        successScreen.classList.remove("show");
+        cartPanel.classList.remove("open");
+
+      });
+
+
+      /* =====================================
+         GET STARTED MODAL
+      ===================================== */
+
+      const modal = document.getElementById("signupModal");
+      const openButtons = document.querySelectorAll(".open-form-btn");
+      const closeModalButton = document.querySelector(".modal-close");
+      const form = document.getElementById("getStartedForm");
+
+      if (modal) {
+
+        openButtons.forEach(button => {
+          button.addEventListener("click", function () {
+            modal.classList.add("active");
+          });
+        });
+
+        if (closeModalButton) {
+          closeModalButton.addEventListener("click", function () {
+            modal.classList.remove("active");
+          });
+        }
+
+        window.addEventListener("click", function (event) {
+          if (event.target === modal) {
+            modal.classList.remove("active");
+          }
+        });
+
+        window.addEventListener("keydown", function (event) {
+          if (event.key === "Escape") {
+            modal.classList.remove("active");
+          }
+        });
+      }
+
+      if (form) {
+        form.addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          alert("Thank you! Your account request has been submitted.");
+
+          if (modal) modal.classList.remove("active");
+
+          form.reset();
+        });
+      }
+
+
+      /* =====================================
+         INITIALIZE PHONE
+      ===================================== */
+
+      renderMenu("starters");
+      updateCart();
+
+    });
+  </script>
+
+</body>
+
+</html>

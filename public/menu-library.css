@@ -418,3 +418,858 @@ body:has(.ml-wrap) .modal-card:has(.ml-wrap) {
 .ml-wrap .ml-category-check {
     color: #8bb8ff !important;
 }
+
+/* =========================================
+   IPHONE 17 PRO MAX - BLACK COPPER DESIGN
+========================================= */
+
+.phone-frame {
+    width: 330px;
+    height: 680px;
+    padding: 5px;
+    position: relative;
+    border-radius: 48px;
+
+    background:
+        linear-gradient(135deg,
+            #ffb36f,
+            #291007 12%,
+            #050505 30%,
+            #b85a25 48%,
+            #080808 65%,
+            #ffad70 85%,
+            #160902);
+
+    border: 2px solid #a85a2c;
+
+    box-shadow:
+        0 0 5px #ff9b52,
+        0 0 12px rgba(255, 112, 38, 0.8),
+        0 0 25px rgba(255, 112, 38, 0.45),
+        0 0 50px rgba(255, 112, 38, 0.2),
+        inset 0 0 12px #ff9b52,
+        0 30px 70px rgba(0, 0, 0, 0.35);
+
+    animation: copperPhoneFloat 6s ease-in-out infinite;
+}
+
+/* Glowing outer outline */
+
+.phone-frame::before {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border-radius: 51px;
+    border: 2px solid rgba(255, 158, 91, 0.85);
+
+    box-shadow:
+        0 0 5px #ff9b52,
+        0 0 12px rgba(255, 115, 43, 0.7),
+        inset 0 0 8px rgba(255, 135, 66, 0.6);
+
+    pointer-events: none;
+    z-index: 5;
+}
+
+/* Inner copper outline */
+
+.phone-frame::after {
+    content: "";
+    position: absolute;
+    inset: 5px;
+    border-radius: 42px;
+    border: 1px solid rgba(255, 165, 104, 0.75);
+
+    box-shadow:
+        0 0 7px rgba(255, 128, 54, 0.9),
+        inset 0 0 8px rgba(255, 128, 54, 0.45);
+
+    pointer-events: none;
+    z-index: 5;
+}
+
+/* Black bezel */
+
+.phone-bezel {
+    height: 100%;
+    width: 100%;
+    padding: 9px;
+    border-radius: 42px;
+    background: #020202;
+
+    box-shadow:
+        inset 0 0 10px rgba(255, 132, 65, 0.5),
+        0 0 8px rgba(255, 132, 65, 0.4);
+}
+
+/* Actual screen */
+
+.phone-screen {
+    height: 100%;
+    width: 100%;
+    border-radius: 34px;
+    overflow: hidden;
+
+    background: #fff;
+
+    display: flex;
+    flex-direction: column;
+
+    position: relative;
+    min-height: 0;
+}
+
+
+/* Dynamic Island */
+
+.phone-notch {
+    top: 9px;
+    width: 105px;
+    height: 27px;
+    border-radius: 20px;
+    background: #000;
+    z-index: 40;
+
+    box-shadow:
+        0 0 4px rgba(255, 132, 65, 0.4);
+}
+
+.notch-speaker {
+    background: #191919;
+}
+
+.notch-camera {
+    background: #080d18;
+    box-shadow:
+        inset 0 0 5px #16416b,
+        0 0 3px #1d4e7a;
+}
+
+/* Side buttons */
+
+.phone-btn-mute,
+.phone-btn-vol-up,
+.phone-btn-vol-down,
+.phone-btn-power {
+    background: linear-gradient(90deg,
+            #1a0904,
+            #ff9d5c,
+            #5a230e);
+
+    box-shadow:
+        0 0 5px rgba(255, 135, 67, 0.7);
+}
+
+/* =========================================
+   MINIMAL ORANGE RESTAURANT HEADER
+========================================= */
+
+.app-header {
+    flex: 0 0 auto;
+
+    min-height: 92px;
+    padding: 47px 15px 12px;
+
+    background: linear-gradient(135deg,
+            #ed641c,
+            #d94b08);
+
+    color: #fff;
+    border-radius: 0;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.app-header h3 {
+    font-size: 16px;
+    font-weight: 800;
+    color: #fff;
+    margin: 0;
+    letter-spacing: -0.3px;
+}
+
+.app-header p {
+    display: none;
+}
+
+/* =========================================
+   CATEGORY NAVIGATION
+========================================= */
+
+.app-tabs {
+    flex: 0 0 auto;
+
+    display: flex;
+    gap: 7px;
+
+    padding: 10px 9px;
+
+    background: #fff;
+    border-bottom: 1px solid #eee;
+
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.app-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.app-tab {
+    flex: 1 0 auto;
+
+    padding: 8px 11px;
+
+    border-radius: 30px;
+    border: 1px solid #f2cbb9;
+
+    background: #fff8f4;
+    color: #8b3d1c;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    white-space: nowrap;
+    cursor: pointer;
+
+    transition: all 0.25s ease;
+}
+
+.app-tab.active {
+    background: #ed5a0b;
+    border-color: #ed5a0b;
+    color: #fff;
+
+    box-shadow:
+        0 3px 9px rgba(230, 81, 0, 0.25);
+}
+
+.app-tab:active {
+    transform: scale(0.94);
+}
+
+/* =========================================
+   MENU HEADING
+========================================= */
+
+.app-menu-heading {
+    flex: 0 0 auto;
+
+    padding: 8px 12px 4px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background: #fff;
+}
+
+.app-menu-heading strong {
+    font-size: 11px;
+    font-weight: 800;
+    color: #222;
+}
+
+.app-menu-heading span {
+    font-size: 9px;
+    color: #888;
+}
+
+/* =========================================
+   SCROLLABLE MENU INSIDE PHONE
+========================================= */
+
+.app-grid {
+    flex: 1 1 auto;
+    min-height: 0;
+
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 9px;
+    padding: 10px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    background: #f8f8f8;
+
+    overscroll-behavior: contain;
+
+    scrollbar-width: thin;
+    scrollbar-color: #ccc transparent;
+}
+
+.app-grid::-webkit-scrollbar {
+    width: 4px;
+}
+
+.app-grid::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+}
+
+/* Food cards */
+
+.menu-item {
+    min-width: 0;
+
+    padding: 8px;
+
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 11px;
+
+    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.04);
+
+    animation: menuCardAppear 0.35s ease both;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.menu-item:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 6px 14px rgba(230, 81, 0, 0.12);
+}
+
+/* Food images */
+
+.item-img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+
+    border-radius: 8px;
+
+    background: #ffe0ca;
+
+    overflow: hidden;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.item-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Food names */
+
+.item-title {
+    font-size: 10px;
+    font-weight: 800;
+    color: #222;
+
+    margin-top: 7px;
+    margin-bottom: 4px;
+}
+
+/* Food prices */
+
+.item-price {
+    font-size: 10px;
+    font-weight: 800;
+    color: #e65100;
+}
+
+/* Add button */
+
+.item-add {
+    min-width: 25px;
+    min-height: 25px;
+
+    border-radius: 7px;
+
+    background: #fff0e7;
+    border: 1px solid #ffd0b5;
+
+    color: #e65100;
+
+    font-size: 12px;
+    font-weight: 900;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+.item-add:hover,
+.item-add.added {
+    background: #e65100;
+    border-color: #e65100;
+    color: #fff;
+}
+
+/* =========================================
+   VIEW CART - INSIDE IPHONE
+========================================= */
+
+.app-cart-bar {
+    position: relative;
+
+    flex: 0 0 auto;
+    width: 100%;
+
+    min-height: 47px;
+
+    padding: 7px 11px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+
+    background: #fff;
+
+    border-top: 1px solid #eee;
+
+    box-shadow:
+        0 -3px 10px rgba(0, 0, 0, 0.04);
+
+    z-index: 10;
+}
+
+.app-cart-bar span {
+    font-size: 10px;
+    font-weight: 800;
+    color: #333;
+}
+
+#demo-cart-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 9px 13px;
+
+    border: none;
+    border-radius: 7px;
+
+    background: #e65100;
+    color: #fff;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 3px 8px rgba(230, 81, 0, 0.2);
+
+    transition: all 0.25s ease;
+}
+
+#demo-cart-button:hover {
+    background: #c94700;
+    transform: translateY(-2px);
+}
+
+#demo-cart-button:active {
+    transform: scale(0.95);
+}
+
+/* =========================================
+   HOME INDICATOR
+========================================= */
+
+.phone-home-indicator {
+    flex: 0 0 13px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: #fff;
+}
+
+.phone-home-indicator::after {
+    content: "";
+
+    width: 75px;
+    height: 4px;
+
+    border-radius: 10px;
+    background: #111;
+}
+
+/* =========================================
+   ANIMATIONS
+========================================= */
+
+@keyframes copperPhoneFloat {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes menuCardAppear {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 480px) {
+    .phone-frame {
+        width: min(330px, calc(100vw - 50px));
+        height: min(680px, calc(100vh - 80px));
+    }
+
+    .app-header {
+        min-height: 88px;
+    }
+
+    .app-tab {
+        padding: 8px 10px;
+        font-size: 9px;
+    }
+
+    .app-cart-bar {
+        min-height: 45px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .phone-frame {
+        animation: none;
+    }
+
+    .menu-item {
+        animation: none;
+    }
+}
+
+/* =========================================
+   CART PANEL INSIDE IPHONE
+========================================= */
+
+.phone-screen {
+    position: relative;
+    overflow: hidden;
+}
+
+.demo-cart-panel {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 13px;
+
+    height: 78%;
+
+    z-index: 50;
+
+    display: flex;
+    flex-direction: column;
+
+    background: #fff;
+
+    border-radius: 18px 18px 0 0;
+
+    box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.17);
+
+    transform: translateY(110%);
+    visibility: hidden;
+
+    transition:
+        transform 0.35s ease,
+        visibility 0.35s ease;
+}
+
+.demo-cart-panel.open {
+    transform: translateY(0);
+    visibility: visible;
+}
+
+/* Cart heading */
+
+.demo-cart-header {
+    flex: 0 0 auto;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 14px;
+
+    border-bottom: 1px solid #eee;
+}
+
+.demo-cart-header strong {
+    font-size: 15px;
+    color: #222;
+}
+
+#demo-cart-close {
+    width: 28px;
+    height: 28px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: #fff0e7;
+    color: #e65100;
+
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* Cart items */
+
+.demo-cart-items {
+    flex: 1;
+    min-height: 0;
+
+    padding: 12px;
+
+    overflow-y: auto;
+}
+
+.demo-cart-empty {
+    text-align: center;
+    padding: 30px 10px;
+
+    color: #999;
+    font-size: 12px;
+}
+
+.demo-cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 12px 0;
+
+    border-bottom: 1px solid #eee;
+}
+
+.demo-cart-item-name {
+    font-size: 11px;
+    font-weight: 800;
+    color: #333;
+}
+
+.demo-cart-item-price {
+    font-size: 10px;
+    color: #888;
+    margin-top: 4px;
+}
+
+/* Cart footer */
+
+.demo-cart-footer {
+    flex: 0 0 auto;
+
+    padding: 12px;
+
+    border-top: 1px solid #eee;
+    background: #fff;
+}
+
+.demo-cart-total {
+    display: flex;
+    justify-content: space-between;
+
+    margin-bottom: 12px;
+
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.demo-cart-total strong {
+    color: #e65100;
+}
+
+/* Confirm Order */
+
+#demo-confirm-order {
+    width: 100%;
+    padding: 12px;
+
+    border: none;
+    border-radius: 9px;
+
+    background: #e65100;
+    color: white;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition: 0.25s ease;
+}
+
+#demo-confirm-order:hover {
+    background: #c74700;
+    transform: translateY(-2px);
+}
+
+#demo-cart-back {
+    width: 100%;
+    padding: 9px;
+
+    margin-top: 7px;
+
+    border: 1px solid #f0d4c4;
+    border-radius: 9px;
+
+    background: #fff8f4;
+    color: #e65100;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+/* =========================================
+   ORDER SUCCESS ANIMATION
+========================================= */
+
+.demo-order-success {
+    position: absolute;
+    inset: 0;
+
+    z-index: 5;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: #fff;
+
+    text-align: center;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition: opacity 0.3s ease;
+}
+
+.demo-order-success.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.success-tick {
+    width: 85px;
+    height: 85px;
+
+    margin-bottom: 18px;
+
+    animation: successPop 0.5s ease both;
+}
+
+.success-tick svg {
+    width: 100%;
+    height: 100%;
+}
+
+.success-tick circle {
+    fill: #e9f9ef;
+    stroke: #22b45e;
+    stroke-width: 3;
+
+    stroke-dasharray: 164;
+    stroke-dashoffset: 164;
+
+    animation: drawCircle 0.7s ease forwards;
+}
+
+.success-tick path {
+    fill: none;
+    stroke: #22b45e;
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+
+    stroke-dasharray: 40;
+    stroke-dashoffset: 40;
+
+    animation: drawTick 0.45s 0.55s ease forwards;
+}
+
+.demo-order-success h3 {
+    font-size: 17px;
+    font-weight: 800;
+    color: #168b48;
+
+    margin-bottom: 8px;
+}
+
+.demo-order-success p {
+    font-size: 11px;
+    color: #777;
+
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+#demo-success-done {
+    width: 100%;
+
+    padding: 11px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: #20a957;
+    color: #fff;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    cursor: pointer;
+}
+
+@keyframes drawCircle {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes drawTick {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes successPop {
+    from {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
