@@ -1,6 +1,12 @@
 // Shared helpers for the login, admin, dashboard and menu pages (talks to /api/v1 with the login cookie).
 // ---- loading feedback: a progress bar while any request runs, a spinner on the button that was pressed ----
-let inflight = 0, apiStarts = 0, barTimer;
+window.__vignaLoadingState = window.__vignaLoadingState || {
+  inflight: 0,
+  apiStarts: 0,
+  barTimer: null
+};
+
+const vignaLoadingState = window.__vignaLoadingState;
 
 function setDashboardTheme(theme) {
   if (theme !== 'light' && theme !== 'dark') {
@@ -15,8 +21,32 @@ if (document.documentElement.dataset.theme) {
   document.documentElement.classList.remove('theme-loading');
 }
 
-const loadStart = () => { inflight++; apiStarts++; clearTimeout(barTimer); barTimer = setTimeout(() => document.documentElement.classList.add('is-loading'), 120); }; // short requests never flash the bar
-const loadEnd = () => { inflight = Math.max(0, inflight - 1); if (!inflight) { clearTimeout(barTimer); document.documentElement.classList.remove('is-loading'); document.dispatchEvent(new Event('api-idle')); } };
+const loadStart = () => {
+  vignaLoadingState.inflight++;
+  vignaLoadingState.apiStarts++;
+
+  clearTimeout(vignaLoadingState.barTimer);
+
+  vignaLoadingState.barTimer = setTimeout(() => {
+    document.documentElement.classList.add('is-loading');
+  }, 120);
+};
+
+const loadEnd = () => {
+  vignaLoadingState.inflight = Math.max(
+    0,
+    vignaLoadingState.inflight - 1
+  );
+
+  if (vignaLoadingState.inflight === 0) {
+    clearTimeout(vignaLoadingState.barTimer);
+
+    document.documentElement.classList.remove('is-loading');
+
+    document.dispatchEvent(new Event('api-idle'));
+  }
+};; // short requests never flash the bar
+
 document.body.insertAdjacentHTML('beforeend', '<div class="loadbar" aria-hidden="true"></div>');
 // Any form submit: show a spinner on its button until the request(s) it started finish.
 document.addEventListener('submit', (e) => {
@@ -55,9 +85,9 @@ function toast(msg) {
 }
 async function requireRole(role) {
   try { const { user } = await api('/api/v1/auth/me'); if (user.role !== role) throw new Error('role'); return user; }
-  catch { location.href = '/login'; await new Promise(() => {}); }
+  catch { location.href = '/login'; await new Promise(() => { }); }
 }
-async function logout() { try { await api('/api/v1/auth/session', 'DELETE'); } catch {} location.href = '/login'; }
+async function logout() { try { await api('/api/v1/auth/session', 'DELETE'); } catch { } location.href = '/login'; }
 
 function tabs(root, onChange) {
   const buttons = [...root.querySelectorAll('[data-tab]')];
@@ -208,11 +238,11 @@ const genPassword = () => {
 // apply('grid' | 'list') is called straight away and on every change.
 function viewToggle(root, key, apply) {
   let mode = 'grid';
-  try { mode = localStorage.getItem(key) === 'list' ? 'list' : 'grid'; } catch {}
+  try { mode = localStorage.getItem(key) === 'list' ? 'list' : 'grid'; } catch { }
   root.classList.add('vtoggle'); root.setAttribute('role', 'group'); root.setAttribute('aria-label', 'Layout');
   root.innerHTML = `<button type="button" data-layout="grid" aria-label="Grid view" title="Grid view">${ico('grid')}</button><button type="button" data-layout="list" aria-label="List view" title="List view">${ico('list')}</button>`;
   const set = (m) => {
-    mode = m; try { localStorage.setItem(key, m); } catch {}
+    mode = m; try { localStorage.setItem(key, m); } catch { }
     root.querySelectorAll('button').forEach((b) => { const on = b.dataset.layout === m; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
     apply(m);
   };

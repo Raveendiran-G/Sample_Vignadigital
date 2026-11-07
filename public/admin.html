@@ -2,127 +2,210 @@
 <html lang="en">
 
 <head>
-  <meta name="color-scheme" content="dark">
+  <meta name="color-scheme" content="light">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="stylesheet" href="/style.css">
   <title>Admin · Digital Menu</title>
-
   <style>
-    /* =========================================
-   ORDER OPTION TOGGLE
-   ========================================= */
+    /* =========================================================
+   VIGNADIGITAL — COMPLETE WHITE THEME
+   Super Admin + Owner Dashboard Theme Support
+========================================================= */
 
-    .order-option {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 9px;
-      cursor: pointer;
-      white-space: nowrap;
+    /* -------------------------
+   GLOBAL THEME
+------------------------- */
+
+    :root {
+      color-scheme: light !important;
+
+      --admin-bg: #f8fafc;
+      --admin-card: #ffffff;
+      --admin-row: #ffffff;
+      --admin-hover: #f5f5f5;
+      --admin-border: #e5e7eb;
+      --admin-text: #171717;
+      --admin-muted: #666666;
+      --admin-brand: #754033;
+      --admin-danger: #dc2626;
     }
 
-    /* Toggle base - OFF RED */
+    /* -------------------------
+   PAGE BACKGROUND
+------------------------- */
 
-    .order-option input[type="checkbox"] {
-      appearance: none;
-      -webkit-appearance: none;
-
-      position: relative;
-
-      width: 46px;
-      height: 25px;
-      min-width: 46px;
-
-      margin: 0;
-
-      border-radius: 30px;
-      background: #dc3545;
-      border: none;
-
-      cursor: pointer;
-
-      transition: background 0.25s ease;
+    html,
+    body {
+      background: var(--admin-bg) !important;
+      background-color: var(--admin-bg) !important;
+      color: var(--admin-text) !important;
+      color-scheme: light !important;
     }
 
-    /* White sliding circle */
+    /* -------------------------
+   SIDEBAR
+------------------------- */
 
-    .order-option input[type="checkbox"]::before {
-      content: "";
-
-      position: absolute;
-
-      width: 19px;
-      height: 19px;
-
-      left: 3px;
-      top: 3px;
-
-      background: #fff;
-      border-radius: 50%;
-
-      transition: transform 0.25s ease;
-
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+    .side {
+      background: #ffffff !important;
+      color: #171717 !important;
+      border-right: 1px solid var(--admin-border) !important;
+      box-shadow: 2px 0 12px rgba(0, 0, 0, .04) !important;
     }
 
-    /* ON - GREEN */
-
-    .order-option input[type="checkbox"]:checked {
-      background: #16a34a !important;
+    .side .brand,
+    .side .brand small {
+      color: #171717 !important;
     }
 
-    /* Move circle right when ON */
-
-    .order-option input[type="checkbox"]:checked::before {
-      transform: translateX(21px);
+    .side .tabs {
+      background: #ffffff !important;
     }
 
-    /* OFF - RED */
-
-    .order-option input[type="checkbox"]:not(:checked) {
-      background: #dc3545 !important;
+    .side .tabs button {
+      background: #ffffff !important;
+      color: #171717 !important;
+      border: 1px solid transparent !important;
+      box-shadow: none !important;
+      transition: background .2s ease, border-color .2s ease !important;
     }
 
-    /* Toggle text */
-
-    .order-option span {
-      font-size: 12px;
-      font-weight: 700;
-      min-width: 25px;
+    .side .tabs button:hover {
+      background: #f5f5f5 !important;
+      color: #171717 !important;
     }
 
-    /* ON text - GREEN */
-
-    .order-option .enabled {
-      color: #16a34a !important;
+    .side .tabs button.on {
+      background: #f1e9e6 !important;
+      color: #754033 !important;
+      border-color: #e5d4ce !important;
+      font-weight: 800 !important;
     }
 
-    /* OFF text - RED */
-
-    .order-option .disabled {
-      color: #ef4444 !important;
+    /* Logout */
+    .side .logout,
+    .side .logout:hover {
+      background: #ffffff !important;
+      color: #171717 !important;
+      -webkit-text-fill-color: #171717 !important;
+      border: 1px solid #d1d5db !important;
+      border-radius: 10px !important;
+      font-weight: 700 !important;
     }
 
-    /* Disabled toggle */
+    /* -------------------------
+   MAIN CONTENT
+------------------------- */
 
-    .order-option input:disabled {
-      opacity: 0.5;
-      cursor: wait;
+    .main {
+      background: #f8fafc !important;
+      color: #171717 !important;
     }
 
+    .main .page-head {
+      color: #171717 !important;
+    }
 
-    /* =========================================
-   RESTAURANT TABLE ALIGNMENT
-   ========================================= */
+    .main .page-head h1 {
+      color: #171717 !important;
+    }
+
+    .main .page-head p {
+      color: #666666 !important;
+    }
+
+    /* -------------------------
+   CARDS
+------------------------- */
+
+    .main .card,
+    .main section .card,
+    .main [data-panel]>.card,
+    #customMenuCard {
+      background: #ffffff !important;
+      color: #171717 !important;
+      border: 1px solid var(--admin-border) !important;
+      border-radius: 12px !important;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, .035) !important;
+    }
+
+    /* -------------------------
+   TEXT
+------------------------- */
+
+    .main h1,
+    .main h2,
+    .main h3,
+    .main h4,
+    .main p,
+    .main label,
+    .main strong,
+    .main b,
+    .main td,
+    .main th {
+      color: #171717;
+    }
+
+    .main .muted,
+    .main .small,
+    .main small {
+      color: #666666 !important;
+    }
+
+    /* -------------------------
+   STATISTICS
+------------------------- */
+
+    .main .stat {
+      background: #ffffff !important;
+      color: #171717 !important;
+      border: 1px solid var(--admin-border) !important;
+      border-radius: 11px !important;
+    }
+
+    .main .stat span {
+      color: #666666 !important;
+    }
+
+    .main .stat b {
+      color: #171717 !important;
+    }
+
+    .main .stat.hl {
+      background: #f7efec !important;
+      border-color: #d8bcb2 !important;
+    }
+
+    .main .stat.hl b {
+      color: var(--admin-brand) !important;
+    }
+
+    /* -------------------------
+   RESTAURANT TABLE
+------------------------- */
 
     #rList {
-      width: 100%;
-      overflow-x: auto;
+      width: 100% !important;
+      overflow-x: auto !important;
+      background: #ffffff !important;
+      color: #171717 !important;
+      border: 1px solid var(--admin-border) !important;
+      border-radius: 10px !important;
+    }
+
+    .table-wrap {
+      background: #ffffff !important;
+      color: #171717 !important;
+      border: 1px solid var(--admin-border) !important;
+      border-radius: 10px !important;
     }
 
     #rList table {
-      width: 100%;
+      width: 100% !important;
+      background: #ffffff !important;
+      color: #171717 !important;
+      border-collapse: collapse !important;
       text-align: center !important;
     }
 
@@ -130,232 +213,426 @@
     #rList table td {
       text-align: center !important;
       vertical-align: middle !important;
+      border-color: #eeeeee !important;
     }
 
-    /* Center action buttons */
-
-    #rList .actions {
-      display: flex;
-      justify-content: center !important;
-      align-items: center !important;
-      flex-wrap: nowrap;
-      gap: 5px;
+    /* Table header */
+    #rList table thead,
+    #rList table thead tr,
+    #rList table th {
+      background: #f3f4f6 !important;
+      color: #171717 !important;
+      font-weight: 800 !important;
     }
 
-    /* Center password and visibility button */
-
-    #rList .pwcell {
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      gap: 6px;
+    /* Table rows */
+    #rList table tbody tr {
+      background: #ffffff !important;
+      color: #171717 !important;
+      transition: background .2s ease !important;
     }
 
-    /* Center order toggle */
-
-    #rList .order-option {
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
+    #rList table tbody tr:nth-child(even) {
+      background: #fafafa !important;
     }
 
-    /* Center badges */
-
-    #rList .pill {
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
+    #rList table tbody td {
+      background: transparent !important;
+      color: #171717 !important;
+      border-bottom: 1px solid #eeeeee !important;
     }
-
-
-    /* =========================================
-   SUPER ADMIN LOGOUT BUTTON
-   ========================================= */
-
-    .side .logout {
-      background: #16a34a !important;
-      color: #ffffff !important;
-
-      border: 1px solid #16a34a !important;
-      border-radius: 11px !important;
-
-      font-weight: 700 !important;
-
-      transition: background 0.2s ease,
-        border-color 0.2s ease !important;
-    }
-
-    .side .logout:hover {
-      background: #15803d !important;
-      border-color: #15803d !important;
-      color: #ffffff !important;
-    }
-
-
-    /* =========================================
-   OWNER DASHBOARD THEME
-   ========================================= */
-
-    body.owner-dashboard {
-
-      --brand: var(--theme);
-      --brand-600: var(--theme-dark);
-      --brand-50: var(--theme-light);
-      --brand-ink: var(--theme-text);
-
-    }
-
-
-    /* Sidebar active item */
-
-    body.owner-dashboard .tabs button.on {
-
-      background: var(--theme-light) !important;
-      color: var(--theme-dark) !important;
-
-    }
-
-
-    /* Main buttons */
-
-    body.owner-dashboard button:not(.ghost):not(.danger),
-    body.owner-dashboard .btn:not(.ghost) {
-
-      background: var(--theme) !important;
-      color: var(--theme-text) !important;
-
-    }
-
 
     /* Hover */
-
-    body.owner-dashboard button:not(.ghost):hover,
-    body.owner-dashboard .btn:not(.ghost):hover {
-
-      background: var(--theme-dark) !important;
-
+    #rList table tbody tr:hover,
+    #rList table tbody tr:hover td {
+      background: #f4efed !important;
+      color: #171717 !important;
     }
 
-
-    /* Selected tabs */
-
-    body.owner-dashboard .subtabs button.on {
-
-      background: var(--theme) !important;
-      color: var(--theme-text) !important;
-
+    /* Action buttons */
+    #rList .actions {
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      flex-wrap: nowrap !important;
+      gap: 5px !important;
     }
 
-
-    /* Highlighted cards */
-
-    body.owner-dashboard .stat.hl {
-
-      background: var(--theme-light) !important;
-      border-color: var(--theme-border) !important;
-
+    /* Password cell */
+    #rList .pwcell {
+      display: inline-flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 6px !important;
     }
 
-    body.owner-dashboard .stat.hl b {
-
-      color: var(--theme-dark) !important;
-
+    /* Status badges */
+    #rList .pill {
+      display: inline-flex !important;
+      justify-content: center !important;
+      align-items: center !important;
     }
 
+    /* -------------------------
+   INPUTS AND SELECTS
+------------------------- */
 
-    /* Item prices */
-
-    body.owner-dashboard .item-body .price {
-
-      color: var(--theme) !important;
-
+    .main input:not([type="checkbox"]),
+    .main select,
+    .main textarea {
+      background: #ffffff !important;
+      color: #171717 !important;
+      border: 1px solid #d1d5db !important;
+      border-radius: 8px !important;
+      color-scheme: light !important;
     }
 
-    /* ==========================================
-   SUPER ADMIN - FINAL COLOR CORRECTIONS
-   Preserve original reference design
-   ========================================== */
-
-    /* LOGOUT BUTTON - GREEN */
-
-    .side .logout {
-      background: #16a34a !important;
-      color: #ffffff !important;
-      border: 1px solid #16a34a !important;
+    .main input::placeholder,
+    .main textarea::placeholder {
+      color: #888888 !important;
     }
 
-    .side .logout:hover {
-      background: #15803d !important;
-      border-color: #15803d !important;
-      color: #ffffff !important;
+    .main input:focus,
+    .main select:focus,
+    .main textarea:focus {
+      outline: none !important;
+      border-color: #754033 !important;
+      box-shadow: 0 0 0 3px rgba(117, 64, 51, .10) !important;
     }
 
+    .main input[type="file"] {
+      background: #ffffff !important;
+      color: #171717 !important;
+    }
 
-    /* ORDER OPTION TOGGLE */
+    /* -------------------------
+   ALL ADMIN BUTTONS
+------------------------- */
+
+    .main button,
+    .main .btn,
+    #rList button,
+    #customMenuCard button,
+    .modal button {
+      background: #ffffff !important;
+      color: #171717 !important;
+      -webkit-text-fill-color: #171717 !important;
+      border: 1px solid #d1d5db !important;
+      border-radius: 8px !important;
+      box-shadow: none !important;
+      transition:
+        background .2s ease,
+        border-color .2s ease,
+        transform .2s ease !important;
+    }
+
+    .main button:hover,
+    .main .btn:hover,
+    #rList button:hover,
+    #customMenuCard button:hover,
+    .modal button:hover {
+      background: #f2f2f2 !important;
+      color: #171717 !important;
+      -webkit-text-fill-color: #171717 !important;
+      border-color: #a3a3a3 !important;
+    }
+
+    .main button:active,
+    #rList button:active {
+      transform: scale(.98) !important;
+    }
+
+    /* Ghost buttons */
+    button.ghost,
+    .btn.ghost {
+      background: #ffffff !important;
+      color: #171717 !important;
+      -webkit-text-fill-color: #171717 !important;
+      border: 1px solid #d1d5db !important;
+    }
+
+    /* Primary buttons */
+    .main button:not(.ghost):not(.danger),
+    .main .btn:not(.ghost) {
+      background: #ffffff !important;
+      color: #171717 !important;
+      -webkit-text-fill-color: #171717 !important;
+      border: 1px solid #d1d5db !important;
+    }
+
+    /* Danger buttons */
+    button.danger,
+    #rList button.danger {
+      background: #ffffff !important;
+      color: #dc2626 !important;
+      -webkit-text-fill-color: #dc2626 !important;
+      border: 1px solid #fecaca !important;
+    }
+
+    button.danger:hover,
+    #rList button.danger:hover {
+      background: #fff1f1 !important;
+      color: #b91c1c !important;
+      -webkit-text-fill-color: #b91c1c !important;
+    }
+
+    /* Copy credentials */
+    #copyCreds,
+    #copyCreds:hover,
+    #copyCreds:active {
+      background: #ffffff !important;
+      color: #171717 !important;
+      -webkit-text-fill-color: #171717 !important;
+      border: 1px solid #d1d5db !important;
+      border-radius: 9px !important;
+      font-weight: 700 !important;
+    }
+
+    /* -------------------------
+   ORDER OPTION TOGGLE
+------------------------- */
+
+    .order-option {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 9px !important;
+      cursor: pointer !important;
+      white-space: nowrap !important;
+    }
 
     .order-option input[type="checkbox"] {
+      appearance: none !important;
+      -webkit-appearance: none !important;
+      position: relative !important;
+      width: 46px !important;
+      height: 25px !important;
+      min-width: 46px !important;
+      margin: 0 !important;
+      border-radius: 30px !important;
       background: #dc3545 !important;
-      transition: background 0.25s ease !important;
+      border: none !important;
+      cursor: pointer !important;
+      transition: background .25s ease !important;
     }
 
-    /* ON - GREEN */
+    .order-option input[type="checkbox"]::before {
+      content: "" !important;
+      position: absolute !important;
+      width: 19px !important;
+      height: 19px !important;
+      left: 3px !important;
+      top: 3px !important;
+      background: #ffffff !important;
+      border-radius: 50% !important;
+      transition: transform .25s ease !important;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, .25) !important;
+    }
 
     .order-option input[type="checkbox"]:checked {
       background: #16a34a !important;
     }
 
-    /* OFF - RED */
-
-    .order-option input[type="checkbox"]:not(:checked) {
-      background: #dc3545 !important;
+    .order-option input[type="checkbox"]:checked::before {
+      transform: translateX(21px) !important;
     }
 
-    /* SLIDING CIRCLE */
-
-    .order-option input[type="checkbox"]::before {
-      background: #ffffff !important;
-      transition: transform 0.25s ease !important;
+    .order-option input[type="checkbox"]:disabled {
+      opacity: .5 !important;
+      cursor: wait !important;
     }
 
-    /* ON TEXT */
+    .order-option span {
+      font-size: 12px !important;
+      font-weight: 700 !important;
+      min-width: 25px !important;
+    }
 
     .order-option .enabled {
       color: #16a34a !important;
     }
 
-    /* OFF TEXT */
-
     .order-option .disabled {
-      color: #ef4444 !important;
+      color: #dc3545 !important;
     }
 
-    /* COPY DETAILS BUTTON - ORANGE */
-    #copyCreds {
-      background: #f56623 !important;
-      background-color: #f56623 !important;
-      color: #ffffff !important;
-      border: 1px solid #f56623 !important;
-      border-radius: 9px !important;
+    #rList .order-option {
+      display: inline-flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+    }
+
+    /* -------------------------
+   MODALS
+------------------------- */
+
+    .modal-box,
+    .modal-content {
+      background: #ffffff !important;
+      color: #171717 !important;
+      border-color: #e5e7eb !important;
+    }
+
+    .modal h1,
+    .modal h2,
+    .modal h3,
+    .modal p,
+    .modal label,
+    .modal span,
+    .modal b {
+      color: #171717 !important;
+    }
+
+    .modal input:not([type="checkbox"]),
+    .modal select,
+    .modal textarea {
+      background: #ffffff !important;
+      color: #171717 !important;
+      border: 1px solid #d1d5db !important;
+      color-scheme: light !important;
+    }
+
+    .modal input::placeholder {
+      color: #888888 !important;
+    }
+
+    /* -------------------------
+   BADGES AND NOTES
+------------------------- */
+
+    .pill {
+      color: #171717 !important;
+    }
+
+    .note {
+      background: #f8f8f8 !important;
+      color: #333333 !important;
+      border-color: #e5e5e5 !important;
+    }
+
+    .err {
+      color: #dc2626 !important;
+    }
+
+    .main a {
+      color: #754033 !important;
+    }
+
+    /* RESTAURANT NAMES – BLACK TEXT ON WHITE */
+
+    #rList tbody tr td:first-child,
+    #rList tbody tr td:first-child *,
+    #rList tbody tr td:first-child a,
+    #rList tbody tr td:first-child span,
+    #rList tbody tr td:first-child strong {
+      background: transparent !important;
+      background-color: transparent !important;
+
+      color: #292929 !important;
+      -webkit-text-fill-color: #292929 !important;
+
       font-weight: 700 !important;
+      text-decoration: none !important;
+      text-shadow: none !important;
+
       opacity: 1 !important;
+      visibility: visible !important;
     }
 
-    #copyCreds:hover {
-      background: #e65312 !important;
-      background-color: #e65312 !important;
-      border-color: #e65312 !important;
-      color: #ffffff !important;
+    /* Remove blue highlight from restaurant names */
+    #rList tbody tr td:first-child a,
+    #rList tbody tr td:first-child button {
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
     }
 
-    #copyCreds:active {
-      background: #d9480f !important;
-      border-color: #d9480f !important;
+    /* Restaurant name hover */
+    #rList tbody tr td:first-child a:hover {
+      color: #754033 !important;
+      -webkit-text-fill-color: #754033 !important;
+      text-decoration: underline !important;
     }
 
-    /* =========================================
-   ALL MENU MANAGE SECTIONS
-   FOOD IMAGES - 1:1 SQUARE RATIO
-   ========================================= */
+    /* Table headings */
+    #rList thead th {
+      background: #f3f4f6 !important;
+      color: #333333 !important;
+    }
+
+    /* Text selection */
+    #rList ::selection {
+      background: #eadbd5 !important;
+      color: #292929 !important;
+    }
+
+    /* -------------------------
+   OWNER DASHBOARD THEME
+   Preserve restaurant's selected theme
+------------------------- */
+
+    body.owner-dashboard {
+      --brand: var(--theme, #754033);
+      --brand-600: var(--theme-dark, #603328);
+      --brand-50: var(--theme-light, #f7efec);
+      --brand-ink: var(--theme-text, #ffffff);
+    }
+
+    /* Owner sidebar active tab */
+    body.owner-dashboard .tabs button.on {
+      background: var(--theme-light, #f7efec) !important;
+      color: var(--theme-dark, #603328) !important;
+    }
+
+    /* Owner dashboard primary buttons */
+    body.owner-dashboard button:not(.ghost):not(.danger),
+    body.owner-dashboard .btn:not(.ghost) {
+      background: var(--theme, #754033) !important;
+      color: var(--theme-text, #ffffff) !important;
+      -webkit-text-fill-color: var(--theme-text, #ffffff) !important;
+      border-color: var(--theme, #754033) !important;
+    }
+
+    /* Owner dashboard button hover */
+    body.owner-dashboard button:not(.ghost):hover,
+    body.owner-dashboard .btn:not(.ghost):hover {
+      background: var(--theme-dark, #603328) !important;
+    }
+
+    /* Owner dashboard selected subtabs */
+    body.owner-dashboard .subtabs button.on {
+      background: var(--theme, #754033) !important;
+      color: var(--theme-text, #ffffff) !important;
+    }
+
+    /* Owner dashboard highlighted stats */
+    body.owner-dashboard .stat.hl {
+      background: var(--theme-light, #f7efec) !important;
+      border-color: var(--theme-border, #e5d4ce) !important;
+    }
+
+    body.owner-dashboard .stat.hl b {
+      color: var(--theme-dark, #603328) !important;
+    }
+
+    /* Item prices */
+    body.owner-dashboard .item-body .price {
+      color: var(--theme, #754033) !important;
+    }
+
+    /* -------------------------
+   COPY DETAILS BUTTON
+------------------------- */
+
+    body.owner-dashboard #copyCreds {
+      background: #ffffff !important;
+      color: #171717 !important;
+    }
+
+    /* -------------------------
+   MENU FOOD IMAGES
+   Keep square image ratio
+------------------------- */
 
     [id^="menu-"] .thumb,
     [id^="menu-"] .item-thumb,
@@ -384,153 +661,1125 @@
       object-position: center !important;
     }
 
-    /* ============================================
-   VIGNADIGITAL SUPER ADMIN
-   FORCE DARK THEME ON ALL DEVICES
-   ============================================ */
+    /* -------------------------
+   RESPONSIVE TABLE
+------------------------- */
 
-    :root {
-      color-scheme: dark !important;
+    @media (max-width: 900px) {
+      #rList {
+        overflow-x: auto !important;
+      }
 
-      --admin-bg: #111113;
-      --admin-card: #1b1b20;
-      --admin-row: #222228;
-      --admin-row-hover: #2b2b32;
-      --admin-border: #303038;
-      --admin-text: #ffffff;
-      --admin-muted: #a1a1aa;
-      --admin-orange: #ff6426;
+      #rList table {
+        min-width: 900px !important;
+      }
+
+      #rList .actions {
+        flex-wrap: wrap !important;
+      }
     }
 
-    /* Main page */
-    html,
-    body {
-      background: var(--admin-bg) !important;
-      background-color: var(--admin-bg) !important;
-      color: var(--admin-text) !important;
-      color-scheme: dark !important;
-    }
+    /* -------------------------
+   FORCE WHITE THEME ON ALL DEVICES
+------------------------- */
 
-    /* Main dashboard cards */
-    .main .card,
-    .main section .card,
-    .main [data-panel]>.card {
-      background: var(--admin-card) !important;
-      background-color: var(--admin-card) !important;
-      color: var(--admin-text) !important;
-      border: 1px solid var(--admin-border) !important;
-    }
-
-    /* Restaurant table wrapper */
-    #rList,
-    .table-wrap {
-      background: var(--admin-card) !important;
-      color: var(--admin-text) !important;
-    }
-
-    /* Table */
-    #rList table {
-      background: var(--admin-card) !important;
-      color: var(--admin-text) !important;
-    }
-
-    /* Table headings */
-    #rList table thead,
-    #rList table thead tr,
-    #rList table th {
-      background: var(--admin-card) !important;
-      background-color: var(--admin-card) !important;
-      color: #a1a1aa !important;
-      border-color: var(--admin-border) !important;
-    }
-
-    /* All table rows */
-    #rList table tbody tr,
-    #rList table tbody tr:nth-child(even),
-    #rList table tbody tr:nth-child(odd) {
-      background: var(--admin-row) !important;
-      background-color: var(--admin-row) !important;
-      color: var(--admin-text) !important;
-    }
-
-    /* Table cells */
-    #rList table tbody td {
-      background: transparent !important;
-      background-color: transparent !important;
-      color: var(--admin-text) !important;
-      border-color: var(--admin-border) !important;
-    }
-
-    /* Hover */
-    #rList table tbody tr:hover,
-    #rList table tbody tr:hover td {
-      background: var(--admin-row-hover) !important;
-      color: var(--admin-text) !important;
-    }
-
-    /* Search and filter controls */
-    .main input,
-    .main select,
-    .main textarea {
-      background: #24242b !important;
-      background-color: #24242b !important;
-      color: #ffffff !important;
-      border-color: var(--admin-border) !important;
-      color-scheme: dark !important;
-    }
-
-    .main input::placeholder {
-      color: #85858f !important;
-    }
-
-    /* Headings and descriptions */
-    .main h1,
-    .main h2,
-    .main h3,
-    .main p,
-    .main label,
-    .main td,
-    .main th {
-      color: var(--admin-text);
-    }
-
-    /* Muted text */
-    .main .muted,
-    .main .small {
-      color: var(--admin-muted);
-    }
-
-    /* Preserve orange highlights */
-    .main .card h3,
-    .main .stat.hl b {
-      color: var(--admin-orange) !important;
-    }
-
-    /* Keep orange action buttons */
-    #rList .actions button:not(.ghost):not(.danger) {
-      background: var(--admin-orange) !important;
-      border-color: var(--admin-orange) !important;
-      color: #ffffff !important;
-    }
-
-    /* Dark theme even when device is in Light Mode */
-    @media (prefers-color-scheme: light) {
+    @media (prefers-color-scheme: dark) {
       :root {
-        color-scheme: dark !important;
+        color-scheme: light !important;
       }
 
       html,
-      body,
-      .main .card,
-      #rList,
-      #rList table {
-        background-color: var(--admin-bg) !important;
-        color: var(--admin-text) !important;
+      body {
+        background: #f8fafc !important;
+        color: #171717 !important;
       }
 
-      #rList table tbody tr {
-        background-color: var(--admin-row) !important;
+      body:not(.owner-dashboard) .side,
+      body:not(.owner-dashboard) .main,
+      body:not(.owner-dashboard) .main .card,
+      body:not(.owner-dashboard) #rList,
+      body:not(.owner-dashboard) #rList table {
+        background-color: #ffffff !important;
+        color: #171717 !important;
       }
+
+      body:not(.owner-dashboard) #rList table tbody tr,
+      body:not(.owner-dashboard) #rList table tbody td {
+        background-color: #ffffff !important;
+        color: #171717 !important;
+      }
+    }
+
+    /* ==========================================
+   SUPER ADMIN – RESTAURANT TABLE WHITE THEME
+========================================== */
+
+    /* Restaurant list container */
+    #rList,
+    #rList table {
+      background: #ffffff !important;
+      color: #171717 !important;
+    }
+
+    /* Search input */
+    .main input[type="search"],
+    .main input[type="text"],
+    .main input:not([type="checkbox"]):not([type="file"]) {
+      background: #ffffff !important;
+      color: #171717 !important;
+      -webkit-text-fill-color: #171717 !important;
+      border: 1px solid #d5d5d5 !important;
+      border-radius: 9px !important;
+      box-shadow: none !important;
+    }
+
+    /* Search placeholder */
+    .main input::placeholder {
+      color: #888888 !important;
+      -webkit-text-fill-color: #888888 !important;
+    }
+
+    /* Status dropdown */
+    .main select {
+      background: #ffffff !important;
+      color: #171717 !important;
+      -webkit-text-fill-color: #171717 !important;
+      border: 1px solid #d5d5d5 !important;
+      border-radius: 9px !important;
+    }
+
+    /* Table header */
+    #rList thead th {
+      background: #f3f4f6 !important;
+      color: #333333 !important;
+      border-bottom: 1px solid #e5e7eb !important;
+    }
+
+    /* Table rows */
+    #rList tbody tr,
+    #rList tbody tr:nth-child(even),
+    #rList tbody tr:nth-child(odd) {
+      background: #ffffff !important;
+    }
+
+    #rList tbody td {
+      background: transparent !important;
+      color: #222222 !important;
+      border-bottom: 1px solid #eeeeee !important;
+    }
+
+    /* Table hover */
+    #rList tbody tr:hover,
+    #rList tbody tr:hover td {
+      background: #faf7f6 !important;
+    }
+
+    /* All action buttons – white with black text */
+    #rList .actions button,
+    #rList td button {
+      background: #ffffff !important;
+      color: #171717 !important;
+      -webkit-text-fill-color: #171717 !important;
+      border: 1px solid #d1d5db !important;
+      border-radius: 8px !important;
+      box-shadow: none !important;
+      font-weight: 700 !important;
+      transition: .2s ease !important;
+    }
+
+    /* Button hover */
+    #rList .actions button:hover,
+    #rList td button:hover {
+      background: #f3f4f6 !important;
+      border-color: #9ca3af !important;
+    }
+
+    /* Manage Menu – white theme with brand text */
+    #rList button[data-action="manage-menu"],
+    #rList button.manage-menu {
+      background: #ffffff !important;
+      color: #754033 !important;
+      -webkit-text-fill-color: #754033 !important;
+      border: 1px solid #754033 !important;
+    }
+
+    /* Manage Menu hover */
+    #rList button[data-action="manage-menu"]:hover,
+    #rList button.manage-menu:hover {
+      background: #f7efec !important;
+    }
+
+    /* View, Edit and Reset Password */
+    #rList button:disabled {
+      background: #f3f4f6 !important;
+      color: #777777 !important;
+      -webkit-text-fill-color: #777777 !important;
+      border: 1px solid #e5e7eb !important;
+      opacity: 1 !important;
+      cursor: not-allowed !important;
+    }
+
+    /* Deactivate button */
+    #rList button.danger,
+    #rList button[data-action="deactivate"] {
+      background: #ffffff !important;
+      color: #dc2626 !important;
+      -webkit-text-fill-color: #dc2626 !important;
+      border: 1px solid #fecaca !important;
+    }
+
+    #rList button.danger:hover,
+    #rList button[data-action="deactivate"]:hover {
+      background: #fff1f1 !important;
+    }
+
+    /* Delete button */
+    #rList button[data-action="delete"] {
+      background: #ffffff !important;
+      color: #dc2626 !important;
+      -webkit-text-fill-color: #dc2626 !important;
+      border: 1px solid #fecaca !important;
+    }
+
+    /* Status badges – preserve their meaning */
+    #rList .pill {
+      border-radius: 20px !important;
+      font-weight: 750 !important;
+    }
+
+    /* Active */
+    #rList .pill.active {
+      background: #dcfce7 !important;
+      color: #15803d !important;
+    }
+
+    /* Paid */
+    #rList .pill.paid {
+      background: #dcfce7 !important;
+      color: #15803d !important;
+    }
+
+    /* Pending */
+    #rList .pill.pending {
+      background: #fef3c7 !important;
+      color: #92400e !important;
+    }
+
+    /* Plan badges */
+    #rList .pill.plan {
+      background: #f3f4f6 !important;
+      color: #333333 !important;
+      border: 1px solid #e5e7eb !important;
+    }
+
+    /* Order toggle */
+    #rList .order-option input[type="checkbox"] {
+      background: #dc3545 !important;
+    }
+
+    #rList .order-option input[type="checkbox"]:checked {
+      background: #16a34a !important;
+    }
+
+    /* Table horizontal scrollbar */
+    #rList {
+      scrollbar-color: #b8b8b8 #f5f5f5 !important;
+      scrollbar-width: thin !important;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      #rList {
+        overflow-x: auto !important;
+      }
+
+      #rList table {
+        min-width: 950px !important;
+      }
+    }
+
+    /* =====================================================
+   VIGNADIGITAL SUPER ADMIN — FINAL SOFT WHITE THEME
+   Targets actual IDs and data attributes in admin.html
+===================================================== */
+
+    :root {
+      color-scheme: light !important;
+    }
+
+    /* PAGE */
+    html,
+    body {
+      background: #f8fafc !important;
+      color: #202124 !important;
+    }
+
+    /* MAIN CONTENT */
+    .main,
+    .main.wide {
+      background: #f8fafc !important;
+      color: #202124 !important;
+    }
+
+    /* RESTAURANT CARD */
+    .main>section .card,
+    .main section .card {
+      background: #ffffff !important;
+      color: #202124 !important;
+      border: 1px solid #e6e8ec !important;
+      box-shadow: 0 3px 12px rgba(0, 0, 0, .035) !important;
+      border-radius: 14px !important;
+    }
+
+    /* =====================================================
+   SEARCH FIELD — ACTUAL ID: #rSearch
+===================================================== */
+
+    #rSearch {
+      background: #ffffff !important;
+      background-color: #ffffff !important;
+      color: #252525 !important;
+      -webkit-text-fill-color: #252525 !important;
+      border: 1px solid #dedfe3 !important;
+      border-radius: 9px !important;
+      box-shadow: none !important;
+      outline: none !important;
+    }
+
+    #rSearch::placeholder {
+      color: #999999 !important;
+      -webkit-text-fill-color: #999999 !important;
+    }
+
+    #rSearch:focus {
+      background: #ffffff !important;
+      border-color: #c9a69b !important;
+      box-shadow: 0 0 0 3px rgba(117, 64, 51, .09) !important;
+    }
+
+    /* =====================================================
+   STATUS DROPDOWN — ACTUAL ID: #rStatus
+===================================================== */
+
+    #rStatus {
+      appearance: auto !important;
+      -webkit-appearance: auto !important;
+      background: #ffffff !important;
+      background-color: #ffffff !important;
+      color: #252525 !important;
+      -webkit-text-fill-color: #252525 !important;
+      border: 1px solid #dedfe3 !important;
+      border-radius: 9px !important;
+      box-shadow: none !important;
+      color-scheme: light !important;
+    }
+
+    #rStatus option {
+      background: #ffffff !important;
+      color: #252525 !important;
+    }
+
+    /* =====================================================
+   RESTAURANT TABLE
+===================================================== */
+
+    #rList,
+    #rList table {
+      background: #ffffff !important;
+      color: #252525 !important;
+    }
+
+    #rList {
+      border: 1px solid #e6e8ec !important;
+      border-radius: 10px !important;
+      overflow-x: auto !important;
+    }
+
+    #rList table {
+      border-collapse: separate !important;
+      border-spacing: 0 !important;
+    }
+
+    #rList thead th {
+      background: #f5f5f6 !important;
+      color: #454545 !important;
+      border-bottom: 1px solid #e8e8e8 !important;
+    }
+
+    #rList tbody tr,
+    #rList tbody tr:nth-child(even),
+    #rList tbody tr:nth-child(odd) {
+      background: #ffffff !important;
+    }
+
+    #rList tbody td {
+      background: transparent !important;
+      color: #303030 !important;
+      border-bottom: 1px solid #eeeeee !important;
+    }
+
+    #rList tbody tr:hover,
+    #rList tbody tr:hover td {
+      background: #fcf8f7 !important;
+    }
+
+    /* =====================================================
+   ACTION BUTTONS
+   Actual HTML: data-menu, data-view, data-edit,
+   data-reset, data-toggle, data-del
+===================================================== */
+
+    /* Common button styling */
+    #rList .actions button {
+      min-height: 31px !important;
+      padding: 6px 11px !important;
+      border-radius: 8px !important;
+      font-size: 12px !important;
+      font-weight: 700 !important;
+      box-shadow: none !important;
+      transition: background .18s ease, border-color .18s ease !important;
+    }
+
+    /* MANAGE MENU — soft restaurant brown */
+    #rList .actions button[data-menu] {
+      background: #f8eeea !important;
+      color: #754033 !important;
+      -webkit-text-fill-color: #754033 !important;
+      border: 1px solid #e8d0c8 !important;
+    }
+
+    #rList .actions button[data-menu]:hover {
+      background: #f1dfd9 !important;
+      border-color: #d9b7aa !important;
+    }
+
+    /* VIEW */
+    #rList .actions button[data-view] {
+      background: #ffffff !important;
+      color: #404040 !important;
+      -webkit-text-fill-color: #404040 !important;
+      border: 1px solid #dedfe3 !important;
+    }
+
+    #rList .actions button[data-view]:hover {
+      background: #f5f5f5 !important;
+    }
+
+    /* EDIT */
+    #rList .actions button[data-edit] {
+      background: #ffffff !important;
+      color: #404040 !important;
+      -webkit-text-fill-color: #404040 !important;
+      border: 1px solid #dedfe3 !important;
+    }
+
+    #rList .actions button[data-edit]:hover {
+      background: #f5f5f5 !important;
+    }
+
+    /* RESET PASSWORD */
+    #rList .actions button[data-reset] {
+      background: #f7f7f8 !important;
+      color: #555555 !important;
+      -webkit-text-fill-color: #555555 !important;
+      border: 1px solid #e3e3e6 !important;
+    }
+
+    #rList .actions button[data-reset]:hover {
+      background: #eeeeef !important;
+    }
+
+    /* DEACTIVATE / ACTIVATE */
+    #rList .actions button[data-toggle] {
+      background: #fff0ef !important;
+      color: #bd4843 !important;
+      -webkit-text-fill-color: #bd4843 !important;
+      border: 1px solid #f1d0cd !important;
+    }
+
+    #rList .actions button[data-toggle]:hover {
+      background: #ffe4e1 !important;
+      border-color: #e9b9b4 !important;
+    }
+
+    /* When the button says ACTIVATE, use soft green */
+    #rList .actions button[data-toggle]:not(.danger) {
+      background: #edf8f0 !important;
+      color: #248047 !important;
+      -webkit-text-fill-color: #248047 !important;
+      border-color: #d0ead8 !important;
+    }
+
+    /* DELETE */
+    #rList .actions button[data-del] {
+      background: #ffffff !important;
+      color: #d04444 !important;
+      -webkit-text-fill-color: #d04444 !important;
+      border: 1px solid #f0cccc !important;
+    }
+
+    #rList .actions button[data-del]:hover {
+      background: #fff0ef !important;
+      border-color: #e9b6b2 !important;
+    }
+
+    /* =====================================================
+   STATUS BADGES — ACTUAL HTML CLASSES
+===================================================== */
+
+    /* MEDIUM-SHADE STATUS BADGES */
+
+    /* Pending */
+    #rList .pill.warn {
+      background: #e9c878 !important;
+      color: #59400b !important;
+      border: 1px solid #dfbd65 !important;
+    }
+
+    /* Paid */
+    #rList .pill.ok {
+      background: #a9d8b7 !important;
+      color: #145b32 !important;
+      border: 1px solid #91c9a2 !important;
+    }
+
+    /* Active */
+    #rList .pill.ok {
+      background: #a9d8b7 !important;
+      color: #145b32 !important;
+      border: 1px solid #91c9a2 !important;
+    }
+
+    /* Inactive */
+    #rList .pill.bad {
+      background: #edb2ad !important;
+      color: #842e29 !important;
+      border: 1px solid #e29b95 !important;
+    }
+
+    /* =====================================================
+   ORDER OPTION TOGGLE
+===================================================== */
+
+    #rList .order-option input[type="checkbox"] {
+      background: #e5b9b5 !important;
+    }
+
+    #rList .order-option input[type="checkbox"]:checked {
+      background: #25a45a !important;
+    }
+
+    /* =====================================================
+   PASSWORD VISIBILITY BUTTON
+===================================================== */
+
+    #rList .pwcell button {
+      background: #ffffff !important;
+      color: #444444 !important;
+      -webkit-text-fill-color: #444444 !important;
+      border: 1px solid #dedfe3 !important;
+    }
+
+    /* =====================================================
+   SCROLLBAR
+===================================================== */
+
+    #rList {
+      scrollbar-color: #c9c9c9 #f5f5f5 !important;
+      scrollbar-width: thin !important;
+    }
+
+    #rList::-webkit-scrollbar {
+      height: 8px !important;
+    }
+
+    #rList::-webkit-scrollbar-track {
+      background: #f5f5f5 !important;
+    }
+
+    #rList::-webkit-scrollbar-thumb {
+      background: #c9c9c9 !important;
+      border-radius: 20px !important;
+    }
+
+    /* =====================================================
+   FORCE LIGHT MODE
+===================================================== */
+
+    @media (prefers-color-scheme: dark) {
+
+      html,
+      body,
+      .main,
+      #rList,
+      #rList table {
+        color-scheme: light !important;
+        background-color: #ffffff !important;
+        color: #202124 !important;
+      }
+
+      #rSearch,
+      #rStatus {
+        background: #ffffff !important;
+        color: #252525 !important;
+        -webkit-text-fill-color: #252525 !important;
+      }
+    }
+
+    /* FULL HEIGHT WHITE ADMIN PAGE */
+    html,
+    body {
+      width: 100% !important;
+      min-height: 100% !important;
+      margin: 0 !important;
+      background: #ffffff !important;
+      color: #202124 !important;
+      color-scheme: light !important;
+    }
+
+    body {
+      min-height: 100vh !important;
+    }
+
+    .shell {
+      min-height: 100vh !important;
+      height: auto !important;
+      background: #ffffff !important;
+      align-items: stretch !important;
+    }
+
+    .side {
+      min-height: 100vh !important;
+      height: auto !important;
+      background: #ffffff !important;
+    }
+
+    .main,
+    .main.wide {
+      min-height: 100vh !important;
+      height: auto !important;
+      background: #ffffff !important;
+      color: #202124 !important;
+    }
+
+    /* =========================================
+   ADMIN SIDEBAR — FINAL WHITE THEME
+========================================= */
+
+    #tabs {
+      background: #ffffff !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 5px !important;
+    }
+
+    /* Normal tabs */
+    #tabs>button {
+      background: #ffffff !important;
+      color: #444444 !important;
+      -webkit-text-fill-color: #444444 !important;
+
+      border: 1px solid transparent !important;
+      border-radius: 10px !important;
+
+      box-shadow: none !important;
+      opacity: 1 !important;
+
+      transition: background-color .2s ease,
+        color .2s ease,
+        border-color .2s ease !important;
+    }
+
+    /* Normal tab text */
+    #tabs>button>span {
+      color: #444444 !important;
+      -webkit-text-fill-color: #444444 !important;
+    }
+
+    /* Hover — ALL inactive tabs */
+    #tabs>button:not(.on):hover {
+      background: #fff0e3 !important;
+      background-color: #fff0e3 !important;
+
+      color: #754033 !important;
+      -webkit-text-fill-color: #754033 !important;
+
+      border: 1px solid #f0d9c9 !important;
+      box-shadow: none !important;
+    }
+
+    /* Hover text — force visible */
+    #tabs>button:not(.on):hover>span {
+      color: #754033 !important;
+      -webkit-text-fill-color: #754033 !important;
+    }
+
+    /* Hover icons */
+    #tabs>button:not(.on):hover svg,
+    #tabs>button:not(.on):hover i {
+      color: #754033 !important;
+      stroke: #754033 !important;
+      fill: none !important;
+    }
+
+    /* Explicit Onboard restaurant hover */
+    #tabs>button[data-tab="onboard"]:hover,
+    #tabs>button[data-tab="onboard"]:hover>span {
+      background: #fff0e3 !important;
+      background-color: #fff0e3 !important;
+      color: #754033 !important;
+      -webkit-text-fill-color: #754033 !important;
+    }
+
+    /* Explicit Change password hover */
+    #tabs>button[data-tab="password"]:hover,
+    #tabs>button[data-tab="password"]:hover>span {
+      background: #fff0e3 !important;
+      background-color: #fff0e3 !important;
+      color: #754033 !important;
+      -webkit-text-fill-color: #754033 !important;
+    }
+
+    /* Selected tab */
+    #tabs>button.on,
+    #tabs>button.on:hover {
+      background: #754033 !important;
+      background-color: #754033 !important;
+
+      color: #ffffff !important;
+      -webkit-text-fill-color: #ffffff !important;
+
+      border: 1px solid #754033 !important;
+      box-shadow: none !important;
+    }
+
+    /* Selected tab text */
+    #tabs>button.on>span,
+    #tabs>button.on:hover>span {
+      color: #ffffff !important;
+      -webkit-text-fill-color: #ffffff !important;
+    }
+
+    /* Selected tab icons */
+    #tabs>button.on svg,
+    #tabs>button.on i {
+      color: #ffffff !important;
+      stroke: #ffffff !important;
+    }
+
+    /* Logout */
+    .side>button.logout,
+    .side>button.logout:hover,
+    .side>button.logout:focus {
+      background: #ffffff !important;
+      color: #292929 !important;
+      -webkit-text-fill-color: #292929 !important;
+      border: 1px solid #bfc3c9 !important;
+      box-shadow: none !important;
+    }
+
+    .side>button.logout>span {
+      color: #292929 !important;
+      -webkit-text-fill-color: #292929 !important;
+    }
+
+    .side>button.logout:hover {
+      background: #fff0e3 !important;
+      border-color: #e6cbbb !important;
+    }
+
+    /* ==================================================
+   FINAL LOGOUT FIX — ADMIN SIDEBAR
+   ================================================== */
+
+    /* Normal state */
+    html body .shell aside.side button.logout {
+      all: unset !important;
+      box-sizing: border-box !important;
+
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 9px !important;
+
+      width: 100% !important;
+      min-height: 40px !important;
+      padding: 9px 14px !important;
+
+      background: #ffffff !important;
+      color: #292929 !important;
+      -webkit-text-fill-color: #292929 !important;
+
+      border: 1px solid #c9c9c9 !important;
+      border-radius: 10px !important;
+
+      font-size: 13px !important;
+      font-weight: 700 !important;
+      line-height: 1.4 !important;
+
+      cursor: pointer !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      box-shadow: none !important;
+
+      transition: background-color .18s ease,
+        border-color .18s ease !important;
+    }
+
+    /* Text must remain visible */
+    html body .shell aside.side button.logout span {
+      color: #292929 !important;
+      -webkit-text-fill-color: #292929 !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+
+    /* Hover */
+    html body .shell aside.side button.logout:hover {
+      background: #fff0e3 !important;
+      background-color: #fff0e3 !important;
+
+      color: #754033 !important;
+      -webkit-text-fill-color: #754033 !important;
+
+      border: 1px solid #e6cbbb !important;
+      box-shadow: none !important;
+      transform: none !important;
+    }
+
+    /* Hover text */
+    html body .shell aside.side button.logout:hover span {
+      color: #754033 !important;
+      -webkit-text-fill-color: #754033 !important;
+    }
+
+    /* Focus and active */
+    html body .shell aside.side button.logout:focus,
+    html body .shell aside.side button.logout:active {
+      background: #fff0e3 !important;
+      color: #754033 !important;
+      -webkit-text-fill-color: #754033 !important;
+      outline: none !important;
+      box-shadow: none !important;
+    }
+
+    html body .shell aside.side button.logout:focus span,
+    html body .shell aside.side button.logout:active span {
+      color: #754033 !important;
+      -webkit-text-fill-color: #754033 !important;
+    }
+
+    /* Keep logout icon visible */
+    html body .shell aside.side button.logout::before {
+      color: #292929 !important;
+      opacity: 1 !important;
+    }
+
+    html body .shell aside.side button.logout:hover::before {
+      color: #754033 !important;
+    }
+  </style>
+
+  <style id="manage-menu-white-theme">
+    /* =====================================================
+   VIGNADIGITAL — COMPLETE MANAGE MENU WHITE THEME
+   ===================================================== */
+
+    body.manage-menu-open {
+      --mm-brand: var(--theme, #ff6426);
+      --mm-brand-dark: var(--theme-dark, #e6531b);
+      --mm-bg: #ffffff;
+      --mm-surface: #ffffff;
+      --mm-soft: #f7f8fa;
+      --mm-border: #e5e7eb;
+      --mm-text: #222222;
+      --mm-muted: #737373;
+      color-scheme: light !important;
+    }
+
+    /* Main Manage Menu page */
+    body.manage-menu-open [data-panel="menu"],
+    body.manage-menu-open #menuHead,
+    body.manage-menu-open #menuMount,
+    body.manage-menu-open #customMenuCard {
+      background: #ffffff !important;
+      color: #222222 !important;
+    }
+
+    /* All cards, panels and sections */
+    body.manage-menu-open [data-panel="menu"] .card,
+    body.manage-menu-open [data-panel="menu"] section,
+    body.manage-menu-open [data-panel="menu"] .stat {
+      background: #ffffff !important;
+      color: #222222 !important;
+      border-color: var(--mm-border) !important;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, .04) !important;
+    }
+
+    /* All text */
+    body.manage-menu-open [data-panel="menu"] h1,
+    body.manage-menu-open [data-panel="menu"] h2,
+    body.manage-menu-open [data-panel="menu"] h3,
+    body.manage-menu-open [data-panel="menu"] p,
+    body.manage-menu-open [data-panel="menu"] label,
+    body.manage-menu-open [data-panel="menu"] span,
+    body.manage-menu-open [data-panel="menu"] strong,
+    body.manage-menu-open [data-panel="menu"] b {
+      color: var(--mm-text);
+    }
+
+    body.manage-menu-open [data-panel="menu"] .muted,
+    body.manage-menu-open [data-panel="menu"] small {
+      color: var(--mm-muted) !important;
+    }
+
+    /* Inputs */
+    body.manage-menu-open [data-panel="menu"] input,
+    body.manage-menu-open [data-panel="menu"] select,
+    body.manage-menu-open [data-panel="menu"] textarea {
+      background: #ffffff !important;
+      color: #222222 !important;
+      border: 1px solid #d5d9e0 !important;
+      color-scheme: light !important;
+    }
+
+    body.manage-menu-open [data-panel="menu"] input:focus,
+    body.manage-menu-open [data-panel="menu"] select:focus,
+    body.manage-menu-open [data-panel="menu"] textarea:focus {
+      border-color: var(--mm-brand) !important;
+      box-shadow: 0 0 0 3px rgba(255, 100, 38, .12) !important;
+      outline: none !important;
+    }
+
+    /* Buttons */
+    body.manage-menu-open [data-panel="menu"] button {
+      background: #ffffff !important;
+      color: #292929 !important;
+      -webkit-text-fill-color: #292929 !important;
+      border: 1px solid #d5d9e0 !important;
+      border-radius: 8px !important;
+      box-shadow: none !important;
+    }
+
+    body.manage-menu-open [data-panel="menu"] button:hover {
+      background: #fff3ec !important;
+      color: var(--mm-brand-dark) !important;
+      -webkit-text-fill-color: var(--mm-brand-dark) !important;
+      border-color: var(--mm-brand) !important;
+    }
+
+    /* Primary buttons */
+    body.manage-menu-open [data-panel="menu"] button.primary,
+    body.manage-menu-open [data-panel="menu"] button.btn-primary,
+    body.manage-menu-open [data-panel="menu"] button.lg,
+    body.manage-menu-open #uploadCustomMenu,
+    body.manage-menu-open #addMenu,
+    body.manage-menu-open #addItem {
+      background: var(--mm-brand) !important;
+      color: #ffffff !important;
+      -webkit-text-fill-color: #ffffff !important;
+      border-color: var(--mm-brand) !important;
+    }
+
+    /* =====================================================
+   POPUP BACKDROPS
+   Keep the actual Manage Menu page visible behind them
+   ===================================================== */
+
+    /* Common overlay selectors used by menu dialogs */
+    body.manage-menu-open .modal-overlay,
+    body.manage-menu-open .modal-backdrop,
+    body.manage-menu-open .dialog-backdrop,
+    body.manage-menu-open .popup-overlay,
+    body.manage-menu-open .menu-modal-overlay,
+    body.manage-menu-open .ml-overlay,
+    body.manage-menu-open .mm-overlay {
+      background: rgba(20, 25, 35, .30) !important;
+      backdrop-filter: blur(2px) !important;
+      -webkit-backdrop-filter: blur(2px) !important;
+    }
+
+    /* =====================================================
+   WHITE POPUP WINDOWS
+   ===================================================== */
+
+    body.manage-menu-open .modal-content,
+    body.manage-menu-open .modal-box,
+    body.manage-menu-open .dialog-content,
+    body.manage-menu-open .popup-content,
+    body.manage-menu-open .menu-modal,
+    body.manage-menu-open .ml-modal,
+    body.manage-menu-open .mm-modal {
+      background: #ffffff !important;
+      background-color: #ffffff !important;
+      color: #222222 !important;
+      border: 1px solid #e5e7eb !important;
+      border-radius: 14px !important;
+      box-shadow: 0 18px 55px rgba(0, 0, 0, .20) !important;
+    }
+
+    /* Popup headings and text */
+    body.manage-menu-open .modal-content h1,
+    body.manage-menu-open .modal-content h2,
+    body.manage-menu-open .modal-content h3,
+    body.manage-menu-open .modal-box h1,
+    body.manage-menu-open .modal-box h2,
+    body.manage-menu-open .modal-box h3,
+    body.manage-menu-open .dialog-content h1,
+    body.manage-menu-open .dialog-content h2,
+    body.manage-menu-open .dialog-content h3,
+    body.manage-menu-open .popup-content h1,
+    body.manage-menu-open .popup-content h2,
+    body.manage-menu-open .popup-content h3 {
+      color: #222222 !important;
+    }
+
+    /* Popup paragraphs */
+    body.manage-menu-open .modal-content p,
+    body.manage-menu-open .modal-box p,
+    body.manage-menu-open .dialog-content p,
+    body.manage-menu-open .popup-content p {
+      color: #737373 !important;
+    }
+
+    /* Popup input fields */
+    body.manage-menu-open .modal-content input,
+    body.manage-menu-open .modal-content select,
+    body.manage-menu-open .modal-content textarea,
+    body.manage-menu-open .modal-box input,
+    body.manage-menu-open .modal-box select,
+    body.manage-menu-open .modal-box textarea,
+    body.manage-menu-open .dialog-content input,
+    body.manage-menu-open .dialog-content select,
+    body.manage-menu-open .dialog-content textarea,
+    body.manage-menu-open .popup-content input,
+    body.manage-menu-open .popup-content select,
+    body.manage-menu-open .popup-content textarea {
+      background: #ffffff !important;
+      color: #222222 !important;
+      border: 1px solid #d5d9e0 !important;
+      color-scheme: light !important;
+    }
+
+    /* Popup tables */
+    body.manage-menu-open .modal-content table,
+    body.manage-menu-open .modal-box table,
+    body.manage-menu-open .dialog-content table,
+    body.manage-menu-open .popup-content table {
+      background: #ffffff !important;
+      color: #222222 !important;
+      border-collapse: collapse !important;
+    }
+
+    body.manage-menu-open .modal-content th,
+    body.manage-menu-open .modal-box th,
+    body.manage-menu-open .dialog-content th,
+    body.manage-menu-open .popup-content th {
+      background: #f3f4f6 !important;
+      color: #444444 !important;
+      border-color: #e5e7eb !important;
+    }
+
+    body.manage-menu-open .modal-content td,
+    body.manage-menu-open .modal-box td,
+    body.manage-menu-open .dialog-content td,
+    body.manage-menu-open .popup-content td {
+      background: #ffffff !important;
+      color: #333333 !important;
+      border-color: #eeeeee !important;
+    }
+
+    /* Popup upload areas */
+    body.manage-menu-open .upload-area,
+    body.manage-menu-open .upload-box,
+    body.manage-menu-open .drop-zone,
+    body.manage-menu-open .file-upload,
+    body.manage-menu-open .upload-container {
+      background: #f8f9fb !important;
+      color: #333333 !important;
+      border: 1px dashed #cbd0d8 !important;
+      border-radius: 10px !important;
+    }
+
+    /* Popup buttons */
+    body.manage-menu-open .modal-content button,
+    body.manage-menu-open .modal-box button,
+    body.manage-menu-open .dialog-content button,
+    body.manage-menu-open .popup-content button {
+      background: #ffffff !important;
+      color: #292929 !important;
+      -webkit-text-fill-color: #292929 !important;
+      border: 1px solid #d5d9e0 !important;
+      border-radius: 8px !important;
+    }
+
+    body.manage-menu-open .modal-content button.primary,
+    body.manage-menu-open .modal-box button.primary,
+    body.manage-menu-open .dialog-content button.primary,
+    body.manage-menu-open .popup-content button.primary {
+      background: var(--mm-brand) !important;
+      color: #ffffff !important;
+      -webkit-text-fill-color: #ffffff !important;
+      border-color: var(--mm-brand) !important;
+    }
+
+    /* Delete actions */
+    body.manage-menu-open .modal-content button.danger,
+    body.manage-menu-open .modal-box button.danger,
+    body.manage-menu-open .dialog-content button.danger,
+    body.manage-menu-open .popup-content button.danger {
+      background: #fff1f1 !important;
+      color: #dc2626 !important;
+      -webkit-text-fill-color: #dc2626 !important;
+      border-color: #fecaca !important;
+    }
+
+    /* Popup scrollbars */
+    body.manage-menu-open .modal-content,
+    body.manage-menu-open .modal-box,
+    body.manage-menu-open .dialog-content,
+    body.manage-menu-open .popup-content {
+      scrollbar-color: #c5c9d0 #f5f6f8 !important;
+      scrollbar-width: thin !important;
+    }
+
+    /* =========================================
+   MANAGE MENU — WHITE CATEGORY DROPDOWN
+========================================= */
+
+    /* Category dropdown */
+    #menuMount select,
+    #menuMount select option {
+      background-color: #ffffff !important;
+      color: #292929 !important;
+      color-scheme: light !important;
+    }
+
+    /* Dropdown options */
+    #menuMount select option {
+      padding: 10px 12px !important;
+      font-weight: 500 !important;
+    }
+
+    /* Selected option */
+    #menuMount select option:checked {
+      background: #fce7dc !important;
+      color: #9a3412 !important;
+    }
+
+    /* Dropdown on focus */
+    #menuMount select:focus {
+      background-color: #ffffff !important;
+      color: #292929 !important;
+      border-color: var(--theme-color, #d9480f) !important;
+      outline: none !important;
+    }
+
+    /* Force light native controls */
+    #menuMount select {
+      color-scheme: light !important;
+      appearance: auto !important;
+      -webkit-appearance: menulist !important;
     }
   </style>
 </head>
@@ -786,34 +2035,82 @@
             ${esc(r.plan_expires)}
           </span>`;
 
-    // --------------------------------------------------
-    // LOAD RESTAURANTS
-    // --------------------------------------------------
+    // ================================================
+    // FAST RESTAURANT LOADING
+    // Display restaurants immediately without waiting
+    // for the summary API.
+    // ================================================
 
     async function load() {
+      const startedAt = performance.now();
 
-      const [s, { restaurants: list }] = await Promise.all([
-        api('/api/v1/admin/summary'),
-        api('/api/v1/admin/restaurants')
-      ]);
+      const statsElement = $('#stats');
+      const listElement = $('#rList');
 
-      restaurants = list;
+      // Keep existing data visible during background refresh.
+      const hasRestaurants = restaurants.length > 0;
 
-      $('#stats').innerHTML = [
-        ['Total restaurants', s.restaurants, 'hl big'],
-        ['Active', s.active],
-        ['Inactive', s.inactive],
-        ['Onboarding revenue', money(s.revenue)],
-        ['Payment pending', money(s.outstanding)]
-      ]
-        .map(([l, v, c]) =>
-          `<div class="stat ${c || ''}">
-            <span>${l}</span>
-            <b>${v}</b>
-        </div>`
-        ).join('');
+      if (!hasRestaurants) {
+        listElement.innerHTML = `
+            <div class="skel skel-row"></div>
+            <div class="skel skel-row"></div>
+            <div class="skel skel-row"></div>
+        `;
+      }
 
-      render();
+      // Start both API requests simultaneously.
+      const summaryRequest = api('/api/v1/admin/summary')
+        .then(summary => {
+          statsElement.innerHTML = [
+            ['Total restaurants', summary.restaurants, 'hl big'],
+            ['Active', summary.active],
+            ['Inactive', summary.inactive],
+            ['Onboarding revenue', money(summary.revenue)],
+            ['Payment pending', money(summary.outstanding)]
+          ]
+            .map(([label, value, cls]) => `
+                    <div class="stat ${cls || ''}">
+                        <span>${label}</span>
+                        <b>${value ?? 0}</b>
+                    </div>
+                `)
+            .join('');
+        })
+        .catch(error => {
+          console.error('Restaurant summary loading failed:', error);
+        });
+
+      // Load and display restaurants independently.
+      try {
+        const result = await api('/api/v1/admin/restaurants');
+
+        restaurants = Array.isArray(result.restaurants)
+          ? result.restaurants
+          : [];
+
+        render();
+
+        console.info(
+          `Restaurants loaded in ${(performance.now() - startedAt).toFixed(0)} ms`
+        );
+
+      } catch (error) {
+        console.error('Restaurant loading failed:', error);
+
+        if (!hasRestaurants) {
+          listElement.innerHTML = `
+                <div class="err">
+                    Unable to load restaurants.
+                    ${esc(error.message || 'Please try again.')}
+                </div>
+            `;
+        }
+
+        throw error;
+      }
+
+      // Do not block restaurant rendering while summary loads.
+      void summaryRequest;
     }
 
     // --------------------------------------------------
@@ -1200,6 +2497,7 @@ Password: ${password}${r.menu_url ? `\nYour menu: ${r.menu_url}` : ''}`;
     // --------------------------------------------------
 
     function openMenu(r) {
+      document.body.classList.add('manage-menu-open');
 
       document.querySelectorAll('[data-panel]').forEach(p =>
         p.classList.toggle('hidden', p.dataset.panel !== 'menu')
@@ -1226,13 +2524,13 @@ Password: ${password}${r.menu_url ? `\nYour menu: ${r.menu_url}` : ''}`;
                 <b>${esc(r.name)}</b>
 
                 ${r.active
-          ? '<span class="pill ok">Active</span>'
-          : '<span class="pill bad">Inactive: guests cannot see this menu</span>'
+          ? '<span class="pill ok restaurant-status active">Active</span>'
+          : '<span class="pill bad restaurant-status inactive">Inactive: guests cannot see this menu</span>'
         }
 
                 ${r.order_enabled !== false
-          ? '<span class="pill ok">Ordering ON</span>'
-          : '<span class="pill warn">Ordering OFF</span>'
+          ? '<span class="pill ok ordering-status on">Ordering ON</span>'
+          : '<span class="pill ordering-status off">Ordering OFF</span>'
         }
 
             </div>
@@ -1253,10 +2551,10 @@ Password: ${password}${r.menu_url ? `\nYour menu: ${r.menu_url}` : ''}`;
         </div>
     `;
 
-      $('#menuHead [data-backlist]').addEventListener(
-        'click',
-        () => showTab('restaurants')
-      );
+      $('#menuHead [data-backlist]').addEventListener('click', () => {
+        document.body.classList.remove('manage-menu-open');
+        showTab('restaurants');
+      });
       $('#menuHead').insertAdjacentHTML('beforeend', `
     <div class="card" id="customMenuCard" style="margin-top:18px">
         <h2>Custom HTML Menu</h2>
@@ -2348,6 +3646,11 @@ Password: ${password}${r.menu_url ? `\nYour menu: ${r.menu_url}` : ''}`;
     })();
 
   </script>
+
+  <script src="/app.js"></script>
+  <script src="/menu-library.js"></script>
+  <script src="/menu-manager.js"></script>
+  <link rel="stylesheet" href="/menu-library.css">
 
 </body>
 

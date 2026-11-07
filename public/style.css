@@ -4809,28 +4809,172 @@ body[data-theme="dark"] .modal {
   }
 }
 
-/* BLACK MODAL BACKDROP */
+/* Shared modal contract: keep the current page visible behind a translucent backdrop. */
 .modal {
-  background: rgba(0, 0, 0, 0.65) !important;
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
+  background: rgba(0, 0, 0, 0.30) !important;
+  background-color: rgba(0, 0, 0, 0.30) !important;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  z-index: 1000 !important;
 }
 
-/* Keep popup card unchanged */
 .modal .modal-box {
-  background: #1c1c1f;
-  color: #ffffff;
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  color: #222222 !important;
+  border-color: #e5e7eb !important;
+  color-scheme: light !important;
 }
 
-/* Light mode: black overlay too */
-html[data-theme="light"] .modal,
-body[data-theme="light"] .modal {
-  background: rgba(0, 0, 0, 0.55) !important;
+.modal .modal-box h1,
+.modal .modal-box h2,
+.modal .modal-box h3,
+.modal .modal-box h4,
+.modal .modal-box label,
+.modal .modal-box p,
+.modal .modal-box span,
+.modal .modal-box strong,
+.modal .modal-box b {
+  color: #222222 !important;
 }
 
-/* Dark mode */
-html[data-theme="dark"] .modal,
-body[data-theme="dark"] .modal {
-  background: rgba(0, 0, 0, 0.70) !important;
+.modal .modal-box .muted,
+.modal .modal-box small {
+  color: #737373 !important;
 }
 
+.modal .modal-box button[data-close] {
+  color: #222222 !important;
+  -webkit-text-fill-color: #222222 !important;
+}
+
+/* Manage Menu item categories are neutral pills, separate from status pills. */
+#menuMount .item .pill:not(.ok):not(.warn):not(.bad) {
+  background: #f1f5f9 !important;
+  color: #334155 !important;
+  border-color: #e2e8f0 !important;
+  font-size: 12px;
+  font-weight: 600 !important;
+}
+
+/* Manage Menu restaurant and ordering statuses. */
+#menuHead .restaurant-status,
+#menuHead .ordering-status {
+  font-weight: 700 !important;
+  border-color: transparent !important;
+}
+
+#menuHead .restaurant-status.active,
+#menuHead .ordering-status.on {
+  background: #dcfce7 !important;
+  color: #166534 !important;
+}
+
+#menuHead .restaurant-status.inactive {
+  background: #fee2e2 !important;
+  color: #991b1b !important;
+}
+
+#menuHead .ordering-status.off {
+  background: #f1f5f9 !important;
+  color: #475569 !important;
+}
+
+/* Bulk image upload uses a light surface without changing other cards. */
+.bulk-image-upload {
+  color: #292929;
+}
+
+.bulk-image-upload > .card,
+.bulk-image-upload [data-bulk-progress] > .card,
+.bulk-image-upload [data-bulk-report] > .card,
+.bulk-image-upload .stat {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  color: #292929 !important;
+  border: 1px solid #e5e7eb !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .04) !important;
+}
+
+.bulk-image-upload .stats {
+  background: #ffffff !important;
+}
+
+.bulk-image-upload h3,
+.bulk-image-upload strong {
+  color: #292929 !important;
+}
+
+.bulk-image-upload p,
+.bulk-image-upload .muted,
+.bulk-image-upload [data-bulk-count],
+.bulk-image-upload [data-bulk-progress] span {
+  color: #777777 !important;
+}
+
+.bulk-image-upload .bulk-drop {
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+  padding: 28px 20px;
+  background: #f8fafc !important;
+  color: #292929 !important;
+  border: 2px dashed #e5e7eb !important;
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.bulk-image-upload .bulk-drop:hover,
+.bulk-image-upload .bulk-drop.is-dragging {
+  background: rgba(217, 72, 15, .06) !important;
+  background: color-mix(in srgb, var(--theme-color, #d9480f) 8%, #ffffff) !important;
+  border-color: var(--theme-color, #d9480f) !important;
+}
+
+.bulk-image-upload .bulk-drop > div {
+  color: var(--theme-color, #d9480f);
+  line-height: 1;
+}
+
+.bulk-file-list {
+  display: grid;
+  gap: 4px;
+  margin-top: 8px;
+  max-height: 120px;
+  overflow: auto;
+  color: #475569;
+  font-size: 12px;
+}
+
+.bulk-image-upload .card-foot {
+  color: #292929;
+}
+
+.bulk-image-upload .err {
+  color: #991b1b !important;
+  background: #fee2e2 !important;
+  border: 1px solid #fecaca !important;
+}
+
+
+/* =====================================
+   FAST ADMIN RESTAURANT PAGE RENDERING
+===================================== */
+
+#rList {
+    contain: layout style;
+}
+
+#rList table {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 500px;
+}
+
+#stats {
+    contain: layout;
+}
+
+.skel {
+    animation-duration: 0.7s !important;
+}

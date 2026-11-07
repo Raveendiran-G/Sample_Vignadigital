@@ -272,9 +272,9 @@ window.MenuManager = (() => {
                         style="grid-column:1/-1"
                     >
                         ${items.length
-                            ? 'No items match your search.'
-                            : 'No items yet. Click "Add item" to create the first dish.'
-                        }
+                    ? 'No items match your search.'
+                    : 'No items yet. Click "Add item" to create the first dish.'
+                }
                     </div>
                 `;
         }
@@ -378,9 +378,9 @@ window.MenuManager = (() => {
                                 style="--tc:${esc(themeColor)}"
                             >
                                 ${thumb(
-                                    item?.image,
-                                    item?.name || '?'
-                                )}
+                    item?.image,
+                    item?.name || '?'
+                )}
                             </div>
 
                             <div>
@@ -450,9 +450,9 @@ window.MenuManager = (() => {
                                         <option
                                             value="${category.id}"
                                             ${String(item?.category_id) === String(category.id)
-                                                ? 'selected'
-                                                : ''
-                                            }
+                        ? 'selected'
+                        : ''
+                    }
                                         >
                                             ${esc(category.name)}
                                         </option>
@@ -508,6 +508,10 @@ window.MenuManager = (() => {
                     </form>
                 `
             });
+
+            if (modal) {
+                modal.classList.add('manage-menu-modal');
+            }
 
             if (!modal) {
                 toast('Unable to open item editor.');
@@ -1051,13 +1055,15 @@ window.MenuManager = (() => {
             const count = q('[data-bulk-count]', modal);
             const progress = q('[data-bulk-progress]', modal);
             const reportBox = q('[data-bulk-report]', modal);
+            const dropZone = q('.bulk-drop', modal);
 
             if (
                 !fileInput ||
                 !submit ||
                 !count ||
                 !progress ||
-                !reportBox
+                !reportBox ||
+                !dropZone
             ) {
                 toast('Bulk image upload could not be initialized.');
                 return;
@@ -1068,17 +1074,57 @@ window.MenuManager = (() => {
 
             // FILE SELECTION
 
-            fileInput.addEventListener('change', () => {
-
-                const files = [...fileInput.files];
-
+            const updateSelectedFiles = files => {
                 const validFiles = files.filter(validImage);
+                const oversized = validFiles.filter(
+                    file => file.size > 5 * 1024 * 1024
+                );
 
-                count.textContent =
-                    `${validFiles.length} valid images selected.`;
+                count.innerHTML = validFiles.length
+                    ? `${validFiles.length} valid images selected.<div class="bulk-file-list">${validFiles.map(file => `<span>${esc(file.name)}</span>`).join('')}</div>`
+                    : 'No images selected.';
 
                 submit.disabled = validFiles.length === 0;
 
+                if (oversized.length) {
+                    reportBox.innerHTML = `
+                        <div class="err">
+                            ${oversized.length}
+                            images exceed the 5 MB limit.
+                        </div>
+                    `;
+                } else {
+                    reportBox.innerHTML = '';
+                }
+            };
+
+            const setSelectedFiles = files => {
+                const transfer = new DataTransfer();
+                files.forEach(file => transfer.items.add(file));
+                fileInput.files = transfer.files;
+                updateSelectedFiles(files);
+            };
+
+            fileInput.addEventListener('change', () => {
+                updateSelectedFiles([...fileInput.files]);
+            });
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropZone.addEventListener(eventName, event => {
+                    event.preventDefault();
+                    dropZone.classList.add('is-dragging');
+                });
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, event => {
+                    event.preventDefault();
+                    dropZone.classList.remove('is-dragging');
+                });
+            });
+
+            dropZone.addEventListener('drop', event => {
+                setSelectedFiles([...event.dataTransfer.files]);
             });
 
             // UPLOAD
@@ -1157,23 +1203,23 @@ window.MenuManager = (() => {
 
                                 <p class="muted">
                                     ${Math.min(
-                                        (batchIndex + 1) * BATCH_SIZE,
-                                        files.length
-                                    )}
+                            (batchIndex + 1) * BATCH_SIZE,
+                            files.length
+                        )}
                                     of ${files.length} images processed.
                                 </p>
 
                                 <div style="
-                                    height:8px;
-                                    background:#333;
-                                    border-radius:10px;
-                                    overflow:hidden;
-                                ">
+    height:8px;
+    background:#e5e7eb;
+    border-radius:10px;
+    overflow:hidden;
+"">
 
                                     <div style="
                                         width:${((batchIndex + 1) / totalBatches) * 100}%;
                                         height:100%;
-                                        background:var(--theme-color,#e65b18);
+                                     background:var(--theme-color,#d9480f);
                                         transition:width .3s;
                                     "></div>
 
@@ -1323,9 +1369,9 @@ window.MenuManager = (() => {
                                         <li>
                                             ${esc(entry.filename)}:
                                             ${(entry.matching_items || [])
-                                                .map(name => esc(name))
-                                                .join(', ')
-                                            }
+                            .map(name => esc(name))
+                            .join(', ')
+                        }
                                         </li>
                                     `).join('')}
                                 </ul>

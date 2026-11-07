@@ -303,120 +303,166 @@
 }
 
 /* =====================================================
-   MENU LIBRARY - DARK POPUP, PRESERVE DASHBOARD
-   Works in both light and dark mode
+   VIGNADIGITAL — WHITE MENU LIBRARY
+   Keep the actual Manage Menu visible behind popups
    ===================================================== */
 
-/* Keep the dashboard visible behind the popup */
+/* Do not hide or replace the dashboard background */
 body:has(.ml-wrap) {
-    background: transparent !important;
+    background: inherit !important;
 }
 
-/* Dark translucent backdrop */
-body:has(.ml-wrap) .modal-backdrop,
-body:has(.ml-wrap) .modal-overlay,
-body:has(.ml-wrap) .modal::before {
-    background: rgba(8, 10, 18, 0.68) !important;
-}
-
-/* Do not change the dashboard or its background images */
+/* Keep the actual dashboard visible behind the modal */
 body:has(.ml-wrap) .shell,
 body:has(.ml-wrap) .main,
 body:has(.ml-wrap) .content,
 body:has(.ml-wrap) .dashboard {
-    background-color: transparent;
-    background-image: inherit;
+    background-color: inherit !important;
+    background-image: inherit !important;
 }
 
-/* Only the Menu Library modal gets the dark theme */
+/* Soft translucent backdrop — not a plain white screen */
+body:has(.ml-wrap) .modal-backdrop,
+body:has(.ml-wrap) .modal-overlay,
+body:has(.ml-wrap) .modal::before {
+    background: rgba(25, 25, 25, 0.28) !important;
+    backdrop-filter: blur(2px) !important;
+    -webkit-backdrop-filter: blur(2px) !important;
+}
+
+/* White popup container */
 body:has(.ml-wrap) .modal-box:has(.ml-wrap),
 body:has(.ml-wrap) .modal-content:has(.ml-wrap),
 body:has(.ml-wrap) .modal-card:has(.ml-wrap) {
-    background: #1c1d24 !important;
-    color: #f5f7ff !important;
-    border: 1px solid #343744 !important;
-    color-scheme: dark !important;
+    background: #ffffff !important;
+    color: #292929 !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 16px !important;
+    box-shadow: 0 18px 55px rgba(0, 0, 0, 0.18) !important;
+    color-scheme: light !important;
 }
 
-/* Library content */
+/* Library main area */
 .ml-wrap {
-    background: #1c1d24 !important;
-    color: #f5f7ff !important;
-    color-scheme: dark !important;
+    background: #ffffff !important;
+    color: #292929 !important;
+    color-scheme: light !important;
 }
 
 /* Search and dropdowns */
 .ml-wrap input:not([type="checkbox"]),
 .ml-wrap select {
-    background: #252731 !important;
-    color: #f5f7ff !important;
-    border: 1px solid #3b4050 !important;
+    background: #ffffff !important;
+    color: #292929 !important;
+    border: 1px solid #dedede !important;
+    color-scheme: light !important;
 }
 
 .ml-wrap input::placeholder {
-    color: #9ca8bd !important;
+    color: #999999 !important;
 }
 
-/* Selection bar */
+/* Selection information */
 .ml-selection-bar {
-    background: #252731 !important;
-    border: 1px solid #343a49 !important;
-    color: #f5f7ff !important;
+    background: #f7f8fa !important;
+    border: 1px solid #e5e7eb !important;
+    color: #292929 !important;
 }
 
-/* Category and dish cards */
+/* Category cards and food item cards */
 .ml-category-card,
 .ml-item-card {
-    background: #20232c !important;
-    border: 1px solid #343a49 !important;
-    color: #f5f7ff !important;
+    background: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
+    color: #292929 !important;
+    transition: background .2s ease, border-color .2s ease,
+        box-shadow .2s ease !important;
 }
 
+/* Hover */
 .ml-category-card:hover,
 .ml-item-card:hover {
-    background: #292e3a !important;
-    border-color: #647da8 !important;
+    background: #fff8f4 !important;
+    border-color: var(--theme-color, #d9480f) !important;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, .06) !important;
 }
 
-/* Text */
+/* Selected cards */
+.ml-category-card:has(input:checked),
+.ml-item-card.selected {
+    background: #fff4ed !important;
+    border-color: var(--theme-color, #d9480f) !important;
+}
+
+/* Headings */
 .ml-wrap h3,
-.ml-wrap strong {
-    color: #ffffff !important;
+.ml-wrap h4,
+.ml-wrap strong,
+.ml-category-content,
+.ml-item-details,
+.ml-item-details strong {
+    color: #292929 !important;
 }
 
+/* Secondary text */
 .ml-wrap small,
 .ml-wrap .muted,
-.ml-wrap p {
-    color: #aebbd2 !important;
+.ml-wrap p,
+.ml-selection-bar span,
+.ml-pagination span {
+    color: #777777 !important;
+}
+
+/* Food item price follows restaurant theme */
+.ml-item-details b {
+    color: var(--theme-color, #d9480f) !important;
 }
 
 /* Checkboxes */
 .ml-wrap input[type="checkbox"] {
-    accent-color: #79a9ed !important;
+    accent-color: var(--theme-color, #d9480f) !important;
 }
 
 /* Footer */
 .ml-footer {
-    background: #1c1d24 !important;
-    border-top: 1px solid #3b4050 !important;
+    background: #ffffff !important;
+    color: #292929 !important;
+    border-top: 1px solid #e5e7eb !important;
 }
 
 /* Import button */
 .ml-footer [data-ml-import] {
-    background: #905747 !important;
+    background: var(--theme-color, #d9480f) !important;
     color: #ffffff !important;
+    border: 1px solid var(--theme-color, #d9480f) !important;
 }
 
 /* Cancel button */
 .ml-footer [data-ml-close] {
-    background: transparent !important;
-    color: #dce7fa !important;
+    background: #ffffff !important;
+    color: #333333 !important;
+    border: 1px solid #dedede !important;
 }
 
-/* Preserve blue accents */
-.ml-wrap a,
-.ml-wrap .ml-category-check {
-    color: #8bb8ff !important;
+/* Error messages */
+.ml-error,
+.ml-error-state {
+    color: #dc4444 !important;
+}
+
+/* Library scrollbar */
+.ml-wrap {
+    scrollbar-color: #c9c9c9 #f5f5f5 !important;
+    scrollbar-width: thin !important;
+}
+
+.ml-wrap::-webkit-scrollbar {
+    width: 7px;
+}
+
+.ml-wrap::-webkit-scrollbar-thumb {
+    background: #c9c9c9;
+    border-radius: 20px;
 }
 
 /* =========================================
@@ -1272,4 +1318,97 @@ body:has(.ml-wrap) .modal-card:has(.ml-wrap) {
         transform: scale(1);
         opacity: 1;
     }
+}
+
+/* =====================================================
+   FINAL MANAGE MENU WHITE THEME OVERRIDES
+   ===================================================== */
+
+#menuMount {
+    background: #ffffff !important;
+    color: #292929 !important;
+}
+
+#menuMount .toolbar,
+#menuMount .stats,
+#menuMount .items {
+    background: #ffffff !important;
+    color: #292929 !important;
+}
+
+#menuMount .stat,
+#menuMount .item {
+    background: #ffffff !important;
+    color: #292929 !important;
+    border: 1px solid #e5e7eb !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .04) !important;
+}
+
+#menuMount .nm,
+#menuMount .ds,
+#menuMount .price,
+#menuMount .stat b {
+    color: #292929 !important;
+}
+
+#menuMount button {
+    color: #292929;
+}
+
+#menuMount button:not([data-add]):hover {
+    background: #fff4ed;
+    border-color: var(--theme-color, #d9480f);
+}
+
+#menuMount [data-add] {
+    background: var(--theme-color, #d9480f) !important;
+    color: #ffffff !important;
+    border-color: var(--theme-color, #d9480f) !important;
+}
+
+/* =========================================
+   VIGNADIGITAL — MANAGE MENU POPUP FIX
+   Keep the menu visible behind every popup
+========================================= */
+
+/* Transparent dark backdrop */
+body:has(.manage-menu-modal) .modal-backdrop,
+body:has(.manage-menu-modal) .modal-overlay,
+body:has(.manage-menu-modal)::before {
+    background: rgba(0, 0, 0, 0.28) !important;
+    backdrop-filter: blur(2px) !important;
+    -webkit-backdrop-filter: blur(2px) !important;
+}
+
+/* White popup itself */
+.manage-menu-modal {
+    background: #ffffff !important;
+    color: #222222 !important;
+    color-scheme: light !important;
+}
+
+/* Popup form fields */
+.manage-menu-modal input,
+.manage-menu-modal select,
+.manage-menu-modal textarea {
+    background: #ffffff !important;
+    color: #222222 !important;
+    border: 1px solid #dedede !important;
+}
+
+/* Popup cards */
+.manage-menu-modal .card {
+    background: #ffffff !important;
+    color: #222222 !important;
+    border-color: #e5e7eb !important;
+}
+
+/* Popup headings and text */
+.manage-menu-modal h2,
+.manage-menu-modal h3,
+.manage-menu-modal h4,
+.manage-menu-modal label,
+.manage-menu-modal strong,
+.manage-menu-modal p {
+    color: #222222 !important;
 }
