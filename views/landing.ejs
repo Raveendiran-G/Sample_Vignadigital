@@ -5,6 +5,12 @@
   <!-- VignaDigital Favicon -->
   <link rel="icon" type="image/png" href="/images/vignadigital-logo.png">
   <link rel="apple-touch-icon" href="/images/vignadigital-logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+    rel="stylesheet">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vigna Digital | Next-Gen Digital Menus</title>
@@ -20,8 +26,12 @@
     <div class="container">
       <div class="nav-inner">
         <div class="logo-wrap">
-          <img src="/images/vignadigital-logo.png" alt="VignaDigital Logo" class="brand-logo">
-          <span>VignaDigital</span>
+          <img src="/images/vignadigital-logo.png" alt="Vigna Digital Logo" class="brand-logo">
+
+          <span class="brand-name">
+            <span class="brand-vigna">Vigna</span>
+            <span class="brand-digital">Digital Menu</span>
+          </span>
         </div>
         <div class="nav-links">
           <a href="#how-it-works" class="nav-link">How it works</a>
@@ -852,7 +862,12 @@
          OPEN CART INSIDE IPHONE
       ===================================== */
 
-      cartButton.addEventListener("click", function () {
+      function openDemoCart(event) {
+
+        if (event) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
 
         successScreen.classList.remove("show");
 
@@ -862,7 +877,9 @@
         updateCart();
 
         cartPanel.classList.add("open");
-      });
+      }
+
+      cartButton.addEventListener("click", openDemoCart);
 
 
       /* =====================================
