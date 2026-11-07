@@ -3293,10 +3293,37 @@
   <script>
     let profile, categories = [], items = [], logoData = null, logoRemoved = false, savedThemeColor = '';
 
-    const thumbHtml = (img, name) =>
-      img
-        ? `<img src="${esc(img)}" alt="" loading="lazy">`
+    function dashboardImageUrl(value) {
+      if (!value) return '';
+
+      const raw = String(value).trim();
+
+      if (/^https?:\/\//i.test(raw)) return raw;
+
+      if (raw.startsWith('/uploads/')) return raw;
+
+      const filename = raw
+        .replace(/^\.?\//, '')
+        .replace(/^(data\/)?uploads\//i, '')
+        .replace(/^\/+/, '');
+
+      return '/uploads/' + filename
+        .split('/')
+        .map(part => encodeURIComponent(part))
+        .join('/');
+    }
+
+    const thumbHtml = (img, name) => {
+      const src = dashboardImageUrl(img);
+
+      return src
+        ? `<img src="${esc(src)}"
+             alt="${esc(name || 'Food item')}"
+             loading="lazy"
+             style="width:100%;height:100%;object-fit:cover;display:block;"
+             onerror="this.onerror=null;this.style.display='none';">`
         : esc((name || '?').trim().charAt(0).toUpperCase());
+    };
 
     // ---------- ITEMS ----------
 
